@@ -1427,7 +1427,7 @@ ID,country,designation,points,price,province,region,variety,winery
 2503,Spain,Secret Reserva Brut Nature,88,19.0,Catalonia,Cava,Sparkling Blend,Chapillon
 2504,Spain,Ximenis,88,40.0,Catalonia,Priorat,Pedro Ximénez,Genium Celler
 2505,US,Party of Four,88,59.0,California,Paso Robles,Red Blend,HammerSky
-2506,US,Three Sisters Cuvée,88,22.0,California,Paso Robles,Rhône-style White Blend,Hearst Ranch
+2511,US,Three Sisters Cuvée,88,22.0,California,Paso Robles,Rhône-style White Blend,Hearst Ranch
 2508,US,Brut Rosé,88,14.0,California,California,Sparkling Blend,Korbel
 2511,US,Lia's Vineyard,88,27.0,Oregon,Chehalem Mountains,Pinot Noir,Longplay
 2512,US,Temperance Hill Vineyard Julia,88,20.0,Oregon,Eola-Amity Hills,Pinot Gris,Lumos
@@ -6978,7 +6978,7 @@ ID,country,designation,points,price,province,region,variety,winery
 12502,US,Brut Rosé,93,29.0,California,Anderson Valley,Sparkling Blend,Roederer Estate
 12503,US,Illegitimi Non Carborundum,93,35.0,New York,North Fork of Long Island,Bordeaux-style Red Blend,Southold
 12505,US,Rosella's Vineyard,93,48.0,California,Santa Lucia Highlands,Chardonnay,Testarossa
-12506,US,Durell Vineyard Origin,93,48.0,California,Sonoma Valley,Chardonnay,Three Sticks
+12511,US,Durell Vineyard Origin,93,48.0,California,Sonoma Valley,Chardonnay,Three Sticks
 12507,US,Marley Anne,93,65.0,California,Edna Valley,Pinot Noir,Tolosa
 12509,France,Premier Cru,93,113.0,Burgundy,Chambolle-Musigny,Pinot Noir,Joseph Drouhin
 12510,Spain,Reserva,89,19.0,Northern Spain,Rioja,Tempranillo,Montecillo
