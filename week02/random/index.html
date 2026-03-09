@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Randomness</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Randomness</h1>
+<h2 id="breaking-patterns">Breaking Patterns</h2>
+<p>Now that we’ve seen how to draw <a href="../counters/index.html">patterns</a> on our canvas using <code class="language-plaintext highlighter-rouge">for()</code> loops and how to create our own <a href="../functions/index.html">functions</a>, let’s see how to use one of the built-in functions from p5.js to make our patterns more interesting.</p>
+<p>Let’s start with a simple grid of circles.</p>
+<p>Note the use of a variable to set the circle diameter:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/CyTtdVfBe"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/CyTtdVfBe">
+    open example in new window
+  </a>
+</div>
+<p>One way to add variability to our pattern would be to pick a slightly different value for the diameter or the color of each of our circles.</p>
+<p>Let’s start with color. We are going to see how we can use <a href="https://p5js.org/reference/p5/random"><code class="language-plaintext highlighter-rouge">random()</code></a> to select a value from a pre-determined set of options for the color of our ellipses.</p>
+<p>For example, let’s say we want half of them to be black and the other half to be white, but we don’t want all the black ones in a row, and then the white ones, because that would look like a chessboard and it’s boring.</p>
+<p>We want them to be mixed and shuffled.</p>
+<p>We could use <code class="language-plaintext highlighter-rouge">random(0, 255)</code> to pick a random grayscale value between \(0\) and \(255\) to fill each circle:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/DjylI5wj-N"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/DjylI5wj-N">
+    open example in new window
+  </a>
+</div>
+<p>Hmmmm…. there is an issue with this: we are not drawing black and white circles. All the values between \(0\) and \(255\) are equally likely to occur!</p>
+<p>There are a few ways to fix this, but let’s start by using the <code class="language-plaintext highlighter-rouge">random()</code> function to give us a number between \(0\) and \(1.0\). Since all the values between \(0\) and \(1.0\) are equally likely to occur, about half of the numbers will be less than \(0.5\) and the other half will be greater than \(0.5\).</p>
+<p>If we image a number line and \(50\) random points along that line, about \(25\) of them will be less than \(0.5\) and the rest will be greater than \(0.5\):</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week02/random-lottery-00.jpg"/>
+</div>
+<p>Putting this in pseudo-code, our logic could be:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">aRandomNumber</span> <span class="o">=</span> <span class="nx">random</span><span class="p">()</span>
+<span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">a</span> <span class="nx">white</span> <span class="nx">circle</span>
+<span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">a</span> <span class="nx">black</span> <span class="nx">circle</span>
+</code></pre></div></div>
+<p>Since the two choices are mutually exclusive (they can’t both happen at the same time), we can use an <code class="language-plaintext highlighter-rouge">else</code> statement and turn this into the following JavaScript:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="p">(</span><span class="nx">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Myfh7bORq"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Myfh7bORq">
+    open example in new window
+  </a>
+</div>
+<p>Cool ! What if want to use \(3\) colors now? Like some gold, blue and white circles?</p>
+<p>We could do something similar:</p>
+<p>Draw a number, if it’s less than half, draw a black circle, otherwise, draw another number and repeat the process to pick between gold and blue. This works, but what do we notice about the frequency of the three colors?</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/0fZEyVwJz"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/0fZEyVwJz">
+    open example in new window
+  </a>
+</div>
+<p>Gold and blue circles happen with similar frequency, but it seems like there are more black circles. Twice as many black circles, actually. In this code we were asking p5.js to draw black circles half of the time, and then to split the remaining half again in half, so blue and gold only happen \(25\%\) of the time each.</p>
+<p>We implemented something like this:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week02/random-lottery-01.jpg"/>
+</div>
+<p>What if we draw a random number between \(0\) and \(1\) and save it in a variable. Now we can use this number multiple times in multiple <code class="language-plaintext highlighter-rouge">if()</code> statements and check if it falls between certain ranges. If we want something to happen about one-third of the time, that’s the same as asking if the random number is less than \(0.3333\), because of all the numbers between \(0\) and \(1\) one-third of them are less than \(0.3333\).</p>
+<p>We’re now implementing something like this:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week02/random-lottery-02.jpg"/>
+</div>
+<p>The logic for black can be:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="nx">aRandomNumer</span> <span class="o">&lt;</span> <span class="mf">0.333</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">black</span>
+</code></pre></div></div>
+<p>If the number is greater than \(0.3333\) we can now just check if it’s also less than \(0.6666\). Doing this after we checked that it’s greater than \(0.3333\) guarantees that our random number is between \(0.3333\) and \(0.6666\), an interval that accounts for another third of the numbers between \(0\) and \(1\).</p>
+<p>The logic for black and gold:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="nx">aRandomNumer</span> <span class="o">&lt;</span> <span class="mf">0.333</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">black</span>
+<span class="k">else</span> <span class="k">if</span> <span class="nx">aRandomNumer</span> <span class="o">&lt;</span> <span class="mf">0.666</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">gold</span>
+</code></pre></div></div>
+<p>And if the number is not less than \(0.6666\) we get the other third of the numbers between \(0\) and \(1\) (all the ones between \(0.6666\) and \(1.0\)):</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="nx">aRandomNumer</span> <span class="o">&lt;</span> <span class="mf">0.333</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">black</span>
+<span class="k">else</span> <span class="k">if</span> <span class="nx">aRandomNumer</span> <span class="o">&lt;</span> <span class="mf">0.666</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">gold</span>
+<span class="k">else</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">blue</span>
+</code></pre></div></div>
+<p>In code:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/w2bda32Ty"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/w2bda32Ty">
+    open example in new window
+  </a>
+</div>
+<p>Hooray. Much better.</p>
+<h3>✨✨🎉✨✨</h3>
+<h2 id="lottery">Lottery</h2>
+<p>We’re calling this a <em>lottery</em> method of picking random numbers because any time there’s a choice to be made we’re picking one option from a set of possibilities. We’re not using the <em>continuous</em> value that the <code class="language-plaintext highlighter-rouge">random()</code> function returns, but are using it to draw from a <em>discrete</em> set of options.</p>
+<p>Doing a lottery selection like this is a bit cumbersome, but it gives us a way to precisely control how often something happens. If we want to have different events happen with different probabilities we can just change the values we check inside our <code class="language-plaintext highlighter-rouge">if</code>/<code class="language-plaintext highlighter-rouge">else-if</code>/<code class="language-plaintext highlighter-rouge">else</code> logic.</p>
+<p>Let’s say we want to use six colors: black, white, gold, blue, green, grey and we want black one-third of the time, white one-quarter of the time and the other colors one-tenth of the time. To work with values that add up to \(100\%\) let’s use black: \(35\%\), white: \(25\%\), and \(10\%\) for all others:</p>
+<p>Something like this:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week02/random-lottery-03.jpg"/>
+</div>
+<p>Our logic could be something like:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">aRandomNumber</span> <span class="o">=</span> <span class="nx">random</span><span class="p">()</span>
+<span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.35</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">black</span>
+<span class="k">else</span> <span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.60</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">white</span>
+<span class="k">else</span> <span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.70</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">gold</span>
+<span class="k">else</span> <span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.80</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">blue</span>
+<span class="k">else</span> <span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.90</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">green</span>
+<span class="k">else</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">grey</span>
+</code></pre></div></div>
+<p>The thresholds we check against are accumulating. When we are checking for black, we already know that it’s greater than \(0.35\), and we only check if it’s less than \(0.6\) because numbers between \(0.35\) and \(0.60\) account for \(25\%\) of all the numbers between \(0.0\) and \(1.0\).</p>
+<p>In code, the above logic becomes:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Rf4yj-5hf"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Rf4yj-5hf">
+    open example in new window
+  </a>
+</div>
+<p>Can we use something like this to pick different shapes or different sizes from a set of pre-determined options ?</p>
+<h2 id="size-lottery">Size Lottery</h2>
+<p>The process is similar, but now we’ll have another random number and another block of <code class="language-plaintext highlighter-rouge">if</code>/<code class="language-plaintext highlighter-rouge">else</code> statements to select the size.</p>
+<p>Let’s go back to just \(3\) colors with equal probabilities:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/gHh7Q8k7g"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/gHh7Q8k7g">
+    open example in new window
+  </a>
+</div>
+<p>Now we’ll add this logic to select the size of the ellipse:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">aRandomNumber</span> <span class="o">=</span> <span class="nx">random</span><span class="p">()</span>
+<span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.25</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">big</span>
+<span class="k">else</span> <span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">medium</span>
+<span class="k">else</span> <span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.75</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">small</span>
+<span class="k">else</span><span class="p">:</span> <span class="nx">draw</span> <span class="nx">extra</span><span class="o">-</span><span class="nx">small</span>
+</code></pre></div></div>
+<p>And we’ll use a variable called <code class="language-plaintext highlighter-rouge">maxDiam</code> to keep track of the maximum diameter of our ellipses, so we don’t have to fix the spacing we are using in the <code class="language-plaintext highlighter-rouge">for</code> loops.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Ps_Z5TmvK"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Ps_Z5TmvK">
+    open example in new window
+  </a>
+</div>
+<h2 id="position-lottery">Position Lottery</h2>
+<p>We can use the same idea to slightly vary the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> locations of our ellipses.</p>
+<p>After we choose a diameter, we can use another <code class="language-plaintext highlighter-rouge">if</code>/<code class="language-plaintext highlighter-rouge">else</code> statement to pick the direction we want to move our ellipse:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">aRandomNumber</span> <span class="o">=</span> <span class="nx">random</span><span class="p">()</span>
+<span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.25</span><span class="p">:</span> <span class="nx">move</span> <span class="nx">left</span>
+<span class="k">else</span> <span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span> <span class="nx">move</span> <span class="nx">right</span>
+<span class="k">else</span> <span class="k">if</span> <span class="nx">aRandomNumber</span> <span class="o">&lt;</span> <span class="mf">0.75</span><span class="p">:</span> <span class="nx">move</span> <span class="nx">up</span>
+<span class="k">else</span><span class="p">:</span> <span class="nx">move</span> <span class="nx">down</span>
+</code></pre></div></div>
+<p>We’ll use an extra variable called <code class="language-plaintext highlighter-rouge">dValue</code> to calculate how far we want to move the ellipses, and variables called <code class="language-plaintext highlighter-rouge">dx</code> and <code class="language-plaintext highlighter-rouge">dy</code> to keep track of which direction to change.</p>
+<p>This calculation makes the smaller ellipses move further, and larger ellipses move less:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">dValue</span> <span class="o">=</span> <span class="p">(</span><span class="nx">maxDiam</span> <span class="o">-</span> <span class="nx">eDiam</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+</code></pre></div></div>
+<p>And in code:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Rlaj-c9Ft"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Rlaj-c9Ft">
+    open example in new window
+  </a>
+</div>
+<p>What’s useful about this is that we now have a way to create non-regular patterns that don’t really look like patterns. The <code class="language-plaintext highlighter-rouge">for</code> loops are still there, so in the background of our logic we have a grid, but visually it doens’t necessarily look like a grid.</p>
+<h2 id="uniformly-distributed-continuous-variations">Uniformly Distributed Continuous Variations</h2>
+<p>We’ve been using the values from the <code class="language-plaintext highlighter-rouge">random()</code> function to choose between a set of pre-defined options because in some cases it’s nice to add random variation while maintaining some control over the results.</p>
+<p>For example, a sketch that picks completely random colors for each ellipse will most likely pick a bunch of unpalatable colors. The way to pick a completely random color is to draw \(3\) random numbers between \(0\) and \(255\) and use them as red, green and blue values for our fill color:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">redRandom</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">greenRandom</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">blueRandom</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">);</span>
+
+<span class="nx">fill</span><span class="p">(</span><span class="nx">redRandom</span><span class="p">,</span> <span class="nx">greenRandom</span><span class="p">,</span> <span class="nx">blueRandom</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/H7qqVMUwt"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/H7qqVMUwt">
+    open example in new window
+  </a>
+</div>
+<h2 id="-1">🤮</h2>
+<p>But, maybe uniformly distributed continuous values can be used for the ellipses’s diameter and position variations.</p>
+<p>This will pick a random diameter between \(4\) and \(40\) when <code class="language-plaintext highlighter-rouge">maxDiam</code> is \(40\):</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">eDiam</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="nx">maxDiam</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="nx">maxDiam</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/2JCHEP_4g"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/2JCHEP_4g">
+    open example in new window
+  </a>
+</div>
+<p>And this will add random variations in both the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> directions, based on the value of the ellipse’s diameter. The difference is that now <em>ANY</em> number between <code class="language-plaintext highlighter-rouge">-dValue</code> and <code class="language-plaintext highlighter-rouge">dValue</code> is possible:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">dValue</span> <span class="o">=</span> <span class="p">(</span><span class="nx">maxDiam</span> <span class="o">-</span> <span class="nx">eDiam</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">dx</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="o">-</span><span class="nx">dValue</span><span class="p">,</span> <span class="nx">dValue</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">dy</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="o">-</span><span class="nx">dValue</span><span class="p">,</span> <span class="nx">dValue</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/zcNqTwUpM"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/zcNqTwUpM">
+    open example in new window
+  </a>
+</div>
+<p>This looks pretty cool. Our underlying grid is almost unnoticeable.</p>
+<p>And combining random positions and size:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/p1yFq_-SN"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/p1yFq_-SN">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../conditionals/index.html">Conditionals</a></li>
+<li><a href="../patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../counters/index.html">Loops as Counters</a></li>
+<li><a href="../functions/index.html">Functions</a></li>
+<li><a href="index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

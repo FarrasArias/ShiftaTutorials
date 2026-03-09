@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Animations</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Animations</h1>
+<h2 id="frames">Frames</h2>
+<p>We’ve seen this basic p5.js structure many times now:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// run this once</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">draw</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// run this over and over and over</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Just to reiterate what p5.js does with this code: all of the commands inside the <code class="language-plaintext highlighter-rouge">setup()</code> function run just once. This is where we setup the canvas size, maybe set initial values to some variables, draw the background for the first time, set up any of the drawing modes, like <a href="https://p5js.org/reference/p5/rectMode"><code class="language-plaintext highlighter-rouge">rectMode</code></a>, <a href="https://p5js.org/reference/p5/colorMode"><code class="language-plaintext highlighter-rouge">colorMode</code></a>, etc.</p>
+<p>After the <code class="language-plaintext highlighter-rouge">setup()</code> function runs, p5.js takes our <code class="language-plaintext highlighter-rouge">draw()</code> function and runs all the commands that are inside of it over and over and over again, at a specific rate. For most of the code we have run so far we haven’t noticed this re-draw because we draw the same shapes every time the <code class="language-plaintext highlighter-rouge">draw()</code> function runs.</p>
+<p>How often the <code class="language-plaintext highlighter-rouge">draw()</code> function runs will depend on many things, but for most browsers and displays it will be either \(30\) times per second or \(60\) times per second. This is referred to as the frame rate and sometimes these values are given as \(30\) <em>fps</em> or \(60\) <em>fps</em>, where <em>fps</em> stands for <em>frames per second</em>. \(30\) and \(60\) <em>fps</em> are common refresh rates on monitors and they are fast enough that we can use consecutive re-draws to draw animations without our eyes noticing jumps or discontinuities.</p>
+<p>We can call each execution of <code class="language-plaintext highlighter-rouge">draw()</code> a frame, and by varying positions, sizes and colors slightly between frames we can create animations.</p>
+<p><em>Animations?</em> Yeah!</p>
+<p>If, instead of drawing a circle at the exact same location every time <code class="language-plaintext highlighter-rouge">draw()</code> executes, we use a variable to change its position, we can make it move!</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/txJBbZKnX"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/txJBbZKnX">
+    open example in new window
+  </a>
+</div>
+<p>Let’s play around a little bit with this concept… what if we only draw the background once, but keep drawing ellipses every frame ?</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/C0SDPIm2f"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/C0SDPIm2f">
+    open example in new window
+  </a>
+</div>
+<p>Or, what if instead of drawing a fully opaque background, we add a little alpha to our color?</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/anLS0_0Rx"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/anLS0_0Rx">
+    open example in new window
+  </a>
+</div>
+<p>Cooool !!!</p>
+<h2 id="frame-count">Frame Count</h2>
+<p>Instead of using a variable called <code class="language-plaintext highlighter-rouge">xPos</code> we could have called the p5.js variable <a href="https://p5js.org/reference/p5/frameCount"><code class="language-plaintext highlighter-rouge">frameCount</code></a>. This variable keeps track of how many times the <code class="language-plaintext highlighter-rouge">draw()</code> function has executed and can be easily used for creating animations:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/L9FIYPY2_"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/L9FIYPY2_">
+    open example in new window
+  </a>
+</div>
+<p>At each frame we are redrawing the ellipse, but before redrawing we are rotating our canvas by <code class="language-plaintext highlighter-rouge">frameCount</code> degrees: the first frame it rotates by \(0^\circ\), the second time by \(1^\circ\), then \(2^\circ\), then \(3^\circ\), etc, and when we see all these frames one after the other we perceive it as an animated ellipse rotating.</p>
+<p>Since the <code class="language-plaintext highlighter-rouge">frameCount</code> variable just keeps growing and growing it’s very easy to use it for something like this because rotations are “cyclic”, they repeat after \(360^\circ\). Also note that we are using the <code class="language-plaintext highlighter-rouge">radians()</code> function because <code class="language-plaintext highlighter-rouge">rotate()</code> expects angles in radians and if we just gave <code class="language-plaintext highlighter-rouge">rotate()</code> our <code class="language-plaintext highlighter-rouge">frameCount</code> it would rotate really fast. Try it!!</p>
+<p>Let’s go back to our circle example:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/txJBbZKnX"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/txJBbZKnX">
+    open example in new window
+  </a>
+</div>
+<p>Play with the value that determines the speed of the circle in the sketch above ☝️ and figure out how to make it move faster. As it moves faster, do we lose the impression of an animation at any point?</p>
+<h2 id="setting-boundaries">Setting Boundaries</h2>
+<p>Now, what if we don’t want it to go away, and instead have it bounce back once it hits the edge of our canvas?</p>
+<p>We’ll add a variable to keep track of our position and direction, and every frame, after we increment the position of our circle, we could check if its position has gotten bigger than the canvas <code class="language-plaintext highlighter-rouge">width</code> and if necessary, change its direction:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/mH4M23PZV"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/mH4M23PZV">
+    open example in new window
+  </a>
+</div>
+<p>Our circle is disappearing on the left side of the screen now. We can fix that the same way we fixed the right side:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/V_d91eHez"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/V_d91eHez">
+    open example in new window
+  </a>
+</div>
+<p>Let’s just clean this up a little bit, and refactor the <code class="language-plaintext highlighter-rouge">xDir</code> variable to actually hold our velocity. The code stays the same, because the logic is the same, but the variable name is just a little more meaningful and we now know we can use it to control the velocity of our ellipse: a positive velocity means its moving to the right and a negative velocity means its moving to the left.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/v6y32pYHP"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/v6y32pYHP">
+    open example in new window
+  </a>
+</div>
+<p>Looking at the logic, we can actually simplify it by just detecting when it gets to either edge, and flipping the <code class="language-plaintext highlighter-rouge">xVel</code>:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/u28VL-98_"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/u28VL-98_">
+    open example in new window
+  </a>
+</div>
+<p>Almost perfect. The circle only changes direction when its center goes beyond the canvas, not its edge. Let’s put the circle radius in a variable and use that to detect when the circle hits the end of the canvas:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/HR0Adpc-8"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/HR0Adpc-8">
+    open example in new window
+  </a>
+</div>
+<p>We now have a simple, infinite, animation using our <code class="language-plaintext highlighter-rouge">draw()</code> loop.</p>
+<h2 id="more-animation-dimensions">More Animation Dimensions</h2>
+<p>Both the <code class="language-plaintext highlighter-rouge">mod(%)</code> operator and <code class="language-plaintext highlighter-rouge">map()</code> function that we will cover <a href="../maths/index.html">here</a> can be really useful when doing animation.</p>
+<p>We can use the <code class="language-plaintext highlighter-rouge">map()</code> function to create an animation based on time. In this example we map the seconds that have passed in the current minute of time to the diameter of a circle. We know seconds has a range \([0, 59]\), so it’s just a matter of choosing the smallest and largest values for the diameter.</p>
+<p>In addition to mapping \([0, 59] \rightarrow [20, width]\) for the diameter, we can also map the seconds value to the amount of green in our <code class="language-plaintext highlighter-rouge">fill()</code> color. We know each of the \(3\) color parameters has a maximum value of \(255\), and if we always want a bit of green in our color we can map \([0, 59] \rightarrow [128, 255]\):</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/thbVYgT-l"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/thbVYgT-l">
+    open example in new window
+  </a>
+</div>
+<p>We can add other elements to this by also mapping the milliseconds amount to a different ellipse’s diameter. We unfortunately don’t have a function that gives us the current time’s milliseconds, but <a href="https://p5js.org/reference/p5/millis"><code class="language-plaintext highlighter-rouge">millis()</code></a> gives us the number of milliseconds that have elapsed since we started our sketch. It keeps growing, so we’ll use <code class="language-plaintext highlighter-rouge">mod(%)</code> to keep it between \([0, 999]\).</p>
+<p>Then, instead of mapping \([0, 999] \rightarrow [20, width]\), we’ll map this value to be between the other ellipse’s diameter and <code class="language-plaintext highlighter-rouge">width</code>, so \([0, 999] \rightarrow [secondDiam, width]\).</p>
+<p>This should give us an interesting effect:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/620VoCQoG"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/620VoCQoG">
+    open example in new window
+  </a>
+</div>
+<p>We can also use <a href="../../week02/counters/index.html"><code class="language-plaintext highlighter-rouge">for()</code> loops</a>, <a href="../arrays/index.html">arrays</a> and <a href="../objects/index.html">objects</a> to create some pretty abstract animations.</p>
+<p>We’ll create an array of line objects. Each line has an <code class="language-plaintext highlighter-rouge">x</code> location, a length <code class="language-plaintext highlighter-rouge">l</code> and a velocity <code class="language-plaintext highlighter-rouge">v</code>.</p>
+<p>At each frame we update every line’s length using its velocity, and make sure to wrap back to \(0\) when it grows bigger than the canvas <code class="language-plaintext highlighter-rouge">height</code>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/5HEH8eW-r"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/5HEH8eW-r">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../arrays/index.html">Arrays</a></li>
+<li><a href="../strings/index.html">Strings</a></li>
+<li><a href="../objects/index.html">JavaScript Objects</a></li>
+<li><a href="index.html">Animations</a></li>
+<li><a href="../interactions/index.html">Interactions</a></li>
+<li><a href="../maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

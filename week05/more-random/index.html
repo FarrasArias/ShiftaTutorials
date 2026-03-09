@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>More Randomness</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>More Randomness</h1>
+<p>We’ve already seen how to generate continuous <a href="../../week02/random/index.html">random numbers</a> within a range, and also how to use those numbers to pick values from a pre-determined set of options.</p>
+<p>Just to review, let’s use <code class="language-plaintext highlighter-rouge">random()</code> to generate a grid of ellipses with different, unpredictable, diameters:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/JYdWqKl2W"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/JYdWqKl2W">
+    open example in new window
+  </a>
+</div>
+<p>We’re using <code class="language-plaintext highlighter-rouge">random(0.2 * gridW, 0.8 * gridW)</code> to pick random ellipse diameter values that are between \(20\%\) and \(80\%\) of the grid width.</p>
+<h2 id="uniform">Uniform</h2>
+<p>Calling <code class="language-plaintext highlighter-rouge">random(min, max)</code> gives us uniformly distributed values: any value between its <code class="language-plaintext highlighter-rouge">min</code> and <code class="language-plaintext highlighter-rouge">max</code> parameters are equally likely to occur.</p>
+<p>We can visually this in a couple of ways.</p>
+<p>In one-dimension, using a random variable to set the diameter of ellipses. All values between \(0\) and <code class="language-plaintext highlighter-rouge">width</code> are equally likely:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/--jfZGT-3"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/--jfZGT-3">
+    open example in new window
+  </a>
+</div>
+<p>We can rerun the sketch and get different results, but overall, the ellipses don’t seem to follow any pattern.</p>
+<p>We can also visually the distribution of the <code class="language-plaintext highlighter-rouge">random()</code> function in two-dimensions, using random variables to pick <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> positions for ellipses. All positions on the canvas are equally likely:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/I6-rCuYnY"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/I6-rCuYnY">
+    open example in new window
+  </a>
+</div>
+<p>And, again, we can rerun the sketch and get slightly different results, but it will always look like the ellipses are equally spread throughout our canvas.</p>
+<p>Uniform random variables are strongly related to choice events like rolling a die, picking a card from a deck, or thinking of a number between \(0\) and \(100\).</p>
+<p>This isn’t the only way randomness occurs though. If we look at values for people’s heights, shoe sizes and blood pressure, or even something like wine pH levels and subway occupancy throughout the day, we’ll see that even though exact values are not predictable, these events or measurements tend to have a non-uniform distribution where certain values are more likely to occur.</p>
+<h2 id="normal-gaussians">Normal Gaussians</h2>
+<p>Subway occupancy, wine pH levels, shoe size and blood pressure are examples of variables that follow a <a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distribution</a> (sometimes also called a Gaussian distribution). This might sound familiar from algebra or statistics class, but just to review: in a normal distribution, not all numbers are equally likely to occur; the distribution has a specific <em>expected value</em> and a <em>spread</em>.</p>
+<p>The <em>expected value</em> is the average, or mean, value of the distribution, usually denoted by the greek letter <em>mu</em> \(\mu\). If we sample a bunch of numbers from a normally distributed event, we would expect half of the numbers to be larger than the mean, and the other half to be smaller.</p>
+<p>The <em>spread</em> of a distribution is officially called a <em>standard deviation</em>. It’s commonly denoted by the greek letter <em>sigma</em> \(\sigma\), and it specifies how likely numbers far from the mean are to occur. This plot shows the relationship between mean and standard deviation for a gaussian distribution with mean \(0\) and standard deviation \(\sigma\):</p>
+<div class="scaled-images w75">
+<img src="../../assets/images/week05/gaussian-00.jpg"/>
+</div>
+<p>What this graph shows is that about \(68\%\) of the values chosen from a gaussian distribution will be within \(1\) standard deviation from the mean, about \(95\%\) will be within \(2\) standard deviations, and almost all of the values (\(99.6\%\) of them) will be within \(3\) standard deviations from the mean.</p>
+<p>We can check this with the p5.js <a href="https://p5js.org/reference/p5/randomGaussian"><code class="language-plaintext highlighter-rouge">randomGaussian()</code></a> function.</p>
+<p>Let’s use it to repeat the same two visualizations we used for the <code class="language-plaintext highlighter-rouge">random()</code> function above.</p>
+<p>In one-dimension, let’s use \(0\) for the mean and \(\frac{width}{3}\) for the standard deviation for our ellipses’s diameters. One way to pick the value for the standard deviation is to take whatever we would like to be the largest value returned by <code class="language-plaintext highlighter-rouge">randomGaussian()</code> and divide it by \(3\). We want our ellipses to have a maximum diameter of <code class="language-plaintext highlighter-rouge">width</code>, so our standard deviation should be \(\frac{1}{3}\) of that value. This should make it so that most of the ellipses fall within the canvas:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/5X5OnNGP_"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/5X5OnNGP_">
+    open example in new window
+  </a>
+</div>
+<p>In two-dimensions, we want our ellipses to be clustered around the center and mostly stay within the canvas. This makes our means \(\frac{width}{2}\) and \(\frac{height}{2}\), and since we would like our <code class="language-plaintext highlighter-rouge">x</code> position to be at most \(\frac{width}{2}\) away from the mean (at \(0\) or <code class="language-plaintext highlighter-rouge">width</code>), we divide \(\frac{width}{2}\) by \(3\) to get the standard deviation. The same logic is used to calculate the standard deviation for the <code class="language-plaintext highlighter-rouge">y</code> position and the values we’ll use for \(\sigma\) are: \(\frac{width}{6}\) and \(\frac{height}{6}\).</p>
+<p>From the reasoning above we can see that a more general way to pick standard deviation values when using <code class="language-plaintext highlighter-rouge">randomGaussian()</code> is: \(\sigma = \frac{max - mean}{3}\).</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/6f5jIIUOj"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/6f5jIIUOj">
+    open example in new window
+  </a>
+</div>
+<p>We can even plot some markers at \(1\), \(2\) and \(3\) standard deviations to check that the values returned by the <code class="language-plaintext highlighter-rouge">randomGaussian()</code> function follow the expected \(68\%\), \(95\%\) and \(99.6\%\) distributions.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/dds08wUTa"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/dds08wUTa">
+    open example in new window
+  </a>
+</div>
+<p>In the sketch above, \(68\%\) of the ellipses should be within the smallest white circle, \(27\%\) should be between the two smallest white circles, \(4\%\) between the two largest white circles, and very rarely we’ll see an ellipse outside the largest white circle. So, \(68\%\) of the ellipses are within \(1\) \(\sigma\) from the mean, \(95\%\) (\(68\% + 27\%\)) are within \(2\) \(\sigma\) and almost all of them are within \(3\) \(\sigma\) from the mean of \(0\).</p>
+<p>We can see something similar in our two-dimensional example:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/jArRRDRhN"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/jArRRDRhN">
+    open example in new window
+  </a>
+</div>
+<p>Finally, let’s see what happens if we use a gaussian distribution to pick ellipse diameters for the grid pattern we looked at in the beginning of this section. Let’s try \(0\) for the mean and \(\frac{gridW}{3}\) for the standard deviation (since we want our largest possible diameter to be <code class="language-plaintext highlighter-rouge">gridW</code>):</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/yxSDQp5CL"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/yxSDQp5CL">
+    open example in new window
+  </a>
+</div>
+<p>Since it’s very unlikely that we’ll get \(2\) maximum diameter ellipses next to each other, we can even experiment with slightly larger values for \(\sigma\), like \(\frac{gridW}{2.5}\) or even \(\frac{gridW}{2}\).</p>
+<p>Try it out above ☝️ and see if the difference is noticeable!</p>
+<h2 id="noise">Noise</h2>
+<p>Uniform and gaussian distributions aren’t the only ways of creating random numbers.</p>
+<p>The random numbers generated by the <code class="language-plaintext highlighter-rouge">random()</code> and <code class="language-plaintext highlighter-rouge">randomGaussian()</code> functions are unpredictable because knowing something about one of the numbers doesn’t say anything about the next. But, what if we want to use sequences of random numbers where each number is somehow related to the previous value in the sequence?</p>
+<p>Of course, p5.js has another function for generating these types of random numbers: <a href="https://p5js.org/reference/p5/noise"><code class="language-plaintext highlighter-rouge">noise()</code></a>.</p>
+<p>Noise is different from the other functions because its parameters aren’t used to specify anything about the distribution of the numbers, or their range, but instead to determine how close sequentially chosen numbers should be.</p>
+<p>For example, calling noise with the same parameter during a sketch:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">print</span><span class="p">(</span><span class="nx">noise</span><span class="p">(</span><span class="mi">1010</span><span class="p">));</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">noise</span><span class="p">(</span><span class="mi">1010</span><span class="p">));</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">noise</span><span class="p">(</span><span class="mi">1010</span><span class="p">));</span>
+</code></pre></div></div>
+<p>Will give the same number (always between \(0\) and \(1\)):</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mf">0.63951621</span>
+<span class="mf">0.63951621</span>
+<span class="mf">0.63951621</span>
+</code></pre></div></div>
+<p>But, the parameter can be used to determine how <em>similar</em> two or more consecutive random numbers should be.</p>
+<p>For example, calling noise with consecutive whole numbers:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">print</span><span class="p">(</span><span class="nx">noise</span><span class="p">(</span><span class="mi">1010</span><span class="p">));</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">noise</span><span class="p">(</span><span class="mi">1011</span><span class="p">));</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">noise</span><span class="p">(</span><span class="mi">1012</span><span class="p">));</span>
+</code></pre></div></div>
+<p>Gives a sequence of different numbers that are all within \(0.2\) of each other:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mf">0.40770879</span>
+<span class="mf">0.49712939</span>
+<span class="mf">0.29742239</span>
+</code></pre></div></div>
+<p>Calling noise with numbers that only vary by \(0.1\):</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">print</span><span class="p">(</span><span class="nx">noise</span><span class="p">(</span><span class="mf">1010.0</span><span class="p">));</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">noise</span><span class="p">(</span><span class="mf">1010.1</span><span class="p">));</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">noise</span><span class="p">(</span><span class="mf">1010.2</span><span class="p">));</span>
+</code></pre></div></div>
+<p>we get a sequence of different numbers that are more alike, and vary by, maybe, \(0.02\):</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mf">0.36829471</span>
+<span class="mf">0.38614744</span>
+<span class="mf">0.39177833</span>
+</code></pre></div></div>
+<p><em>So… How do we use it?</em></p>
+<p>Well, <code class="language-plaintext highlighter-rouge">noise()</code> is useful because we can use values we have in our sketch to control by how much the numbers in the sequence will vary.</p>
+<p>A simple example, similar to the ones above, would be to use <code class="language-plaintext highlighter-rouge">noise()</code> to pick random <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> locations for some ellipses.</p>
+<p>Let’s say we start with something like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">width</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">width</span> <span class="o">*</span> <span class="nx">noise</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">height</span> <span class="o">*</span> <span class="nx">noise</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+  <span class="nx">ellipse</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Since the values returned by <code class="language-plaintext highlighter-rouge">noise()</code> are in the range \([0, 1]\), we multiply them by <code class="language-plaintext highlighter-rouge">width</code> and <code class="language-plaintext highlighter-rouge">height</code> to get values that stretch across our whole canvas:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Go0Xi5bXM"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Go0Xi5bXM">
+    open example in new window
+  </a>
+</div>
+<h2>🤔</h2>
+<p>Since <code class="language-plaintext highlighter-rouge">noise()</code> returns the same value when called with the same parameter, the \(x\) and \(y\) variables in the sketch above will always have the same value and our ellipses get drawn in a diagonal line. Boring.</p>
+<p>One way to fix this is to give the <code class="language-plaintext highlighter-rouge">noise()</code> function for each variable a different, fixed offset, like:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">width</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">width</span> <span class="o">*</span> <span class="nx">noise</span><span class="p">(</span><span class="mi">1010</span> <span class="o">+</span> <span class="nx">i</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">height</span> <span class="o">*</span> <span class="nx">noise</span><span class="p">(</span><span class="mi">2020</span> <span class="o">+</span> <span class="nx">i</span><span class="p">);</span>
+  <span class="nx">ellipse</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/VOGOgVAa6"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/VOGOgVAa6">
+    open example in new window
+  </a>
+</div>
+<p>This is better, but it still looks a lot like the <code class="language-plaintext highlighter-rouge">random()</code> or the <code class="language-plaintext highlighter-rouge">randomGaussian()</code> functions. This is because the parameter that we are giving to the <code class="language-plaintext highlighter-rouge">noise()</code> function vary by \(1\) between iterations, and from our exploration above we saw that calling <code class="language-plaintext highlighter-rouge">noise()</code> with consecutive whole numbers will return numbers that change by about \(0.2\) between consecutive calls.</p>
+<p>This is quite a lot. \(0.2\) is \(\frac{1}{5}\) of our total range, and the resulting sequence can look pretty much like <code class="language-plaintext highlighter-rouge">random()</code> or <code class="language-plaintext highlighter-rouge">randomGaussian()</code>.</p>
+<p>We can make consecutive numbers more similar by incrementing the parameter to noise by \(0.01\) instead of \(1\):</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">width</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">width</span> <span class="o">*</span> <span class="nx">noise</span><span class="p">(</span><span class="mi">1010</span> <span class="o">+</span> <span class="nx">i</span> <span class="o">/</span> <span class="mi">100</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">height</span> <span class="o">*</span> <span class="nx">noise</span><span class="p">(</span><span class="mi">2020</span> <span class="o">+</span> <span class="nx">i</span> <span class="o">/</span> <span class="mi">100</span><span class="p">);</span>
+  <span class="nx">ellipse</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/7xkp7ELGy"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/7xkp7ELGy">
+    open example in new window
+  </a>
+</div>
+<p>Oh, whoa. So now both the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> locations for our ellipses vary by small amounts between each iteration, and since each value is slightly related to the previous one we get something that looks like the trail of a moving ellipse.</p>
+<p>Pretty cool !</p>
+<p>We can even increase the number of iterations above from <code class="language-plaintext highlighter-rouge">width</code> to <code class="language-plaintext highlighter-rouge">4 * width</code> or <code class="language-plaintext highlighter-rouge">10 * width</code> to get longer trails.</p>
+<p>Try it out ☝️ !</p>
+<p>Let’s see what <code class="language-plaintext highlighter-rouge">noise()</code> looks like in the one-dimension visualization. We’ll again use <code class="language-plaintext highlighter-rouge">noise(i / 100)</code> so that our diameter doesn’t vary too much between iterations:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/FwqCTeqRU"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/FwqCTeqRU">
+    open example in new window
+  </a>
+</div>
+<p>We can see that the diameters vary by small smalls between iterations and we almost get patterns when all the ellipses overlap.</p>
+<p>Let’s try <code class="language-plaintext highlighter-rouge">noise()</code> in our grid example:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/HPub93Kv5"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/HPub93Kv5">
+    open example in new window
+  </a>
+</div>
+<h2 id="-1">🤔</h2>
+<p>Maybe if we use <code class="language-plaintext highlighter-rouge">y / 100</code> ? …</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/oib4-fdue"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/oib4-fdue">
+    open example in new window
+  </a>
+</div>
+<p>Or, <code class="language-plaintext highlighter-rouge">(x + y) / 100</code> ?</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Qjh-iKRFm"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Qjh-iKRFm">
+    open example in new window
+  </a>
+</div>
+<p>Even thought the last one looks kind of cool, all of these are predictable: either their rows, columns or diagonals are the same. Which makes sense since we’re calling <code class="language-plaintext highlighter-rouge">noise()</code> with repeating values coming from <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code> or <code class="language-plaintext highlighter-rouge">x + y</code>.</p>
+<p>Unlike the 2D case above where we used separate calls to <code class="language-plaintext highlighter-rouge">noise()</code> to get values for <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> locations, now we would like to get <em>one</em> value for diameter based on <em>two</em> values for location. Luckily, we can just call <code class="language-plaintext highlighter-rouge">noise()</code> with two parameters, like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">noise</span><span class="p">(</span><span class="nx">x</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">y</span> <span class="o">/</span> <span class="mi">100</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Now, the <code class="language-plaintext highlighter-rouge">noise()</code> function will take both sequences into account when it returns a value, so even if one of the values stays the same, the other changes and the resulting value will change:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/cLIOZhjLs"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/cLIOZhjLs">
+    open example in new window
+  </a>
+</div>
+<p>Pretty cool. We’ll soon see how to use this version of 2D and even 3D noise.</p>
+<h2 id="review">Review</h2>
+<p><code class="language-plaintext highlighter-rouge">random(min, max)</code>: gives us uniformly distributed values between <code class="language-plaintext highlighter-rouge">min</code> and <code class="language-plaintext highlighter-rouge">max</code>, where every value is equally likely to occur.</p>
+<p><code class="language-plaintext highlighter-rouge">randomGaussian(</code>\(\mu\)<code class="language-plaintext highlighter-rouge">, </code>\(\sigma\)<code class="language-plaintext highlighter-rouge">)</code>: gives us normally distributed values clustered around \(\mu\), and with most of the values between \(\mu - 3\sigma\) and \(\mu + 3\sigma\).</p>
+<p><code class="language-plaintext highlighter-rouge">noise(i, j)</code>: gives us sequences of values between \(0\) and \(1\), that don’t vary much between consecutive calls when <code class="language-plaintext highlighter-rouge">i</code> and <code class="language-plaintext highlighter-rouge">j</code> are sequences of gradually increasing (or decreasing) values.</p>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
+<script src="../../js/random-examples.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const rowEl = document.getElementsByClassName("canvas-row")[0];
+    const rowWidth = rowEl.offsetWidth;
+
+    const mRandom1D = new p5(random1d(rowWidth / 3), 'random-1d');
+    const mGauss1D = new p5(gauss1d(rowWidth / 3), 'randomGaussian-1d');
+    const mNoise1D = new p5(noise1d(rowWidth / 3), 'noise-1d');
+
+    const mRandom2D = new p5(random2d(rowWidth / 3), 'random-2d');
+    const mGauss2D = new p5(gauss2d(rowWidth / 3), 'randomGaussian-2d');
+    const mNoise2D = new p5(noise2d(rowWidth / 3), 'noise-2d');
+
+    const mRandomGrid = new p5(randomGrid(rowWidth / 3), 'random-grid');
+    const mGaussGrid = new p5(gaussGrid(rowWidth / 3), 'randomGaussian-grid');
+    const mNoiseGrid = new p5(noiseGrid(rowWidth / 3), 'noise-grid');
+  });
+</script>
+<div class="canvas-row">
+<div class="canvas-container" id="random-1d">
+<code class="language-plaintext highlighter-rouge">random()</code>
+</div>
+<div class="canvas-container" id="randomGaussian-1d">
+<code class="language-plaintext highlighter-rouge">randomGaussian()</code>
+</div>
+<div class="canvas-container" id="noise-1d">
+<code class="language-plaintext highlighter-rouge">noise()</code>
+</div>
+</div>
+<div class="canvas-row">
+<div class="canvas-container" id="random-2d">
+<code class="language-plaintext highlighter-rouge">random()</code>
+</div>
+<div class="canvas-container" id="randomGaussian-2d">
+<code class="language-plaintext highlighter-rouge">randomGaussian()</code>
+</div>
+<div class="canvas-container" id="noise-2d">
+<code class="language-plaintext highlighter-rouge">noise()</code>
+</div>
+</div>
+<div class="canvas-row">
+<div class="canvas-container" id="random-grid">
+<code class="language-plaintext highlighter-rouge">random()</code>
+</div>
+<div class="canvas-container" id="randomGaussian-grid">
+<code class="language-plaintext highlighter-rouge">randomGaussian()</code>
+</div>
+<div class="canvas-container" id="noise-grid">
+<code class="language-plaintext highlighter-rouge">noise()</code>
+</div>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../classes/index.html">Classes</a></li>
+<li><a href="../cycles/index.html">Cycles</a></li>
+<li><a href="../sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

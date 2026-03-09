@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Gradio Models</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Gradio Models</h1>
+<p>We can’t really talk about AI without talking about LLMs and diffusion models.</p>
+<p>One step up in complexity from the models <a href="../transformers/index.html">we just saw</a>, these generative models usually require more resources to run. It doesn’t mean that we can’t use them in our sketches, but we have to offload their processing and execution to computers with large amounts of memory, faster processors and usually some GPUs.</p>
+<p>We’ll do this by making <em>API</em> calls to servers or services that run these bigger models:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week06/gradio-server-00.jpg"/>
+</div>
+<p>Let’s take a look at a few examples.</p>
+<h2 id="hugging-face--gradio">Hugging Face / Gradio</h2>
+<p>Besides being the GitHub of open source models, Hugging Face also hosts models that we can interact with through code and APIs.</p>
+<p>This mostly happens through a library called <a href="https://www.gradio.app/"><code class="language-plaintext highlighter-rouge">Gradio</code></a>. This library was developed to facilitate the creation of simple web interfaces for complex models, but when deployed to Hugging Face, <code class="language-plaintext highlighter-rouge">Gradio</code> apps also expose API <em>endpoints</em> that allow us to run models remotely.</p>
+<p>We can start by looking <a href="https://huggingface.co/spaces">here</a> for different models that people have set up to run on the Hugging Face servers, and then figure out how to connect and interact with them from our sketches.</p>
+<p>Let’s revisit our image description example:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZuwaVgRID"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZuwaVgRID">
+    open example in new window
+  </a>
+</div>
+<p>In this example, not only did running the model on the browser freeze our sketch, the results were also not very accurate because it’s an older model.</p>
+<p>We’ll use the same structure for our new sketch, so we can reuse a good portion of the code from above:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/7Dp5UhgtS"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/7Dp5UhgtS">
+    open example in new window
+  </a>
+</div>
+<p>But this time let’s try the image description model hosted <a href="https://huggingface.co/spaces/aifeifei798/Image-To-Flux-Prompt">here</a>.</p>
+<p>The first thing we do is visit the model’s <a href="https://huggingface.co/spaces/aifeifei798/Image-To-Flux-Prompt">interface page</a> and scroll down to the bottom until we see the <em>Use via API</em> button. Clicking on that button and then selecting the <code class="language-plaintext highlighter-rouge">JavaScript</code> option, we get something like this:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week06/gradio-api-00.jpg"/>
+</div>
+<p>Again, we can’t import the <code class="language-plaintext highlighter-rouge">Gradio</code> library using the code they have there, but we can load it during <code class="language-plaintext highlighter-rouge">preload()</code> using:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">gUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js</span><span class="dl">"</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">module</span> <span class="o">=</span> <span class="k">await</span> <span class="k">import</span><span class="p">(</span><span class="nx">gUrl</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Then, we can follow the rest of the code for setting up a client:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">client</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">module</span><span class="p">.</span><span class="nx">Client</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="dl">"</span><span class="s2">aifeifei798/Image-To-Flux-Prompt</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Again, lots of <code class="language-plaintext highlighter-rouge">await</code> function calls… (see the <a href="../concurrency/index.html">concurrency tutorial</a> for a refresher).</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/5HjsmM_qP"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/5HjsmM_qP">
+    open example in new window
+  </a>
+</div>
+<p>We are all set to call inference on our image with:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">predict</span><span class="p">(</span><span class="dl">"</span><span class="s2">/feifeichat</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">image</span><span class="p">:</span> <span class="nx">exampleImage</span><span class="p">,</span> 
+<span class="p">});</span>
+</code></pre></div></div>
+<p>But !! the model expects an image <code class="language-plaintext highlighter-rouge">blob</code> (<em>binary large object</em>), not a <code class="language-plaintext highlighter-rouge">p5.js</code> image, nor an image <code class="language-plaintext highlighter-rouge">dataURL</code> like before.</p>
+<p>In order to turn our camera frame into a <code class="language-plaintext highlighter-rouge">blob</code> we can call the <code class="language-plaintext highlighter-rouge">toBlob()</code> method of our frame, but since this is an operation that can take a while, we have to do this asynchronously with a <em>callback</em> function:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mCamera</span><span class="p">.</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">toBlob</span><span class="p">(</span><span class="nx">callModel</span><span class="p">);</span>
+</code></pre></div></div>
+<p>(see the <a href="../concurrency/index.html">concurrency tutorial</a> for more info about <em>callback</em> functions)</p>
+<p>Where <code class="language-plaintext highlighter-rouge">callModel()</code> is the function that will be called once the image <code class="language-plaintext highlighter-rouge">blob</code> is ready:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">callModel</span><span class="p">(</span><span class="nx">imgBlob</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">predict</span><span class="p">(</span><span class="dl">"</span><span class="s2">/feifeichat</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">image</span><span class="p">:</span> <span class="nx">imgBlob</span><span class="p">,</span>
+  <span class="p">});</span>
+  <span class="nx">print</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The actual caption is inside <code class="language-plaintext highlighter-rouge">result.data[0]</code>. And we can just assign that to the <code class="language-plaintext highlighter-rouge">caption</code> variable to see it on the canvas:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/1JE1qkiWd"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/1JE1qkiWd">
+    open example in new window
+  </a>
+</div>
+<p>This model takes a bit longer to run, but it’s way more accurate and descriptive.</p>
+<h2 id="more-models">More Models!!</h2>
+<p>Since we have a good image description model for our camera, we can add an API call to another model to create an audio description of our camera frame.</p>
+<p>Let’s try the model hosted <a href="https://huggingface.co/spaces/mrfakename/MeloTTS">here</a>.</p>
+<p>If we go to the <em>Use via API</em> button, and then the <code class="language-plaintext highlighter-rouge">JavaScript</code> example, we will see how to use this model’s API:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Client</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="dl">"</span><span class="s2">mrfakename/MeloTTS</span><span class="dl">"</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">predict</span><span class="p">(</span><span class="dl">"</span><span class="s2">/synthesize</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">text</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Hello!!</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">speaker</span><span class="p">:</span> <span class="dl">"</span><span class="s2">EN-US</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">speed</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="na">language</span><span class="p">:</span> <span class="dl">"</span><span class="s2">EN</span><span class="dl">"</span><span class="p">,</span>
+<span class="p">});</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Easy enough.</p>
+<p>First, we’ll import the <code class="language-plaintext highlighter-rouge">Gradio</code> library exactly like we did before, but then, this time, we’ll create two separate clients for our models:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">gUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js</span><span class="dl">"</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">module</span> <span class="o">=</span> <span class="k">await</span> <span class="k">import</span><span class="p">(</span><span class="nx">gUrl</span><span class="p">);</span>
+<span class="nx">imgClient</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">module</span><span class="p">.</span><span class="nx">Client</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="dl">"</span><span class="s2">aifeifei798/Image-To-Flux-Prompt</span><span class="dl">"</span><span class="p">);</span>
+<span class="nx">ttsClient</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">module</span><span class="p">.</span><span class="nx">Client</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="dl">"</span><span class="s2">mrfakename/MeloTTS</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+<p>We’ll just call the text-to-speech model once we have our image description in <code class="language-plaintext highlighter-rouge">callImgModel()</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">imgResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">imgClient</span><span class="p">.</span><span class="nx">predict</span><span class="p">(</span><span class="dl">"</span><span class="s2">/feifeichat</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">image</span><span class="p">:</span> <span class="nx">imgBlob</span><span class="p">,</span>
+<span class="p">});</span>
+<span class="nx">caption</span> <span class="o">=</span> <span class="nx">imgResult</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+<span class="kd">let</span> <span class="nx">ttsResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">ttsClient</span><span class="p">.</span><span class="nx">predict</span><span class="p">(</span><span class="dl">"</span><span class="s2">/synthesize</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">text</span><span class="p">:</span> <span class="nx">caption</span><span class="p">,</span>
+  <span class="na">speaker</span><span class="p">:</span> <span class="dl">"</span><span class="s2">EN-US</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">speed</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="na">language</span><span class="p">:</span> <span class="dl">"</span><span class="s2">EN</span><span class="dl">"</span><span class="p">,</span>
+<span class="p">});</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">ttsResult</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/faeo3Hqs_"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/faeo3Hqs_">
+    open example in new window
+  </a>
+</div>
+<p>If we look at <code class="language-plaintext highlighter-rouge">ttsResult</code>, we’ll see that inside <code class="language-plaintext highlighter-rouge">ttsResult.data[0]</code> we get an url for an audio file:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week06/gradio-result-00.jpg"/>
+</div>
+<p>Let’s load this audio up into a player:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mPlayer</span> <span class="o">=</span> <span class="nx">loadSound</span><span class="p">(</span><span class="nx">ttsResult</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">url</span><span class="p">,</span> <span class="nx">playSound</span><span class="p">);</span>
+</code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">playSound</code> parameter is a <em>callback</em> function that will be called once the file is ready to play:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">playSound</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">mPlayer</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>And that’s it. We now have a real-time audio description tool:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/bVZR4sZSr"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/bVZR4sZSr">
+    open example in new window
+  </a>
+</div>
+<h2 id="an-image-generation-example">An Image Generation Example</h2>
+<p>Image generation models are quite resource intensive, so it’s rare to find a very complete model that we can run for free.</p>
+<p>There are some image generation models that run faster, but have less quality or variance in their output.</p>
+<p>One of these <em>Turbo</em> models is hosted on Hugging Face, <a href="https://huggingface.co/spaces/diffusers/unofficial-SDXL-Turbo-i2i-t2i">here</a>.</p>
+<p>If we look at the API documentation, we’ll see some familiar code:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">Client</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="dl">"</span><span class="s2">diffusers/unofficial-SDXL-Turbo-i2i-t2i</span><span class="dl">"</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">predict</span><span class="p">(</span><span class="dl">"</span><span class="s2">/predict</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span>
+	<span class="na">init_image</span><span class="p">:</span> <span class="nx">exampleImage</span><span class="p">,</span>
+  <span class="na">prompt</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Hello!!</span><span class="dl">"</span><span class="p">,</span>
+	<span class="na">strength</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="na">steps</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="na">seed</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">print</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Let’s add this to a sketch and see if we can force smiles into images we capture with the camera.</p>
+<p>We still have a <code class="language-plaintext highlighter-rouge">captureFrame()</code> function, that starts the process of turning our camera frame into a <code class="language-plaintext highlighter-rouge">blob</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">captureFrame</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">mFrame</span> <span class="o">=</span> <span class="nx">loadImage</span><span class="p">(</span><span class="nx">mCamera</span><span class="p">.</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">toDataURL</span><span class="p">());</span>
+  <span class="nx">mCamera</span><span class="p">.</span><span class="nx">canvas</span><span class="p">.</span><span class="nx">toBlob</span><span class="p">(</span><span class="nx">callImgModel</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>And then the <code class="language-plaintext highlighter-rouge">callImgModel()</code> function actually calls the model once the <code class="language-plaintext highlighter-rouge">blob</code> is ready:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">imgResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">imgClient</span><span class="p">.</span><span class="nx">predict</span><span class="p">(</span><span class="dl">"</span><span class="s2">/predict</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">init_image</span><span class="p">:</span> <span class="nx">imgBlob</span><span class="p">,</span>
+  <span class="na">prompt</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Make them smile</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">strength</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+  <span class="na">steps</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="na">seed</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">});</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">imgResult</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/-L2D1wbdn"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/-L2D1wbdn">
+    open example in new window
+  </a>
+</div>
+<p>Again, the part of the result we are interested in is in <code class="language-plaintext highlighter-rouge">imgResult.data[0].url</code>, so let’s just load that into our <code class="language-plaintext highlighter-rouge">mFrame</code> variable:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mFrame</span> <span class="o">=</span> <span class="nx">loadImage</span><span class="p">(</span><span class="nx">imgResult</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">url</span><span class="p">);</span>
+</code></pre></div></div>
+<p>And …</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/mcFK8sjbm"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/mcFK8sjbm">
+    open example in new window
+  </a>
+</div>
+<p>Results may vary. This model is not super smart, or controllable, but it does tend to make people in the image sort of smile, even if it distorts their face a little bit. That’s part of the tradeoff of these <em>Turbo</em> models:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week06/gradio-diffusion-01.jpg"/>
+</div>
+<p>Adapting some of the parameters might also help:</p>
+<p>The <code class="language-plaintext highlighter-rouge">strength</code> determines how much of the prompt the image model takes into account, and the <code class="language-plaintext highlighter-rouge">steps</code> determine how many passes the model uses to generate the final image.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">prompt</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Make the person smile really big</span><span class="dl">"</span><span class="p">,</span>
+<span class="nx">strength</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+<span class="nx">steps</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+</code></pre></div></div>
+<p>or</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">prompt</span><span class="p">:</span> <span class="dl">"</span><span class="s2">person smiling really happy</span><span class="dl">"</span><span class="p">,</span>
+<span class="nx">strength</span><span class="p">:</span> <span class="mf">0.35</span><span class="p">,</span>
+<span class="nx">steps</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</code></pre></div></div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../concurrency/index.html">Concurrency</a></li>
+<li><a href="../ml5/index.html">ml5</a></li>
+<li><a href="../teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../transformers/index.html">Transformers.js</a></li>
+<li><a href="index.html">Gradio Models</a></li>
+<li><a href="../gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

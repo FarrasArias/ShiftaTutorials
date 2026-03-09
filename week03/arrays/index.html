@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Arrays</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Arrays</h1>
+<h2 id="review">Review</h2>
+<p>Before we start looking at <em>arrays</em>, the main topic of this page, let’s review a couple of concepts that will make it easier for us to visualize what they are and how to use them.</p>
+<p>We saw the p5.js variables <a href="https://p5js.org/reference/p5/mouseX"><code class="language-plaintext highlighter-rouge">mouseX</code></a> and <a href="https://p5js.org/reference/p5/mouseY"><code class="language-plaintext highlighter-rouge">mouseY</code></a> when we looked at <a href="../../week01/variables/index.html">variables</a>, <a href="../../week02/conditionals/index.html">conditionals</a> and <a href="../../week02/functions/index.html">functions</a>.</p>
+<p>These variables always hold the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> position of our mouse during the execution of our sketch, so if we use them inside our <code class="language-plaintext highlighter-rouge">draw()</code> function to draw an ellipse, it will look like the ellipse is following our mouse.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/04ZAOiwGT"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/04ZAOiwGT">
+    open example in new window
+  </a>
+</div>
+<p>Great.</p>
+<p>When we looked at <a href="../../week02/conditionals/index.html">conditionals</a> and <a href="../../week02/functions/index.html">functions</a> we also saw code that could detect overlap between our mouse and different shapes.</p>
+<p>Like this code that changes the color of rectangles when the mouse hovers over them:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/IOAIaoJ2b"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/IOAIaoJ2b">
+    open example in new window
+  </a>
+</div>
+<p>Or this code that changes the shapes that it draws when it detects collision between our mouse ellipse and an <em>obstacle</em>:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/2A9QJrOcR"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/2A9QJrOcR">
+    open example in new window
+  </a>
+</div>
+<p>Also great.</p>
+<p>But, right now, we are not so interested in the logic for detecting collision or overlap. Instead, we want to look at how we can rewrite the code that defines the <em>obstacles</em> in those sketches in a way that will make it easier to add new obstacles and change the ones that are already there.</p>
+<h2 id="lists">Lists</h2>
+<p>Let’s take a look at a simplified version of one of those sketches, that only draws ellipses. Here we want \(5\) obstacle ellipses, and since later we’ll want to use their positions to detect collision, we’ll use \(5\) variables to hold their <code class="language-plaintext highlighter-rouge">x</code> positions and another \(5\) variables for their <code class="language-plaintext highlighter-rouge">y</code> positions.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/LAIYvwNxQ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/LAIYvwNxQ">
+    open example in new window
+  </a>
+</div>
+<p>This is all fine and works well… for \(5\) ellipses. What if this is the initial prototype of a game we are making and eventually we will want to have \(100\) obstacles ?</p>
+<p>Writing <code class="language-plaintext highlighter-rouge">x0</code>, <code class="language-plaintext highlighter-rouge">x1</code>, <code class="language-plaintext highlighter-rouge">x2</code>, …, <code class="language-plaintext highlighter-rouge">x99</code> to define all of the values just isn’t very practical. An then, calling <code class="language-plaintext highlighter-rouge">rect(x0, y0, d)</code>, <code class="language-plaintext highlighter-rouge">rect(x1, y1, d)</code>, <code class="language-plaintext highlighter-rouge">rect(x2, y2, d)</code>, …, <code class="language-plaintext highlighter-rouge">rect(x99, y99, d)</code> inside <code class="language-plaintext highlighter-rouge">draw()</code> is just as much work.</p>
+<p>Luckily, JavaScript, like most programming languages, has a builtin data-structure called <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"><code class="language-plaintext highlighter-rouge">Array</code></a> that can help us organize data like this.</p>
+<p>Just like we can declare variables to hold numbers:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">z</span> <span class="o">=</span> <span class="mi">90</span><span class="p">;</span>
+</code></pre></div></div>
+<p>We can declare variables to hold arrays:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="kd">let</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">[];</span>
+</code></pre></div></div>
+<p>But, unlike a regular variable that holds just one value, arrays hold sequences of values.</p>
+<p>The syntax with the <code class="language-plaintext highlighter-rouge">[</code> and <code class="language-plaintext highlighter-rouge">]</code> square brackets above is kind of funny looking, but it’s telling the computer that we want the variables <code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">b</code> to be arrays, and we want these arrays to start empty.</p>
+<p>If instead we wanted to declare arrays already with values inside, this is the syntax:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">ints</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">];</span>
+<span class="kd">let</span> <span class="nx">evens</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">];</span>
+<span class="kd">let</span> <span class="nx">odds</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">];</span>
+</code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">ints</code> variable holds an array, and that array has \(5\) elements, the first \(5\) non-negative integers: \(0\), \(1\), \(2\), \(3\) and \(4\).</p>
+<p>The <code class="language-plaintext highlighter-rouge">evens</code> and <code class="language-plaintext highlighter-rouge">odds</code> arrays also hold \(5\) elements each, the first \(5\) non-negative even and odd whole numbers, respectively.</p>
+<p>Once we have declared and initialized an array, we can access its members using square brackets <code class="language-plaintext highlighter-rouge">[</code> and <code class="language-plaintext highlighter-rouge">]</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">evens</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// first value of the evens array: 0</span>
+<span class="nx">evens</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="c1">// second value of the evens array: 2</span>
+<span class="nx">evens</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span> <span class="c1">// third value of the evens array: 4</span>
+<span class="c1">// ... etc</span>
+</code></pre></div></div>
+<p>Let’s see how we can use this in our sketch with the obstacles.</p>
+<p>Instead of <code class="language-plaintext highlighter-rouge">x0</code>, <code class="language-plaintext highlighter-rouge">x1</code>, <code class="language-plaintext highlighter-rouge">y0</code>, <code class="language-plaintext highlighter-rouge">y1</code>, etc, we’ll declare arrays to hold the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> positions of our obstacles, and use the bracket notation to access individual elements when it’s time to draw them.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/2TzVXz8uN"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/2TzVXz8uN">
+    open example in new window
+  </a>
+</div>
+<h2 id="iterators">Iterators</h2>
+<p>At first this doesn’t seem like an advantage at all, because we just changed <code class="language-plaintext highlighter-rouge">x0</code>, <code class="language-plaintext highlighter-rouge">x1</code>, etc for <code class="language-plaintext highlighter-rouge">x[0]</code>, <code class="language-plaintext highlighter-rouge">x[1]</code>, etc, which actually requires even more typing.</p>
+<p>The full advantage of using arrays comes from the fact that we can iterate through them using <code class="language-plaintext highlighter-rouge">for()</code> loops and avoid writing repetitive code like the one above.</p>
+<p>For example, if we want to print all the values in an array called <code class="language-plaintext highlighter-rouge">x</code>, we can use code like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">print</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This is new and can look intimidating at first, so let’s go over it in detail.</p>
+<p>First, we create a <code class="language-plaintext highlighter-rouge">for()</code> loop that counts from \(0\) all the way to <code class="language-plaintext highlighter-rouge">x.length</code> in increments of \(1\). This is just like any <code class="language-plaintext highlighter-rouge">for()</code> loop we’ve seen <a href="../../week02/patterns/index.html">here</a> or <a href="../../week02/counters/index.html">here</a>. The one difference is that the loop’s end condition (the <code class="language-plaintext highlighter-rouge">i &lt; x.length</code> expression) doesn’t use a fixed value, nor one of the variables that have to do with the canvas dimensions, like <code class="language-plaintext highlighter-rouge">width</code> and <code class="language-plaintext highlighter-rouge">height</code>.</p>
+<p>Instead, our loop is using a variable that belongs to our array <code class="language-plaintext highlighter-rouge">x</code> and tells us how many elements are in the array. So, if our array has \(5\) elements in it, the loop will execute \(5\) times. If our array has \(50\) elements in it, it will execute \(50\) times. An advantage of using the <code class="language-plaintext highlighter-rouge">x.length</code> variable instead of a fixed value for the end-condition expression, like <code class="language-plaintext highlighter-rouge">i &lt; 5</code>, is that this way we can add or remove elements to our array without having to change this code.</p>
+<p>In the specific example above, the only thing the loop body does is <code class="language-plaintext highlighter-rouge">print(x[i])</code>, which prints the value of the element in position <code class="language-plaintext highlighter-rouge">i</code> of the array. Since <code class="language-plaintext highlighter-rouge">i</code> is our loop variable that counts from \(0\) to \(5\), the result of the loop is the same as:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">print</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span>
+</code></pre></div></div>
+<p>Except we didn’t have to write all of those lines and risk a spelling mistake.</p>
+<p>Let’s use this in our sketch with the obstacles to see how we can avoid writing repetitive code.</p>
+<p>After we’ve declared our arrays with <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> positions, we’ll iterate through them in order to draw the ellipses.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/pycWGw-Rw"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/pycWGw-Rw">
+    open example in new window
+  </a>
+</div>
+<p>Same result. Way less code.</p>
+<p>And, more importantly, more elegant and maintainable code.</p>
+<h2 id="extending">Extending</h2>
+<p>Now that we are drawing our elements by iterating over our array using a <code class="language-plaintext highlighter-rouge">for()</code> loop, we can easily add more obstacles to our sketch.</p>
+<p>All we have to do is add elements to the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> arrays, but the rest of the code in <code class="language-plaintext highlighter-rouge">draw()</code> stays exactly the same.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Af1aWsAuo"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Af1aWsAuo">
+    open example in new window
+  </a>
+</div>
+<p>We can easily put back the overlap detection function and change the logic for selecting the colors of the ellipses to work with our arrays.</p>
+<p>We’ll use a simpler version of the <code class="language-plaintext highlighter-rouge">ellipseOverlap()</code> function:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">ellipseOverlap</span><span class="p">(</span><span class="nx">x0</span><span class="p">,</span> <span class="nx">y0</span><span class="p">,</span> <span class="nx">diam0</span><span class="p">,</span> <span class="nx">x1</span><span class="p">,</span> <span class="nx">y1</span><span class="p">,</span> <span class="nx">diam1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">sqrt</span><span class="p">((</span><span class="nx">x1</span> <span class="o">-</span> <span class="nx">x0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="nx">y1</span> <span class="o">-</span> <span class="nx">y0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">d</span> <span class="o">&lt;</span> <span class="nx">diam0</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="nx">diam1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This function implements this logic from the <a href="../../week02/functions/index.html">functions</a> tutorial:</p>
+<div class="scaled-images">
+<img src="../../assets/images/week02/overlap-03.jpg"/>
+</div>
+<p>It uses euclidean distances to determine if two ellipses are closer than the sum of their radii, and returns <code class="language-plaintext highlighter-rouge">true</code> if they are overlapping and <code class="language-plaintext highlighter-rouge">false</code> otherwise. It doesn’t draw the concentric circles like the original one because we’ll see how to do that in a more elegant manner when we look at <a href="../classes/index.html">classes</a>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/S--4o9Nzw"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/S--4o9Nzw">
+    open example in new window
+  </a>
+</div>
+<h2 id="out-of-control">Out of Control</h2>
+<p>And, if we get bored of writing the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates by hand, we can use what we learned about <a href="../../week02/random/index.html"><code class="language-plaintext highlighter-rouge">random()</code></a> to create some random positions for our obstacles inside <code class="language-plaintext highlighter-rouge">setup()</code>.</p>
+<p>We can start with empty <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> arrays:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="p">[];</span>
+</code></pre></div></div>
+<p>Then, we can use a <code class="language-plaintext highlighter-rouge">for()</code> loop to count to \(5\), and <code class="language-plaintext highlighter-rouge">random()</code> to get \(5\) random coordinate pairs. Once we have coordinates, we can add them to the end of the arrays using the special array function <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push"><code class="language-plaintext highlighter-rouge">push()</code></a>.</p>
+<p>For example, this is how we add the numbers \(10\), \(12\) and \(14\) to the end of an array called <code class="language-plaintext highlighter-rouge">evens</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">evens</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="nx">evens</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+<span class="nx">evens</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="mi">14</span><span class="p">);</span>
+</code></pre></div></div>
+<p>And this is how we add a random coordinate between \(0\) and <code class="language-plaintext highlighter-rouge">width</code> to the end of our <code class="language-plaintext highlighter-rouge">x</code> array:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">mx</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">width</span><span class="p">);</span>
+<span class="nx">x</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">mx</span><span class="p">);</span>
+</code></pre></div></div>
+<p>We can use something like this for the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates in our sketch. And besides changing how the ellipse coordinates get initialized, we didn’t have to change anything in our sketch. The <code class="language-plaintext highlighter-rouge">draw()</code> function is exactly the same as before.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/w1xoYIYbz"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/w1xoYIYbz">
+    open example in new window
+  </a>
+</div>
+<p>We’ll see how to make it so the obstacles don’t overlap when we talk about <a href="../classes/index.html">classes</a>, but for now, arrays, FTW!</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="index.html">Arrays</a></li>
+<li><a href="../strings/index.html">Strings</a></li>
+<li><a href="../objects/index.html">JavaScript Objects</a></li>
+<li><a href="../animations/index.html">Animations</a></li>
+<li><a href="../interactions/index.html">Interactions</a></li>
+<li><a href="../maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Sine &amp; Cosine</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Sine &amp; Cosine</h1>
+<p>In the previous <a href="../cycles/index.html">section</a> we saw how to define a cycle in terms of \(amplitude\), \(period\) and \(\mathit{offset}\):</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Qw8RJhauV"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Qw8RJhauV">
+    open example in new window
+  </a>
+</div>
+<p>A little review:</p>
+<p>\(Amplitude\): how far the circle moves before going back to the beginning.</p>
+<p>\(Period\): how long it takes for one cycle to complete and start again (can be in seconds, but number of frames is more useful when using <code class="language-plaintext highlighter-rouge">frameCount</code>).</p>
+<p>\(\mathit{Offset}\): starting position of the circle.</p>
+<p>Other than the modulus operator and the triangle wave, another easy way of generating cycles is by using the <a href="https://en.wikipedia.org/wiki/Sine_and_cosine">sine and cosine</a> trigonometric functions. This might not be immediately clear from the wikipedia definition: <em>In the context of a right triangle: for a given angle, its sine is the ratio of the length of the side that is opposite that angle to the length of its hypotenuse; and the cosine is the ratio of the length of the adjacent leg to that of the hypotenuse</em>.</p>
+<p>But, what’s important to us here is to remember that both the sine and cosine functions repeat every 360º or \(2\pi\) radians.</p>
+<p>In the case of sine, as the angle \(\theta\) grows from \(0\) to \(\frac{\pi}{2}\), \(sin(\theta)\) grows from \(0\) to \(1\). As \(\theta\) grows from \(\frac{\pi}{2}\) to \(\pi\), \(sin(\theta)\) decreases from \(1\) to \(0\). As \(\theta\) grows from \(\pi\) to \(\frac{3\pi}{2}\), \(sin(\theta)\) goes from \(0\) to \(-1\), and finally as \(\theta\) grows from \(\frac{3\pi}{2}\) to \(2\pi\), \(sin(\theta)\) increases from \(-1\) to \(0\). After that, as \(\theta\) keeps growing, to \(3\pi\), \(4\pi\), \(5\pi\), etc, the values of \(sin(\theta)\) will keep repeating and always be between \([-1 , 1]\). In other words: $$sin(\theta + 2\pi) = sin(\theta)$$</p>
+<p>Visually:</p>
+<div class="scaled-images w75">
+<img src="../../assets/images/week05/sine-00.jpg"/>
+</div>
+<p>If we look for equations that relate the sine and cosine functions to cyclic or <a href="https://phys.libretexts.org/Bookshelves/Classical_Mechanics/Classical_Mechanics_(Dourmashkin)/23%3A_Simple_Harmonic_Motion/23.01%3A_Introduction_to_Periodic_Motion#Simple_Harmonic_Motion:_Quantitative">harmonic</a> motion, we might find something like this:</p>
+
+\[y(t) = A \times sin\left(\frac{2\pi}{P}\times t\right)\]
+
+<p>where \(A\) is the amplitude and \(P\) is the period.</p>
+<p>In p5.js this could be rewritten as:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">A</span> <span class="o">*</span> <span class="nx">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nx">PI</span> <span class="o">/</span> <span class="nx">periodFrames</span> <span class="o">*</span> <span class="nx">frameCount</span><span class="p">);</span>
+</code></pre></div></div>
+<p>where \(A\) is the amplitude, \(P\) is the period in number of frames and <code class="language-plaintext highlighter-rouge">frameCount</code> is the variable that keeps growing indefinitely:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/nN5UJPZkB"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/nN5UJPZkB">
+    open example in new window
+  </a>
+</div>
+<p>Hmmm…. this kind of works. Since the range of <code class="language-plaintext highlighter-rouge">sin()</code> is \([-1, 1]\), our circle is oscillating between \([-amplitude, amplitude]\), which isn’t really what we want. One easy way to fix this is to add 1 to the <code class="language-plaintext highlighter-rouge">sin()</code> function so we have a range that goes between \([0, 2]\), then divide that by \(2\) to bring the range down to \([0, 1]\) and, finally, multiply by the amplitude:</p>
+
+\[x = \frac{A}{2}\times \left(sin\left(\frac{2\pi}{P}\times frameCount\right) + 1\right)\]
+
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/92DpmSO0y"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/92DpmSO0y">
+    open example in new window
+  </a>
+</div>
+<p>Much better. And this same equation works for other parameters, like the circle radius. We just have to define an \(amplitude\), \(period\) and \(\mathit{offset}\) that makes sense for radius values:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/rlVJhxgnD"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/rlVJhxgnD">
+    open example in new window
+  </a>
+</div>
+<p>We can take some time to play with the parameters here and build some intuition about how they affect the motion of the circle. Try changing <code class="language-plaintext highlighter-rouge">xPeriodSec</code>, <code class="language-plaintext highlighter-rouge">rPeriodSec</code>, <code class="language-plaintext highlighter-rouge">rAmplitude</code> and <code class="language-plaintext highlighter-rouge">rOffset</code>.</p>
+<p>If we want, we can easily change the variable names and equations to make the circle oscillate vertically:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/TtPK-g8nM"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/TtPK-g8nM">
+    open example in new window
+  </a>
+</div>
+<p>Here \(amplitude\) is the whole screen <code class="language-plaintext highlighter-rouge">height</code> and there’s no \(\mathit{offset}\), so it starts at \(0\).</p>
+<p>Now, we can combine <em>harmonic motion</em> in the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> direction to get <em>elliptic cycles</em>:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/kSxgebmnj"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/kSxgebmnj">
+    open example in new window
+  </a>
+</div>
+<p>We just have to make sure we use \(sin()\) for one direction and \(cos()\) for the other, or else we’ll just get motion in a straight diagonal line.</p>
+<p>If we make the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> functions have different periods, we will get a nice <a href="https://en.wikipedia.org/wiki/Lissajous_curve">Lissajous</a> movement:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/9P_BKTs_5"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/9P_BKTs_5">
+    open example in new window
+  </a>
+</div>
+<p>Putting it all together, and using \(sin()\) and \(cos()\) for the <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code> and <code class="language-plaintext highlighter-rouge">radius</code> parameters ends up giving our sketch a 3D effect:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/qN37xEOH9"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/qN37xEOH9">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../classes/index.html">Classes</a></li>
+<li><a href="../cycles/index.html">Cycles</a></li>
+<li><a href="index.html">Sine &amp; Cosine</a></li>
+<li><a href="../vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

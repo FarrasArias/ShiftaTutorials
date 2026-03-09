@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>The Browser and JavaScript</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>The Browser and JavaScript</h1>
+<h2 id="the-internet">The Internet</h2>
+<p>Since JavaScript was originally designed to run in browsers over the internet, it helps to have a working understanding of how the internet actually functions.</p>
+<div class="scaled-images">
+<img src="../../assets/images/week01/internet-00.jpg"/>
+</div>
+<p>Strip away the metaphors, there is no "cloud," no matrix, and what remains is simpler: the internet is other people’s computers. Specifically, it is a global network of powerful, purpose-built machines called <strong>servers</strong>: machines designed to store files and to continuously receive requests and send responses at scale. These servers live in large, climate-controlled facilities called data centers, typically on land. Some of these facilities are surprisingly exotic, Microsoft, for instance, ran an experimental underwater data center off the coast of Scotland as part of <em>Project Natick</em>, testing whether ocean cooling could improve energy efficiency. And connecting all these data centers across continents are thousands of kilometers of <a href="https://en.wikipedia.org/wiki/Submarine_communications_cable">undersea fiber-optic cables</a> running along the ocean floor.</p>
+<div class="scaled-images">
+<img src="../../assets/images/week01/internet-01.jpg"/>
+</div>
+<p>When you type a URL into your browser, your computer sends a <strong>request</strong> over this network to the appropriate server, asking for a specific file. A URL like <code class="language-plaintext highlighter-rouge">p5js.org</code> is, in practice, a request for a file called <code class="language-plaintext highlighter-rouge">index.html</code> stored on that server. If the server recognizes and authorizes the request, it responds by sending that file back to your computer.</p>
+<div class="scaled-images">
+<img src="../../assets/images/week01/request-00.jpg"/>
+</div>
+<h2 id="the-browser">The Browser</h2>
+<p>Your <strong>web browser</strong>, Chrome, Firefox, Safari, is, at its core, an interpreter of code. When it receives an <code class="language-plaintext highlighter-rouge">html</code> file from a server, it reads that file and uses its contents to construct and display a page:</p>
+<div class="scaled-images">
+<img src="../../assets/images/week01/request-01.jpg"/>
+</div>
+<p>The <code class="language-plaintext highlighter-rouge">html</code> code might look something like this:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>My Homepage<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"style.css"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"sketch.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    Page Content
+    <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"image.gif"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+<p>HTML (HyperText Markup Language) is the backbone of every webpage. It defines the <em>content</em> and <em>structure</em> of a page: headings, paragraphs, images, links, and how they are organized. To see what a webpage looks like with only HTML and no styling at all, <a href="https://info.cern.ch/">the world’s first website</a> is still live, exactly as it appeared in 1991.</p>
+<p>HTML files frequently reference additional files. When the browser encounters a reference to an image, a stylesheet, or a script, it makes additional requests to fetch those files too.</p>
+<div class="scaled-images">
+<img src="../../assets/images/week01/request-02.jpg"/>
+</div>
+<div class="scaled-images">
+<img src="../../assets/images/week01/request-03.jpg"/>
+</div>
+<p><code class="language-plaintext highlighter-rouge">css</code> files (Cascading Style Sheets) define the <em>visual presentation</em> of a page: fonts, colors, spacing, layout. They are entirely separate from the content, the same HTML can look completely different depending on which CSS is applied. A compelling demonstration of this is the <a href="https://www.csszengarden.com/">CSS Zen Garden</a>: a single HTML file, styled with dozens of completely different stylesheets, each producing a radically different visual result.</p>
+<div class="scaled-images">
+<img src="../../assets/images/week01/request-04.jpg"/>
+</div>
+<div class="scaled-images">
+<img src="../../assets/images/week01/request-05.jpg"/>
+</div>
+<p>If a webpage were an apartment, the <code class="language-plaintext highlighter-rouge">html</code> file defines where the walls, doors and windows go, while the <code class="language-plaintext highlighter-rouge">css</code> file specifies their materials and colors. JavaScript, then, specifies what happens when different light switches are flipped.</p>
+<p>JavaScript files describe how the browser should <em>behave</em> in response to user interaction: what happens when a button is clicked, how a form should be validated, how content should update dynamically without reloading the page. This is the layer that transformed the web from a collection of static digital documents into the interactive, application-like environment we use today.</p>
+<h2 id="javascript">JavaScript</h2>
+<p>In the early days of the web, before JavaScript was a fully developed language, websites were largely <em>static</em>. Once the <code class="language-plaintext highlighter-rouge">html</code> and <code class="language-plaintext highlighter-rouge">css</code> files were downloaded and rendered, the browser’s job was done, the digital equivalent of a printed page. JavaScript changed this by enabling content and behavior to change dynamically in response to user actions.</p>
+<p>Once a JavaScript file (a <code class="language-plaintext highlighter-rouge">.js</code> file) is downloaded, the browser starts a parallel process to read and <em>interpret</em> it. This is handled by the browser’s JavaScript engine, an internal component that goes through the code line by line and executes its instructions. This is what it means for JavaScript to be an <em>interpreted</em> language: rather than running directly on hardware, a JavaScript program requires another program (the engine) to run it.</p>
+<div class="scaled-images">
+<img src="../../assets/images/week01/JavaScript.jpg"/>
+</div>
+<p>Today, JavaScript is a robust, general-purpose language capable of running outside the browser as well, through environments like <a href="https://nodejs.org/">Node.js</a>, though it always requires an interpreter. It supports a wide variety of programming styles and is extensively extended by <em>libraries</em> (reusable collections of pre-written code) and <em>frameworks</em> (libraries that also impose a structure and methodology on how programs are organized).</p>
+<h2 id="p5js">p5.js</h2>
+<p><a href="https://p5js.org/">p5.js</a> is a JavaScript library focused on creative coding. It extends the core language with tools for drawing shapes, working with color, handling animation, and responding to input, all directly inside a browser window.</p>
+<p>Importantly, when working with p5.js in this course, you do not need a web server or an active internet connection. A browser can interpret JavaScript files stored locally on your own computer just as readily as files downloaded from a remote server. This means you can write code, open the resulting files in your browser, and see the output immediately, no deployment required. That said, once you have something worth sharing, a p5.js sketch can absolutely be hosted on a server and made accessible to anyone with a browser. That is the full picture, but not something we need to worry about right now.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../programming/index.html">Programming Computers</a></li>
+<li><a href="index.html">The Browser and JavaScript</a></li>
+<li><a href="../p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../variables/index.html">Variables</a></li>
+<li><a href="../transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

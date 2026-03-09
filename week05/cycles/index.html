@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Cycles</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Cycles</h1>
+<p>We’ve seen how to loop through elements and repeat code execution using <code class="language-plaintext highlighter-rouge">for()</code> loops. That structure is good for when we have repetitions with a well-defined beginning and an end, but sometimes we might want to repeat some computation or action for an indefinite amount of time with a certain rhythm or frequency. So… cycles.</p>
+<p>One of the simplest ways to create a cycle is to think of a way to periodically reset a variable that just grows and grows. Think of the way an analog clock works: time just keeps going forward and growing, but the longer arm of the clock comes back to its beginning position every \(60\) minutes, and the shorter arm resets every \(12\) hours:</p>
+<div class="scaled-images left w33">
+<img src="../../assets/images/week05/clock.jpg"/>
+</div>
+<p>Before we create any cycles, let’s just visualize a variable that keeps growing and growing in p5.js: <a href="https://p5js.org/reference/p5/frameCount"><code class="language-plaintext highlighter-rouge">frameCount</code></a>. This variable keeps track of how many times the <code class="language-plaintext highlighter-rouge">draw()</code> function has executed during the execution of our program.</p>
+<p>In our sketch we are using it to set the horizontal position of the circle, but since <code class="language-plaintext highlighter-rouge">frameCount</code> grows unbounded, the <code class="language-plaintext highlighter-rouge">x</code> position will also keep growing and eventually the circle leaves the screen.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/06bX4FQ5h"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/06bX4FQ5h">
+    open example in new window
+  </a>
+</div>
+<p>Now, let’s turn this variable that grows and grows and grows into a cyclic variable that repeats with a certain frequency.</p>
+<p>We just saw how to do this using the <a href="../../week03/maths/index.html">modulo operator</a> (<code class="language-plaintext highlighter-rouge">%</code>), but let’s review.</p>
+<p>Since we want to create a sequence that repeats after <code class="language-plaintext highlighter-rouge">width</code> elements, like: \([0,1,2,...,width - 2,width - 1, 0,1,2,...,width - 2,width-1, 0,1,...]\), we can just use the remainder of the natural numbers when they are divided by <code class="language-plaintext highlighter-rouge">width</code>. And in our case, using p5.js, the <a href="https://p5js.org/reference/p5/frameCount"><code class="language-plaintext highlighter-rouge">frameCount</code></a> variable gives us a sequence of the natural numbers.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/IWnsMnLdZ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/IWnsMnLdZ">
+    open example in new window
+  </a>
+</div>
+<p>In this example, the <code class="language-plaintext highlighter-rouge">width</code> number is acting as the <em>amplitude</em> of our cycle (how far the circle goes before it repeats), and there’s no <em>offset</em> to its starting position, but we could add one:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/pPNtbCHT8"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/pPNtbCHT8">
+    open example in new window
+  </a>
+</div>
+<p>Now, this circle moves a distance of \(\frac{width}{2}\) pixels, starting at \(\frac{width}{4}\), so the amplitude of this cycle is \(\frac{width}{2}\) and its offset is \(\frac{width}{4}\).</p>
+<p>We can always make it move faster by multiplying the <code class="language-plaintext highlighter-rouge">frameCount</code> variable by a constant, so that instead of growing by \(1\) it grows by \(2\) or by \(3\), etc.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/PN1Ka5QAq"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/PN1Ka5QAq">
+    open example in new window
+  </a>
+</div>
+<h2 id="period-and-amplitude">Period and Amplitude</h2>
+<p>This is good, but sometimes it’s useful to control the frequency of a repeating action using actual time units, like: <em>seconds</em>, <em>milliseconds</em> or <em>minutes</em>. And in our code, even though we can control how often the action repeats, it’s not clear how to change it if we want to, for example, make the action repeat every \(1\) second or \(2\) seconds or \(15\) seconds.</p>
+<p>In order to do that in this case, we need to keep track of how often our frame is updating in terms of seconds, and more generally, we need some way to define the period of our repetition in terms of seconds.</p>
+<p>Let’s start by creating a variable called <code class="language-plaintext highlighter-rouge">periodSec</code> that keeps track of how often we want to repeat our action (in <em>seconds</em>), and since we are updating our sketch every frame, let’s calculate how often we repeat our action in terms of frames, using our <code class="language-plaintext highlighter-rouge">frameRate</code>:</p>
+
+\[periodFrames = periodSeconds \times frameRate\]
+
+<p><code class="language-plaintext highlighter-rouge">period</code> is the number of frames our action will last before it repeats. <code class="language-plaintext highlighter-rouge">frameRate</code> can be obtained in p5.js using the <a href="https://p5js.org/reference/p5/getTargetFrameRate"><code class="language-plaintext highlighter-rouge">getTargetFrameRate()</code></a> function.</p>
+<p>Now, we can think about the speed of our circle in units of \(\frac{pixels}{frames}\) as:</p>
+
+\[speed = \frac{amplitude}{periodFrames}\]
+
+<p>And its location:</p>
+
+\[x = frameCount \times speed\]
+
+<p>Putting that in the code with the modulo and the offset, we get:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Qw8RJhauV"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Qw8RJhauV">
+    open example in new window
+  </a>
+</div>
+<h2 id="triangles-and-other-functions">Triangles and Other Functions</h2>
+<p>Now, the reason why it’s advantageous to express our cycles in terms of amplitude, period and offset is because we can easily find other equations for repetitive motion that are expressed in those terms.</p>
+<p>Like this equation for a <a href="https://en.wikipedia.org/wiki/Triangle_wave#Definition">triangle wave</a> from wikipedia that defines a triangle wave of period \(p\) that spans the range \([0, 1]\) as:</p>
+
+\[x(t) = 2 \left\lvert\frac{t}{p} - \left \lfloor \frac{t}{p} + \frac{1}{2} \right\rfloor\right\rvert\]
+
+<p>The variable \(t\) is the one that keeps growing, which in our case is <code class="language-plaintext highlighter-rouge">frameCount</code>.</p>
+<p>Now, we can easily translate that into p5js:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">x</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">amplitude</span> <span class="o">*</span> <span class="nx">abs</span><span class="p">(</span><span class="nx">frameCount</span> <span class="o">/</span> <span class="nx">periodFrames</span> <span class="o">-</span> <span class="nx">floor</span><span class="p">(</span><span class="nx">frameCount</span> <span class="o">/</span> <span class="nx">periodFrames</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">));</span>
+</code></pre></div></div>
+<p>We have to multiply by <code class="language-plaintext highlighter-rouge">amplitude</code> to turn the range \([0, 1]\) in the original equation into the range \([0, amplitude]\).</p>
+<p>But that is the only change!</p>
+<p>Besides that we just copied the equation from wikipedia and it works:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/vLW_lAv3P"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/vLW_lAv3P">
+    open example in new window
+  </a>
+</div>
+<p>This works for any periodic functions that is expressed in terms of \(amplitude\), \(period\) and \(t\). We can easily turn them into p5.js code.</p>
+<p>This equation, for example:</p>
+<div class="scaled-images">
+<img src="../../assets/images/week05/cycles-00.jpg"/>
+</div>
+<p>We just have to remember that \(t\) is our <code class="language-plaintext highlighter-rouge">frameCount</code> and \(mod()\) is the <code class="language-plaintext highlighter-rouge">%</code> operator, and this becomes:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">x</span> <span class="o">=</span> <span class="nx">amplitude</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="nx">frameCount</span> <span class="o">%</span> <span class="nx">periodFrames</span><span class="p">)</span> <span class="o">/</span> <span class="nx">periodFrames</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">;</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/epm33qbdE"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/epm33qbdE">
+    open example in new window
+  </a>
+</div>
+<p>And this:</p>
+<div class="scaled-images">
+<img src="../../assets/images/week05/cycles-01.jpg"/>
+</div>
+<p>becomes:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">x</span> <span class="o">=</span> <span class="nx">amplitude</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="nx">frameCount</span> <span class="o">%</span> <span class="nx">periodFrames</span><span class="p">)</span> <span class="o">/</span> <span class="nx">periodFrames</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span><span class="p">;</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/2F1O5mE0h"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/2F1O5mE0h">
+    open example in new window
+  </a>
+</div>
+<p>Next, we’ll take a look at some periodic functions from trigonometry. They’re so common and useful that they get their own <a href="../sincos/index.html">page</a>.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../classes/index.html">Classes</a></li>
+<li><a href="index.html">Cycles</a></li>
+<li><a href="../sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

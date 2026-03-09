@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Loops as Patterns</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Loops as Patterns</h1>
+<h2 id="on-repeat">On Repeat</h2>
+<p>It’s very common in programming to want to repeat calculations on different data/inputs. For example, when processing images or sound, we’ll often want to rerun the same code on different pixels/samples. Creating visual or sound patterns also involves repeating some computation over and over, with slight modifications.</p>
+<p>There are many ways to get our program to rerun portions of our code, like the <code class="language-plaintext highlighter-rouge">while</code> and <code class="language-plaintext highlighter-rouge">do</code>/<code class="language-plaintext highlighter-rouge">while</code> commands, and <a href="https://en.wikipedia.org/wiki/List_comprehension">list comprehensions</a>, but the simplest way, and the one less prone to tricky bugs, is the <code class="language-plaintext highlighter-rouge">for</code> loop.</p>
+<h2 id="for-loops">For Loops</h2>
+<p>We are going to take a look at for loops and how to parametrize and nest them.</p>
+<p>First, let’s start with a simple sketch that draws circles:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/DZtkQ823q"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/DZtkQ823q">
+    open example in new window
+  </a>
+</div>
+<p>But, 😱 ….  there’s so much repeated code and so much that can be improved here…</p>
+<p>First, variables! Let’s make it so we can easily change circle diameter, start location and spacing:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZtfI2lnFnE"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZtfI2lnFnE">
+    open example in new window
+  </a>
+</div>
+<p>Better ! This way we can easily change the size of our circles (<code class="language-plaintext highlighter-rouge">cDiam</code>), where they start (<code class="language-plaintext highlighter-rouge">xOffset</code>), the distance between their centers (<code class="language-plaintext highlighter-rouge">xSpacing</code>) and their vertical location (<code class="language-plaintext highlighter-rouge">yPos</code>). Take some time to change those variables and re-run the code to see exactly what each of them does. Fun, right? But we’re still repeating a bunch of code!</p>
+<p><code class="language-plaintext highlighter-rouge">for()</code> loops to the rescue! We can refactor the code above using this structure:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span><span class="p">(</span><span class="nx">start</span><span class="p">;</span> <span class="nx">condition</span><span class="p">;</span> <span class="nx">increment</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// do stuff</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Where:</p>
+<ul>
+<li><code class="language-plaintext highlighter-rouge">start</code> is an expression that initializes variables we will use in our loop</li>
+<li><code class="language-plaintext highlighter-rouge">condition</code> is a boolean expression that specifies what keeps the loop running</li>
+<li><code class="language-plaintext highlighter-rouge">increment</code> is an expression that runs at the end of each iteration</li>
+</ul>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/dkYky6guC"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/dkYky6guC">
+    open example in new window
+  </a>
+</div>
+<p>The resulting drawing is a little bit different; the circles go right off the canvas. We can try to control that in a couple of ways.</p>
+<p>The first way is to use our <code class="language-plaintext highlighter-rouge">xOffset</code> variable to stop the for loop once <code class="language-plaintext highlighter-rouge">xPos</code> gets to <code class="language-plaintext highlighter-rouge">width - xOffset</code> instead of <code class="language-plaintext highlighter-rouge">width</code>:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/9d0QfkWQx"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/9d0QfkWQx">
+    open example in new window
+  </a>
+</div>
+<p>The second way requires more changes to the code, so we can keep track of the number of circles instead of where they are being drawn:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/4SwKr6hBz"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/4SwKr6hBz">
+    open example in new window
+  </a>
+</div>
+<p>There’s a lot of new stuff there. We declared a new variable <code class="language-plaintext highlighter-rouge">numCircles</code> that defines how many circles we want to draw (7 for now). In our <code class="language-plaintext highlighter-rouge">for</code> statement we have <code class="language-plaintext highlighter-rouge">cCnt</code> now, which keeps track of the number of circles drawn. It iterates from 0 to <code class="language-plaintext highlighter-rouge">numCircles</code>. In this case it goes from \(0\) to \(6\). <em>Wait… what!? Weren’t we drawing 7 circles??</em> Yes!, but if we count from \(0\) to \(6\) \((0, 1, 2, 3, 4, 5, 6)\) that’s actually \(7\) numbers. That’s a bit confusing at first, but we’ll see this a lot and get used to the fact that in programming we usually start counting from 0.</p>
+<p>What about this: <code class="language-plaintext highlighter-rouge">let xPos = xOffset + cCnt * xSpacing;</code>?</p>
+<p>That’s how we calculate the xPosition of our circles based on how many circles we’ve drawn in our loop. The first time the loop executes <code class="language-plaintext highlighter-rouge">cCnt</code> is 0, so <code class="language-plaintext highlighter-rouge">xPos = xOffset + 0 * xSpacing</code> or <code class="language-plaintext highlighter-rouge">xPos = xOffset</code>. That seems right.</p>
+<p>In the second iteration that becomes <code class="language-plaintext highlighter-rouge">xPos = xOffset + 1 * xSpacing</code>. The xPosition of the center of the second circle is the initial offset plus 1 amount of spacing between circle centers. In the third iteration it’s <code class="language-plaintext highlighter-rouge">xPos = xOffset + 2 * xSpacing</code> because there’s the initial offset plus 2 amounts of spacing for the 2 circles already drawn. We can play around with the variable values to get a better feeling for the math behind this calculation.</p>
+<p>It’s important to take a moment here and understand the difference between the two methods of drawing the circles. In the first case our loop variable and stop condition is based on the location of the circles and in the second case it’s based on the number of circles drawn.</p>
+<p>Let’s go back to the first way (by location) and add some variables for looping in the other direction:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/vR8b0db59"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/vR8b0db59">
+    open example in new window
+  </a>
+</div>
+<p>Take some time to play with the variables to see how they affect our drawing.</p>
+<h2 id="for-loops-with-for-loops">For Loops With For Loops</h2>
+<p>And now, let’s say that when we’re looping in the horizontal direction, instead of drawing one circle for every location of <code class="language-plaintext highlighter-rouge">xPos</code> we want to draw an entire column of circles?</p>
+<p>Nested <code class="language-plaintext highlighter-rouge">for()</code> loops to the rescue! We can just copy the whole loop statement that draws a column of circles and put that inside the first loop that iterates in the horizontal direction (and make sure the <code class="language-plaintext highlighter-rouge">ellipse()</code> command uses the <code class="language-plaintext highlighter-rouge">xPos</code> and <code class="language-plaintext highlighter-rouge">yPos</code> variables):</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/YH8DMpfdM"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/YH8DMpfdM">
+    open example in new window
+  </a>
+</div>
+<p>Now we can play with all the variables and see how they change the drawing:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/iY-DlVY-9"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/iY-DlVY-9">
+    open example in new window
+  </a>
+</div>
+<p>Or we can start adding variations to the circles based on their position, like, changing color based on the x and y location for the circle:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/I9DpHPDAx"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/I9DpHPDAx">
+    open example in new window
+  </a>
+</div>
+<p>Or, increase diameter along with the x position:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/xT4rSb4IC"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/xT4rSb4IC">
+    open example in new window
+  </a>
+</div>
+<p>Or, color based on x position and size based on y position:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/8KVrenWPx"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/8KVrenWPx">
+    open example in new window
+  </a>
+</div>
+<h2 id="for-loops-with-for-loops-with-for-loops">For Loops With For Loops With For Loops…</h2>
+<p>And if we really want to stretch our looping abilities we can add another level of <code class="language-plaintext highlighter-rouge">for()</code> looping to draw concentric circles at each x and y position:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/cfOHbCjAs"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/cfOHbCjAs">
+    open example in new window
+  </a>
+</div>
+<p>Take some time to play with this code and make sure all the variables and loops make sense.</p>
+<p>Loops are very powerful constructs in programming. Looking at the code above, we’re drawing many many circles (how many exactly?), but our code only has one line with one <code class="language-plaintext highlighter-rouge">ellipse()</code> command.</p>
+<p>As always, since we are using variables everywhere we can change their values or use them to change our circle at each iteration of our loop:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/riWYeR2Zf"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/riWYeR2Zf">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../conditionals/index.html">Conditionals</a></li>
+<li><a href="index.html">Loops as Patterns</a></li>
+<li><a href="../counters/index.html">Loops as Counters</a></li>
+<li><a href="../functions/index.html">Functions</a></li>
+<li><a href="../random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

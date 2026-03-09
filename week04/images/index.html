@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Images</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Images</h1>
+<h2 id="loading-images">Loading Images</h2>
+<p>We are going to look at how to work with images and pixel arrays in p5js.</p>
+<p>Just getting an image on the canvas is not very hard. We’ll follow steps that are similar to how we load data files or fonts, and then, drawing the image is similar to how we would draw a <code class="language-plaintext highlighter-rouge">rect()</code>:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/V24PFFw_K"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/V24PFFw_K">
+    open example in new window
+  </a>
+</div>
+<p>Once our image is loaded into a variable, it becomes a <a href="https://p5js.org/reference/p5/p5.Image/"><code class="language-plaintext highlighter-rouge">p5.Image</code></a> object, and we can use its <code class="language-plaintext highlighter-rouge">width</code> and <code class="language-plaintext highlighter-rouge">height</code> variables to check its size in pixels. Notice the output in the console; our image is a lot bigger than our \(400\) x \(400\) canvas.</p>
+<p>If we only specify two values for the <code class="language-plaintext highlighter-rouge">image()</code> function, the image is drawn at its original resolution, and in this case it overflows.</p>
+<p>Let’s resize it so it fits in our canvas, and then center it.</p>
+<p>We can use <a href="https://p5js.org/reference/p5.Image/resize/"><code class="language-plaintext highlighter-rouge">resize()</code></a>, another member function from the <code class="language-plaintext highlighter-rouge">p5.Image</code> object, to properly scale an image. If we look at the documentation, we’ll see that if we pass a \(0\) as one of the two parameters to <code class="language-plaintext highlighter-rouge">resize()</code>, it will resize the image in one direction while keeping its original aspect ratio:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/dSNYc-RFv"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/dSNYc-RFv">
+    open example in new window
+  </a>
+</div>
+<p>After we scale our image we can compute some offsets to center it on the canvas. These offsets are half of the difference between the image size and the canvas size:</p>
+<div class="scaled-images left w100">
+<img src="../../assets/images/week04/images-00.jpg"/>
+</div>
+<h2 id="processing-images">Processing Images</h2>
+<p>We can also use some of the <code class="language-plaintext highlighter-rouge">p5.Image</code> member variables and methods to access and manipulate the pixels of an image. But, first, let’s see how those are organized.</p>
+<p>If we look at the documentation we’ll see that <code class="language-plaintext highlighter-rouge">p5.Image</code> class objects have a <a href="https://p5js.org/reference/p5.Image/pixels/"><code class="language-plaintext highlighter-rouge">pixels</code></a> member variable that contains the color values for all of the pixels in the image.</p>
+<p>And if we print some information about this array we’ll notice a couple of things:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">print</span><span class="p">(</span><span class="dl">"</span><span class="s2">pixel array size: </span><span class="dl">"</span><span class="p">,</span> <span class="nx">mImage</span><span class="p">.</span><span class="nx">pixels</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+</code></pre></div></div>
+<p>gives:<br/><code class="language-plaintext highlighter-rouge">pixel array size: 0</code></p>
+<p>That’s because before we can use the pixel array we have to tell the image to prepare it for us with the function <code class="language-plaintext highlighter-rouge">loadPixels()</code>. So now:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mImage</span><span class="p">.</span><span class="nx">loadPixels</span><span class="p">();</span>
+<span class="nx">print</span><span class="p">(</span><span class="dl">"</span><span class="s2">pixel array size: </span><span class="dl">"</span><span class="p">,</span> <span class="nx">mImage</span><span class="p">.</span><span class="nx">pixels</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+</code></pre></div></div>
+<p>gives:<br/><code class="language-plaintext highlighter-rouge">pixel array size: 550400</code></p>
+<p>There are two important things to note here:</p>
+<ol>
+<li>
+<p>The pixel array only has one dimension. Even though our image has a <code class="language-plaintext highlighter-rouge">width</code> and a ```height`, in memory, all of the pixels are stored in a continuous sequence of numbers, one row at a time. When we have a one-dimensional array that holds all of the pixels of the first row, then all of the pixels of the second row, then the third row, etc … we say the pixels are stored in row-major order, and we’ll have to do some math to figure out which pixel index corresponds to a specific \((x, y)\) location in the image, and vice-versa (given a pixel index, what is its \((x, y)\) location on the image).</p>
+</li>
+<li>
+<p>There are more values in the array than pixels in the image. Our scaled image is<br/>\(344\) x \(400\), or \(137,600\), pixels, but our array is exactly \(4\) times larger than this. This also has to do with how JavaScript stores numbers in memory. Instead of storing the \(R\), \(G\), \(B\) and \(alpha\) values into one 4-byte number, JavaScript uses 4 different numbers. So our array is \(4\) larger than the number of pixels because the values for \(R\), \(G\), \(B\) and \(alpha\) for each pixel are stored separately in different indexes of this array.</p>
+</li>
+</ol>
+<p>If we had a \(3\) x \(3\) image with \(9\) pixels, the beginning of its pixel array would look something like this:</p>
+<div class="scaled-images left w100">
+<img src="../../assets/images/week04/images-01.jpg"/>
+</div>
+<p>And the association between image pixel indices \((x, y)\) and array index \(i\):</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week04/images-02.jpg"/>
+</div>
+<p>What this means is that, if we want to iterate over our image and do something with each pixel, we’ll have to do some math to translate between \((x, y)\) coordinate to pixel array coordinate \(i\).</p>
+<p>Let’s start with the simpler case, where we don’t care about \((x, y)\) position, but just want to manipulate every pixel in our array with the same logic, independent of its location. We’ll have to iterate over all of the values in the pixel array, but instead of incrementing our loop index by \(1\) we will increment it by \(4\). This way our <code class="language-plaintext highlighter-rouge">i</code> variable always points to the first of the \(4\) color values for a pixel.</p>
+<div class="scaled-images left w100">
+<img src="../../assets/images/week04/images-03.jpg"/>
+</div>
+<p>We are going to change the green value of every pixel in our image using the <code class="language-plaintext highlighter-rouge">mouseY</code> position. Since every pixel gets the same change, we don’t care about its \((x, y)\) location within the image, and we can just iterate over <code class="language-plaintext highlighter-rouge">mImage.pixels</code> directly with one <code class="language-plaintext highlighter-rouge">for()</code> loop, whose index increments by \(4\).</p>
+<p>Any time we change the values in a <code class="language-plaintext highlighter-rouge">p5.Image</code> <code class="language-plaintext highlighter-rouge">pixels</code> array we have to call <code class="language-plaintext highlighter-rouge">updatePixels()</code> so p5.js can update some internal values for actually drawing our new image.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/JbAHwnWwI"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/JbAHwnWwI">
+    open example in new window
+  </a>
+</div>
+<p>Even if every pixel isn’t changed by the same amount, as long as each pixel gets the same logic, we can use this method for iterating over the image’s pixel values.</p>
+<p>Instead of incrementing the green value of all of the pixels, let’s exaggerate its dominant color. Since we’re going to need to refer to the original image in order to know which color was its dominant color, we’ll have to first make a copy of the image:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ehdyLdUOG"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ehdyLdUOG">
+    open example in new window
+  </a>
+</div>
+<p>Now, even though each pixel is being changed by a different amount, according to its color values, the logic applied to each pixel is the same, independent of \((x, y)\) location, so we can still use the method with just one <code class="language-plaintext highlighter-rouge">for()</code> loop.</p>
+<h2 id="processing-pixels">Processing Pixels</h2>
+<p>Up until now, we’ve been executing the same logic on our entire image. Even thought we’re processing the image by its pixels, the whole image gets processed the same way, independent of each pixel’s location.</p>
+<p>Let’s take a look at a situation where we want to draw shapes to the screen based on the pixel values of an image.</p>
+<p>Now we care about the \((x, y)\) position of the pixel within the image because that will correspond to where we place our shape on our canvas.</p>
+<p>Let’s start by just building up the logic for drawing a circle pattern in our canvas using nested <code class="language-plaintext highlighter-rouge">for()</code> loops. All of the logic for loading and scaling the image is there in the <code class="language-plaintext highlighter-rouge">preload()</code> and <code class="language-plaintext highlighter-rouge">setup()</code> functions, but we’re not using the image yet. We just want to make sure the logic for drawing our circle pattern works.</p>
+<p>These <code class="language-plaintext highlighter-rouge">for()</code> loops should look familiar. We start at <code class="language-plaintext highlighter-rouge">mRadius</code> and draw circles that are<br/><code class="language-plaintext highlighter-rouge">2 * mRadius</code> pixels wide, with a spacing that is also <code class="language-plaintext highlighter-rouge">2 * mRadius</code> pixels:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">mRadius</span><span class="p">;</span> <span class="nx">y</span> <span class="o">&lt;</span> <span class="nx">mImage</span><span class="p">.</span><span class="nx">height</span> <span class="o">-</span> <span class="nx">mRadius</span><span class="p">;</span> <span class="nx">y</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">mRadius</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">mRadius</span><span class="p">;</span> <span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">mImage</span><span class="p">.</span><span class="nx">width</span> <span class="o">-</span> <span class="nx">mRadius</span><span class="p">;</span> <span class="nx">x</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">mRadius</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fill</span><span class="p">(</span><span class="mi">128</span><span class="p">);</span>
+    <span class="nx">ellipse</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">mRadius</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">mRadius</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Let’s just add some logic to make <code class="language-plaintext highlighter-rouge">mRadius</code> vary according to our <code class="language-plaintext highlighter-rouge">mouseY</code> position:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">mRadius</span> <span class="o">=</span> <span class="nx">floor</span><span class="p">(</span><span class="nx">map</span><span class="p">(</span><span class="nx">mouseY</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">height</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="kc">true</span><span class="p">));</span>
+</code></pre></div></div>
+<p>And we get something like this (the circle diameter was reduced to <code class="language-plaintext highlighter-rouge">1.75 * mRadius</code> to give a more pleasant look):</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/EZU_o4JNl"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/EZU_o4JNl">
+    open example in new window
+  </a>
+</div>
+<p>Now the only thing we have to do is get the color values at the image’s \((x, y)\) position to use for our <code class="language-plaintext highlighter-rouge">fill()</code>. The math looks a bit intimidating at first, but let’s go through it with images and build up our understanding of how to go from our two-dimensional \((x, y)\) value to a single index \(i\) that will give us the right color values from the pixel array.</p>
+<p>Let’s consider the following \(4\) x \(3\) image with pixel indices \((x, y)\), and its corresponding array of pixel values with index \(i\):</p>
+<div class="scaled-images left w100">
+<img src="../../assets/images/week04/images-04.jpg"/>
+</div>
+<p>It’s easy to figure out the value for \(i\) for the first row in the image when \(y = 0\): \(i\) is just equal to the \(x\) value. So, \((0, 0)\), \((1, 0)\), \((2, 0)\), \((3, 0)\) correspond to \([0, 1, 2, 3]\).</p>
+<p>For the second row, when \(y = 1\), we have \((0, 1)\), \((1, 1)\), \((2, 1)\), \((3, 1)\) corresponding to \(i\) values of \([4, 5, 6, 7]\). Well, we can get those same numbers by adding \(4\) to each \(i\) value from the first row.</p>
+<p>And if we look at the last row, when \(y = 2\), we have \((0, 2)\), \((1, 2)\), \((2, 2)\), \((3, 2)\) corresponding to \(i\) values of \([8, 9, 10, 11]\). Those numbers are \(4\) greater than the \(i\) values for the second row \(([4, 5, 6, 7])\) and \(8\) greater than the \(i\) values from the first row \(([0, 1, 2, 3])\).</p>
+<p>So, every time we move \(x\) by \(1\), our \(i\) value also increases by \(1\), but when we increase \(y\) by \(1\), our \(i\) value increases by \(4\), which gives us the following equation:</p>
+
+\[i = 4 \times y + x\]
+
+<p>More generally speaking, when we move \(y\) by \(1\) our \(i\) index increases by the width of the image:</p>
+
+\[i = width \times y + x\]
+
+<p>Just one more adjustment, because unfortunately our image pixel array doesn’t only have \(1\) value per pixel, but \(4\).</p>
+<p>When we increment \(x\) by \(1\) we actually want to increment our \(i\) by \(4\) to get to the next pixel’s first color value. Likewise, when \(y\) increases by \(1\) we want to increment \(i\) by \(4 \times width\), so we again land on the first color value of a pixel:</p>
+<div class="scaled-images left w100">
+<img src="../../assets/images/week04/images-05.jpg"/>
+</div>
+<p>So, to get the index of the first color value for a pixel at \((x, y)\), we need to do:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">pIndex</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="nx">y</span> <span class="o">*</span> <span class="nx">mImage</span><span class="p">.</span><span class="nx">width</span> <span class="o">+</span> <span class="nx">x</span><span class="p">);</span>
+</code></pre></div></div>
+<p>That will give us the \(red\) value for the pixel, while the \(green\) and \(blue\) values are at <code class="language-plaintext highlighter-rouge">pIndex + 1</code> and <code class="language-plaintext highlighter-rouge">pIndex + 2</code>, respectively.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ff3i5NEoJ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ff3i5NEoJ">
+    open example in new window
+  </a>
+</div>
+<p>A little bit of math, but once we know it, it’s not that bad.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="index.html">Images</a></li>
+<li><a href="../videos/index.html">Videos</a></li>
+<li><a href="../sound-files/index.html">Sound Files</a></li>
+<li><a href="../sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

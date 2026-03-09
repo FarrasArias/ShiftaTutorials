@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Loading Data (JSON/CSV)</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Loading Data (JSON/CSV)</h1>
+<p>We’ve seen how <a href="../../week03/arrays/index.html">arrays</a> and <a href="../../week03/objects/index.html">objects</a> can be used for organizing our data, and also how to use <code class="language-plaintext highlighter-rouge">for()</code> loops to create, store and process values in those structures. We’ve also seen how the <a href="../../week03/maths/index.html"><code class="language-plaintext highlighter-rouge">map()</code></a> function can be used to transform input values in different ranges and units into parameters for visualizations.</p>
+<p>We can now look at ways of acquiring, processing and visualizing data that has been previously created and stored in files locally or online.</p>
+<h2 id="json">JSON</h2>
+<p>In order to do that we’ll make use of a file format called <a href="https://en.wikipedia.org/wiki/JSON">JSON</a>, or, JavaScript Object Notation. <em>JSON is an open standard file format and data interchange format that uses human-readable text to store and transmit data objects</em>. If we take a look at a JSON file we’ll see that it’s structured exactly like a JavaScript object, with data organized into key-value pairs:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+	</span><span class="p">{</span><span class="w"> </span><span class="nl">"zip"</span><span class="p">:</span><span class="w"> </span><span class="mi">10001</span><span class="p">,</span><span class="w"> </span><span class="nl">"rent"</span><span class="p">:</span><span class="w"> </span><span class="mi">4230</span><span class="p">,</span><span class="w"> </span><span class="nl">"bedrooms"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">},</span><span class="w">
+	</span><span class="p">{</span><span class="w"> </span><span class="nl">"zip"</span><span class="p">:</span><span class="w"> </span><span class="mi">10012</span><span class="p">,</span><span class="w"> </span><span class="nl">"rent"</span><span class="p">:</span><span class="w"> </span><span class="mi">1830</span><span class="p">,</span><span class="w"> </span><span class="nl">"bedrooms"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">},</span><span class="w">
+	</span><span class="p">{</span><span class="w"> </span><span class="nl">"zip"</span><span class="p">:</span><span class="w"> </span><span class="mi">10217</span><span class="p">,</span><span class="w"> </span><span class="nl">"rent"</span><span class="p">:</span><span class="w"> </span><span class="mi">3400</span><span class="p">,</span><span class="w"> </span><span class="nl">"bedrooms"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">},</span><span class="w">
+	</span><span class="p">{</span><span class="w"> </span><span class="nl">"zip"</span><span class="p">:</span><span class="w"> </span><span class="mi">11217</span><span class="p">,</span><span class="w"> </span><span class="nl">"rent"</span><span class="p">:</span><span class="w"> </span><span class="mi">2160</span><span class="p">,</span><span class="w"> </span><span class="nl">"bedrooms"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">},</span><span class="w">
+	</span><span class="p">{</span><span class="w"> </span><span class="nl">"zip"</span><span class="p">:</span><span class="w"> </span><span class="mi">11238</span><span class="p">,</span><span class="w"> </span><span class="nl">"rent"</span><span class="p">:</span><span class="w"> </span><span class="mi">2690</span><span class="p">,</span><span class="w"> </span><span class="nl">"bedrooms"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+<p>In this case we have an array of objects, each of which has \(3\) key-value pairs. The syntax is almost exactly like in JavaScript, with the only exception being that the keys in a JSON file have to have the quote symbols (“ “) around their names. It’s no surprise that we can almost just read a JSON file directly into a JavaScript variable, and even less surprising that p5.js has some functions that will help us do just that.</p>
+<p>The <a href="https://p5js.org/reference/p5/loadJSON"><code class="language-plaintext highlighter-rouge">loadJSON()</code></a> function takes the location of a JSON file (stored locally or online), and returns a JavaScript object with the data from the file. Since the file could be large, or be coming from somewhere else on the internet, it could take a long time to download and cause our sketch to freeze and become unresponsive.</p>
+<p>One way to avoid this situation is to define a special functions (like <code class="language-plaintext highlighter-rouge">setup()</code> and <code class="language-plaintext highlighter-rouge">draw()</code>) that p5.js will use to fetch and load any data before it starts running any other part of our code.</p>
+<p>If we look at the documentation for the <a href="https://p5js.org/reference/p5/preload"><code class="language-plaintext highlighter-rouge">preload()</code></a> function, it says that it’s a function that is called once, immediately before <code class="language-plaintext highlighter-rouge">setup()</code>, that guarantees that any data loading happens before we start the sketch. It’s also important to note that, according to the documentation, <em>Nothing besides load calls (<code class="language-plaintext highlighter-rouge">loadImage()</code>, <code class="language-plaintext highlighter-rouge">loadJSON()</code>, <code class="language-plaintext highlighter-rouge">loadFont()</code>, etc.) should be inside the preload function</em>.</p>
+<p>This is how we define our <code class="language-plaintext highlighter-rouge">preload()</code> to load a JSON file from the internet:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">data</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">preload</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://data.com/rent.json</span><span class="dl">"</span><span class="p">;</span>
+  <span class="nx">data</span> <span class="o">=</span> <span class="nx">loadJSON</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">url</code> variable could also specify a local file, but regardless, by the time the <code class="language-plaintext highlighter-rouge">setup()</code> function runs, our <code class="language-plaintext highlighter-rouge">data</code> variable will already have all of the information that is inside the <code class="language-plaintext highlighter-rouge">rent.json</code> file, and we can then use <code class="language-plaintext highlighter-rouge">for()</code> loops to process it however we want:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/HxGSOzMFS"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/HxGSOzMFS">
+    open example in new window
+  </a>
+</div>
+<p>Some things to note about the above sketch:</p>
+<ol>
+<li>
+<p>We are loading a local file, so the location that we pass to the <code class="language-plaintext highlighter-rouge">loadJSON()</code> function specifies a file called <code class="language-plaintext highlighter-rouge">Winemag_100.json</code> that is located in the same folder as our <code class="language-plaintext highlighter-rouge">sketch.js</code> file.</p>
+</li>
+<li>
+<p>We first load the JSON into a variable called <code class="language-plaintext highlighter-rouge">dataObject</code> and then in <code class="language-plaintext highlighter-rouge">setup()</code> use that variable and some JavaScript functions to actually put the contents of the file into an array that we can iterate. This is not necessary all the time, only when our file specifies an array and we want to work with an array. If we look at the p5.js documentation for <a href="https://p5js.org/reference/p5/loadJSON"><code class="language-plaintext highlighter-rouge">loadJSON()</code></a>, it says: <em>Note that even if the JSON file contains an Array, an Object will be returned</em>. We use: <code class="language-plaintext highlighter-rouge">Object.values(dataObject)</code> to turn the Object into an array.</p>
+</li>
+<li>
+<p>During <code class="language-plaintext highlighter-rouge">setup()</code> we are iterating through all of the data points in our dataset to determine the minimum and maximum values for \(2\) properties (<code class="language-plaintext highlighter-rouge">price</code> and <code class="language-plaintext highlighter-rouge">points</code>). This is needed so we can use <a href="https://p5js.org/reference/p5/map"><code class="language-plaintext highlighter-rouge">map()</code></a> later in <code class="language-plaintext highlighter-rouge">draw()</code> to scale these values and use the whole canvas to visualize the data (a detailed explanation of <code class="language-plaintext highlighter-rouge">map()</code> can be found <a href="../../week03/maths/index.html">here</a>).</p>
+</li>
+</ol>
+<p>One more thing about parameters/fields from a JSON: sometimes the field names will have spaces (“final price”, “CRASH TIME”) or special characters (“pm2.5”, “U$D”) and accessing them with just the dot notation won’t work:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">pm2</span><span class="p">.</span><span class="mi">5</span><span class="p">;</span> <span class="c1">// error</span>
+<span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">U$D</span><span class="p">;</span> <span class="c1">// error</span>
+<span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">final</span> <span class="nx">price</span><span class="p">;</span> <span class="c1">// error</span>
+<span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">CRASH</span> <span class="nx">TIME</span><span class="p">;</span> <span class="c1">// error</span>
+</code></pre></div></div>
+<p>In these cases, we have to use brackets, just like when accessing an array, except instead of a number for the index we pass the data field name in quotes (“ “):</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// these work</span>
+<span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="dl">"</span><span class="s2">pm2.5</span><span class="dl">"</span><span class="p">];</span>
+<span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="dl">"</span><span class="s2">U$D</span><span class="dl">"</span><span class="p">];</span>
+<span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="dl">"</span><span class="s2">final price</span><span class="dl">"</span><span class="p">];</span>
+<span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="dl">"</span><span class="s2">CRASH TIME</span><span class="dl">"</span><span class="p">];</span>
+</code></pre></div></div>
+<h2 id="csv">CSV</h2>
+<p>In addition to JSON, there’s another file format that is used often for storing and transmitting structured data: Comma-Separated Values, or, CSV. In some ways this format is a little bit easier to read, because it is less redundant and is very much like a spreadsheet, since it organizes data into rows and columns.</p>
+<p>An example CSV file, with the same data as our JSON file above, could look like:</p>
+<pre><code class="language-csv">zip,rent,bedrooms
+10001,4230,2
+10012,1830,1
+10217,3400,1
+11217,2160,1
+11238,2690,2
+</code></pre>
+<p>The name of the parameters (sometimes called <em>features</em> or <em>fields</em>) are specified in the first row of the file, and after that, each row represents one data point, with their feature values separated by commas (,).</p>
+<p>It’s good to know about both JSON and CSV because sometimes the data we want to use is only available in one of the two formats.</p>
+<p>Luckily, p5.js also has functions to help us load, process and use tabular data in CSV files. The <a href="https://p5js.org/reference/p5/loadTable"><code class="language-plaintext highlighter-rouge">loadTable()</code></a> function is very similar to <code class="language-plaintext highlighter-rouge">loadJSON()</code>, because it downloads the file, reads it, and organizes the data in a way that is easier to access in the rest of our sketch.</p>
+<p>Just like <code class="language-plaintext highlighter-rouge">loadJSON()</code>, <code class="language-plaintext highlighter-rouge">loadTable()</code> should also be placed inside our <code class="language-plaintext highlighter-rouge">preload()</code> function.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">data</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">preload</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://data.com/rent.json</span><span class="dl">"</span><span class="p">;</span>
+  <span class="nx">data</span> <span class="o">=</span> <span class="nx">loadTable</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="dl">"</span><span class="s2">csv</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">header</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>After this, the data will be available in the <code class="language-plaintext highlighter-rouge">data</code> variable, but unlike the case with a JSON file, the data is not in a JavaScript object or array, but in a <a href="https://p5js.org/reference/p5/p5.Table/"><code class="language-plaintext highlighter-rouge">Table</code></a> object. This object has some special functions that we have to use in order to iterate over its contents.</p>
+<p>Instead of using <code class="language-plaintext highlighter-rouge">data.length</code> to know how many data points are in our dataset, we now have to use <code class="language-plaintext highlighter-rouge">data.getRowCount()</code>. And instead of accessing the data using array and object indexing like <code class="language-plaintext highlighter-rouge">data[i].price</code>, we have to use <code class="language-plaintext highlighter-rouge">data.getNum(i, "price")</code>. We can see how those are similar, in both cases we are specifying which data point we want using a number index \(i\), and then which of its fields we want using a string name, like “price”.</p>
+<p>Let’s take a look at a full example that does the same thing as the JSON example above:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/DUn4Pd1-a"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/DUn4Pd1-a">
+    open example in new window
+  </a>
+</div>
+<p>Just like in the JSON example, we first calculate the minimum and maximum values in the <code class="language-plaintext highlighter-rouge">price</code> and <code class="language-plaintext highlighter-rouge">points</code> fields, so we can later scale the values in those fields and use the whole canvas when drawing our visualization.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../images/index.html">Images</a></li>
+<li><a href="../videos/index.html">Videos</a></li>
+<li><a href="../sound-files/index.html">Sound Files</a></li>
+<li><a href="../sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

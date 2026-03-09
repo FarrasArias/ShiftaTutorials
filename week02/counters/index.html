@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Loops as Counters</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Loops as Counters</h1>
+<h2 id="loop-to-fill">Loop to Fill</h2>
+<p>We saw some examples of how to use <code class="language-plaintext highlighter-rouge">for()</code> loops to draw gridded patterns <a href="../patterns/index.html">here</a>.</p>
+<p>Now, we’ll explore another way to think about loops that will allow us to do slightly different things.</p>
+<p>We saw how to draw repeating shapes by using loops with a start position (or offset), an end position and a fixed spacing:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">startPosition</span><span class="p">;</span> <span class="nx">x</span> <span class="o">&lt;</span> <span class="nx">endPosition</span><span class="p">;</span> <span class="nx">x</span> <span class="o">+=</span> <span class="nx">spacing</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">drawShape</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/KjD5w25YP"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/KjD5w25YP">
+    open example in new window
+  </a>
+</div>
+<p>In this example we specify where on our canvas we want our drawing to begin and end. It’s like we’re specifying the area we want to fill with shapes.</p>
+<p>What if instead we want to specify the number of shapes to <strong>FIT</strong> in a space?</p>
+<h2 id="loop-to-count">Loop to Count</h2>
+<p>One way to think about this is that the <code class="language-plaintext highlighter-rouge">for()</code> command is a counter, counting from <code class="language-plaintext highlighter-rouge">startPosition</code> to <code class="language-plaintext highlighter-rouge">endPosition</code> in increments of <code class="language-plaintext highlighter-rouge">spacing</code>. Thinking about the <code class="language-plaintext highlighter-rouge">for()</code> command as a “counter” makes it easy to see how to use it in situations that aren’t about the location of shapes.</p>
+<p>We can use it to repeat an action a set number of times:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/JFR877sol"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/JFR877sol">
+    open example in new window
+  </a>
+</div>
+<p>Or to do some math on sequences of numbers, like finding the sum of all numbers between \(N_{0}\) and \(N_{1}\);</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/YBCKfi7Ct"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/YBCKfi7Ct">
+    open example in new window
+  </a>
+</div>
+<p>Or, to iterate through a collection of items, in an <a href="#">array</a>:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/yqdys8Sff"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/yqdys8Sff">
+    open example in new window
+  </a>
+</div>
+<p>Let’s explore the situation where we want to repeat something a set number of times, and instead of drawing squares all the way across the canvas, we just want rows with \(5\) squares:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/drA7SCEvq"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/drA7SCEvq">
+    open example in new window
+  </a>
+</div>
+<p>This is different from before. We are not iterating through pixel values, and counting from a starting <em>position</em> to a final <em>position</em>, we are now counting the number of squares to draw, from \(0\) to \(4\).</p>
+<p>For each square that we want to draw we have to do a little math first to figure out where to place it: if the first one is at \(0\), the next one should be at \(0 + spacing\), and the one after that at \(0 + spacing + spacing\)… and so on, and so on… in other words, the \(i^{th}\) square is at position \(i * spacing\). If there’s an offset for the first square, that can just get added to the equation, as is seen in the case of the second row of squares in the code above.</p>
+<h2 id="loop-to-fit">Loop to Fit</h2>
+<p>If instead we want to draw a <strong>FIXED</strong> number of squares in a <strong>FIXED</strong> amount of space, we need to figure out how to space the squares. In other words, our counter goes from \(0\) to \(10\) and we want to place our squares between \(0\) and <code class="language-plaintext highlighter-rouge">width</code> or between <code class="language-plaintext highlighter-rouge">offset</code> and <code class="language-plaintext highlighter-rouge">width</code>.</p>
+<p>We could do the math by hand. In the simplest case the \(x\) position of our squares is given by:</p>
+<p>\(x = \frac{i}{10} \times width\).</p>
+<p>In the more complex case, with the offset, it becomes:</p>
+<p>\(x = \frac{i}{10} \times (width - offset) + offset\).</p>
+<p>But, we can also use the p5.js <a href="https://p5js.org/reference/p5/map"><code class="language-plaintext highlighter-rouge">map()</code></a> function to do this math for us and keep our code easier to read and maintain (a detailed explanation of <code class="language-plaintext highlighter-rouge">map()</code> can be found <a href="../../week03/maths/index.html">here</a>).</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/sbt2pVmzK"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/sbt2pVmzK">
+    open example in new window
+  </a>
+</div>
+<p>Now, what if we want to draw \(15\) squares instead of \(10\)?</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/23jR5o-ij"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/23jR5o-ij">
+    open example in new window
+  </a>
+</div>
+<p>Just using <code class="language-plaintext highlighter-rouge">map()</code> is not enough; we see there are gaps in the top row and overlap in the bottom.</p>
+<p>To fix this, before we loop we have to calculate a new width for each of the two cases, based on the number of squares we want and the space we have to fill:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/TKAcfArNy"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/TKAcfArNy">
+    open example in new window
+  </a>
+</div>
+<h2 id="review-all-the-possibilities">Review All the Possibilities</h2>
+<p>In cases where we’re drawing shapes between a pre-defined, specific, start position and end position, with a fixed spacing, we can just iterate over the pixel values and draw:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">pos</span> <span class="o">=</span> <span class="nx">start</span><span class="p">;</span> <span class="nx">pos</span> <span class="o">&lt;</span> <span class="nx">end</span><span class="p">;</span> <span class="nx">pos</span> <span class="o">+=</span> <span class="nx">spacing</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// draw</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>When we want to draw a specific number of shapes, with a <em>given</em> spacing, and we don’t care how much space it might take, we can use a <code class="language-plaintext highlighter-rouge">for()</code> loop as a counter and calculate the position from the spacing:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">count</span> <span class="o">&lt;</span> <span class="nx">maxCount</span><span class="p">;</span> <span class="nx">count</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">pos</span> <span class="o">=</span> <span class="nx">offset</span> <span class="o">+</span> <span class="nx">count</span> <span class="o">*</span> <span class="nx">spacing</span><span class="p">;</span>
+  <span class="c1">// draw</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>When we want to draw a specific number of shapes, within a <em>fixed</em> amount of space, without knowing the spacing beforehand, we can use a <code class="language-plaintext highlighter-rouge">for()</code> loop as a counter and use <code class="language-plaintext highlighter-rouge">map()</code> to calculate the position of each shape:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">count</span> <span class="o">&lt;</span> <span class="nx">maxCount</span><span class="p">;</span> <span class="nx">count</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">pos</span> <span class="o">=</span> <span class="nx">map</span><span class="p">(</span><span class="nx">count</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">maxCount</span><span class="p">,</span> <span class="nx">minPos</span><span class="p">,</span> <span class="nx">maxPos</span><span class="p">);</span>
+  <span class="c1">// draw</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>If we want to draw a specific number of shapes, within a <em>fixed</em> amount of space, without knowing the spacing beforehand, and avoid overlaps or gaps, we have to calculate the spacing based on available width and number of shapes, then we can use a <code class="language-plaintext highlighter-rouge">for()</code> loop as a counter, and do a little math to calculate the position from the spacing:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">spacing</span> <span class="o">=</span> <span class="nx">availableWidth</span> <span class="o">/</span> <span class="nx">maxCount</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">count</span> <span class="o">&lt;</span> <span class="nx">maxCount</span><span class="p">;</span> <span class="nx">count</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">pos</span> <span class="o">=</span> <span class="nx">offset</span> <span class="o">+</span> <span class="nx">count</span> <span class="o">*</span> <span class="nx">spacing</span><span class="p">;</span>
+  <span class="c1">// draw</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h2 id="chessboard">Chessboard</h2>
+<p>Let’s practice some of this and draw a chessboard, centered on our canvas, with some margin around it.</p>
+<p>We’ll start by drawing one row of our board. Since the number of squares is fixed (\(8\)), the amount of space they’ll take is also fixed (\(width - 2 * margin\)) and we want to avoid overlaps, we’ll use the last method:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">spacing</span> <span class="o">=</span> <span class="nx">availableWidth</span> <span class="o">/</span> <span class="nx">maxCount</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">count</span> <span class="o">&lt;</span> <span class="nx">maxCount</span><span class="p">;</span> <span class="nx">count</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">pos</span> <span class="o">=</span> <span class="nx">offset</span> <span class="o">+</span> <span class="nx">count</span> <span class="o">*</span> <span class="nx">spacing</span><span class="p">;</span>
+  <span class="c1">// draw</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/y-LqGkGbt"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/y-LqGkGbt">
+    open example in new window
+  </a>
+</div>
+<p>The spacing and sizing looks good. We just have to fix the color. We want black and white squares to alternate, which means painting the even numbered squares black and the odd numbered squares white. Since we have a variable that keeps track of which square we are drawing (<code class="language-plaintext highlighter-rouge">col</code>), we can just check if that’s an even number (<code class="language-plaintext highlighter-rouge">col % 2 == 0</code>) and select the color accordingly:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/syltJiw2g"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/syltJiw2g">
+    open example in new window
+  </a>
+</div>
+<p>Now we just have to nest some <code class="language-plaintext highlighter-rouge">for()</code> loops to get all of our rows, and we’ll be done:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/mIbZgIy0y"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/mIbZgIy0y">
+    open example in new window
+  </a>
+</div>
+<p>The square colors are alternating in the horizontal direction because we are checking if <code class="language-plaintext highlighter-rouge">col</code> is even, but to get the correct pattern we should also alternate the pattern by row.</p>
+<p>If we enumerate all the possible combinations of column and row even/odd pairings, the pseudo-code for the logic could be something like:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">col</span> <span class="nx">is</span> <span class="nx">even</span> <span class="o">&amp;&amp;</span> <span class="nx">row</span> <span class="nx">is</span> <span class="nx">even</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">black</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">col</span> <span class="nx">is</span> <span class="nx">even</span> <span class="o">&amp;&amp;</span> <span class="nx">row</span> <span class="nx">is</span> <span class="nx">odd</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">white</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">col</span> <span class="nx">is</span> <span class="nx">odd</span> <span class="o">&amp;&amp;</span> <span class="nx">row</span> <span class="nx">is</span> <span class="nx">even</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">white</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">col</span> <span class="nx">is</span> <span class="nx">odd</span> <span class="o">&amp;&amp;</span> <span class="nx">row</span> <span class="nx">is</span> <span class="nx">odd</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">white</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>So, if the row and column index are both even, or are both odd, we paint black. If one is odd and the other is even, we paint white.</p>
+<p>The above pseudo-code can be simplified to:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">col</span> <span class="nx">evenness</span> <span class="o">==</span> <span class="nx">row</span> <span class="nx">evenness</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">black</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">white</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>And in JavaScript <code class="language-plaintext highlighter-rouge">if(col % 2 == row % 2)</code> will check if the <em>evenness</em> of the values is the same:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/rbQjyjGJf"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/rbQjyjGJf">
+    open example in new window
+  </a>
+</div>
+<p>Try changing the size of the canvas in the sketch above. As long as the canvas is a square, our code should work as expected.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../conditionals/index.html">Conditionals</a></li>
+<li><a href="../patterns/index.html">Loops as Patterns</a></li>
+<li><a href="index.html">Loops as Counters</a></li>
+<li><a href="../functions/index.html">Functions</a></li>
+<li><a href="../random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

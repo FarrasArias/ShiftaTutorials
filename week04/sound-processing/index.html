@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Sound Processing</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Sound Processing</h1>
+<h2 id="note">NOTE:</h2>
+<p>To use the sound library, we have to make sure the <a href="https://p5js.org/reference/p5.sound/">p5.sound library</a> is included in our project’s <code class="language-plaintext highlighter-rouge">index.html</code> file after the p5.js file. It will look something like this:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/addons/p5.sound.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div></div>
+<h2 id="inputs--outputs">Inputs &amp; Outputs</h2>
+<p>We’ve already looked at how to use the <a href="https://p5js.org/reference/p5.sound/">p5.sound</a> library to <a href="../sound-files/index.html">play pre-recorded sounds</a> from files, now, let’s look at how to use other parts of the library to further process these files.</p>
+<p>The p5.sound library, along with many other creative coding audio processing toolkits, was designed to somewhat mimic a physical audio processing setup. Objects have input and output ports that receive/send the same kind of information (digital audio samples); each module does some kind of processing or manipulation on its inputs before sending them to its outputs; and modules can easily be chained together to create more complex sound effects.</p>
+<p>There are special objects that allow us to grab live audio from our computer’s input ports (microphone, line-in), and other objects that allow us to send our processed audio to our computer’s outputs (speakers, line-out).</p>
+<p>There are also “<em>display</em>” objects that don’t output any sound signal, but are used to obtain specific information about our audio signals, which we can then use to analyze our audio visually.</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week04/sound-processing-00.jpg"/>
+</div>
+<p>The outputs from these objects/modules can be routed to many inputs, and some modules can receive multiple inputs:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week04/sound-processing-01.jpg"/>
+</div>
+<p>Let’s start by looking at one of the simpler modules.</p>
+<h2 id="amplitude">Amplitude</h2>
+<p><a href="https://p5js.org/reference/p5.sound/p5.Amplitude/">Amplitude</a>. is one of the “<em>display</em>” modules that doesn’t output audio, but instead can be used to show information about our signal.</p>
+<p>In this case, the Amplitude module will give us an audio signal’s amplitude (how loud it is), as a number between \(0\) and \(1\):</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week04/sound-processing-02.jpg"/>
+</div>
+<p>By default, any <a href="https://p5js.org/reference/p5.sound/p5.SoundFile/"><code class="language-plaintext highlighter-rouge">p5.SoundFile</code></a> object we create will send its output to the <a href="https://p5js.org/reference/p5/soundOut"><code class="language-plaintext highlighter-rouge">p5.soundOut</code></a> module/object, which is our final output: the signal that goes to our speaker.</p>
+<p>And, also by default, the Amplitude module gets its input from this same <a href="https://p5js.org/reference/p5/soundOut"><code class="language-plaintext highlighter-rouge">p5.soundOut</code></a> object.</p>
+<p>So, technically, instantiating these two objects like this, would be enough to have them connected properly:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mSound</span> <span class="o">=</span> <span class="nx">loadSound</span><span class="p">(</span><span class="dl">"</span><span class="s2">./sound-file.mp3</span><span class="dl">"</span><span class="p">);</span>
+<span class="nx">mAmp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">p5</span><span class="p">.</span><span class="nx">Amplitude</span><span class="p">();</span>
+</code></pre></div></div>
+<p>But, it’s not a bad idea to practice how to make these connections ourselves. This will avoid unexpected behavior and unnecessary debugging once our audio processing pipelines start getting more complex.</p>
+<p>We can use the following code to manually re-route the signal from our <code class="language-plaintext highlighter-rouge">p5.SoundFile</code> object to both the <code class="language-plaintext highlighter-rouge">p5.soundOut</code> object and a <code class="language-plaintext highlighter-rouge">p5.Amplitude</code> module:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mSound</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
+<span class="nx">mSound</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">p5</span><span class="p">.</span><span class="nx">soundOut</span><span class="p">);</span>
+<span class="nx">mSound</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">mAmp</span><span class="p">);</span>
+</code></pre></div></div>
+<p>These are the exact connections shown in the diagram above.</p>
+<p>Our <code class="language-plaintext highlighter-rouge">p5.Amplitude</code> object can now be used at every iteration of our <code class="language-plaintext highlighter-rouge">draw()</code> function to get the sound’s amplitude and display it visually using ellipses:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/-DxgXbZeG"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/-DxgXbZeG">
+    open example in new window
+  </a>
+</div>
+<p>This is similar to how we displayed audio information in the <a href="../sound-files/index.html">previous section</a> using the <a href="https://p5js.org/reference/p5.SoundFile/getPeaks/"><code class="language-plaintext highlighter-rouge">getPeaks()</code></a> function from the <code class="language-plaintext highlighter-rouge">SoundFile</code> object directly.</p>
+<p>That method works if all we want to do is visualize the information from a single file. If, instead, we want to mix different sound sources first (multiple files, microphone, effects), we’ll have to use an <a href="https://p5js.org/reference/p5.sound/p5.Amplitude/">Amplitude</a> object to visualize the resulting sound wave that is being sent to the speakers,</p>
+<h2 id="filters">Filters</h2>
+<p>Now that we can visualize our sound, let’s add an actual processing module to manipulate the quality and characteristics of our audio:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week04/sound-processing-03.jpg"/>
+</div>
+<p>The <a href="https://p5js.org/reference/p5.sound/p5.Filter/"><code class="language-plaintext highlighter-rouge">p5.Filter</code></a> module allows us to filter our audio signals based on frequencies.</p>
+<p>Some common types of filter that we can implement with this module are: <code class="language-plaintext highlighter-rouge">lowpass</code>, <code class="language-plaintext highlighter-rouge">highpass</code>, <code class="language-plaintext highlighter-rouge">bandpass</code> and <code class="language-plaintext highlighter-rouge">notch</code>.</p>
+<p>Like the name suggests, the <code class="language-plaintext highlighter-rouge">lowpass</code> filter lets low frequencies (bass) through while blocking high frequencies:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week04/sound-processing-04.jpg"/>
+</div>
+<p>The <code class="language-plaintext highlighter-rouge">highpass</code> acts in the opposite manner, filtering out low-frequency components of the sound, while letting high frequencies pass to the output:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week04/sound-processing-05.jpg"/>
+</div>
+<p>The <code class="language-plaintext highlighter-rouge">notch</code> filter is used to attenuate a specific range of frequencies from the audio signal, while the <code class="language-plaintext highlighter-rouge">bandpass</code> does the opposite and only lets a specific range of frequencies pass to its output:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week04/sound-processing-06.jpg"/>
+<img src="../../assets/images/week04/sound-processing-07.jpg"/>
+</div>
+<p>The frequency \(f\), sometimes called the cutoff frequency, corner frequency or break frequency, is a parameter to the filter object and will determine which frequencies pass and which will be filtered out. The <code class="language-plaintext highlighter-rouge">bandpass</code> and <code class="language-plaintext highlighter-rouge">notch</code> filters also have another parameter to control their bandwidth, or how wide their cutoff or pass bands are.</p>
+<p>With this in mind, we can instantiate a filter and implement the following system:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week04/sound-processing-03.jpg"/>
+</div>
+<p>With something like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mSound</span> <span class="o">=</span> <span class="nx">loadSound</span><span class="p">(</span><span class="dl">"</span><span class="s2">./sound-file.mp3</span><span class="dl">"</span><span class="p">);</span>
+<span class="nx">mFilter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">p5</span><span class="p">.</span><span class="nx">Filter</span><span class="p">(</span><span class="dl">"</span><span class="s2">bandpass</span><span class="dl">"</span><span class="p">);</span>
+<span class="nx">mAmp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">p5</span><span class="p">.</span><span class="nx">Amplitude</span><span class="p">();</span>
+
+<span class="nx">mSound</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
+<span class="nx">mFilter</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
+
+<span class="nx">mSound</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">mFilter</span><span class="p">);</span>
+<span class="nx">mFilter</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">p5</span><span class="p">.</span><span class="nx">soundOut</span><span class="p">);</span>
+<span class="nx">mFilter</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">mAmp</span><span class="p">);</span>
+</code></pre></div></div>
+<p>And use <code class="language-plaintext highlighter-rouge">mouseX</code> to pick the filter’s center frequency \(f\):</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/iM1QxgAch"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/iM1QxgAch">
+    open example in new window
+  </a>
+</div>
+<h2 id="fft">FFT</h2>
+<p>We can definitely hear the differences in the sound as we move the mouse around and change the filter’s cutoff frequency, but let’s look at a module that will let us visualize the filter’s effect as well.</p>
+<p>The <a href="https://p5js.org/reference/p5.sound/p5.FFT/"><code class="language-plaintext highlighter-rouge">p5.FFT</code></a> class implements the Fast Fourier Transform algorithm, which can be used to separate our audio signal into individual frequency components.</p>
+<p>We can replace the <code class="language-plaintext highlighter-rouge">Amplitude</code> module in the last example with the <code class="language-plaintext highlighter-rouge">FFT</code> module:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week04/sound-processing-08.jpg"/>
+</div>
+<p>And now, when we call <a href="https://p5js.org/reference/p5.FFT/analyze/"><code class="language-plaintext highlighter-rouge">FFT.analyze()</code></a>, this module calculates an array of \(1024\) values, where each value corresponds to how much of a particular audible frequency was present in the original audio signal.</p>
+<p>So, the first value of the array corresponds to frequencies between \(0\) and \(20\) Hz, the second value is for frequencies between \(20\) and \(40\) Hz, and so on, all the way to the 1024th value that corresponds to frequencies greater than \(22,000\) Hz or \(22\) kHz.</p>
+<p>If the value in a particular position is \(0\), that means the original audio signal had no sound in that frequency. On the other hand, if it’s \(255\), it means that the original signal had a very strong sound with that frequency.</p>
+<p>The <code class="language-plaintext highlighter-rouge">p5.FFT</code> object also has a <a href="https://p5js.org/reference/p5.FFT/getEnergy/"><code class="language-plaintext highlighter-rouge">getEnergy()</code></a> function that returns the amount of a specific frequency or frequency range present in the audio signal. It can also be called with one of five pre-defined range strings, to get the amount of energy in the <code class="language-plaintext highlighter-rouge">bass</code>, <code class="language-plaintext highlighter-rouge">lowMid</code>, <code class="language-plaintext highlighter-rouge">mid</code>, <code class="language-plaintext highlighter-rouge">highMid</code> and  <code class="language-plaintext highlighter-rouge">treble</code> frequency ranges.</p>
+<p>Knowing this, we can use the <code class="language-plaintext highlighter-rouge">p5.FFT</code> object and the <code class="language-plaintext highlighter-rouge">FFT.analyze()</code> and <code class="language-plaintext highlighter-rouge">getEnergy()</code> functions to visualize the effects of the filter from the previous example:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/5qBkXuygI"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/5qBkXuygI">
+    open example in new window
+  </a>
+</div>
+<p>Instead of just drawing one circle, we now draw five, one for each of the predefined frequency ranges, and as we move the mouse from the left to the right we will see movement go from the bottom circles to the top, which correspond to the higher frequency ranges.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../images/index.html">Images</a></li>
+<li><a href="../videos/index.html">Videos</a></li>
+<li><a href="../sound-files/index.html">Sound Files</a></li>
+<li><a href="index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Translations, Rotations and Transformations</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Translations, Rotations and Transformations</h1>
+<p>Now that we’ve covered the basics of drawing shapes in p5.js, let’s take a look a more advanced constructs for placing objects on our canvas.</p>
+<h2 id="translations">Translations</h2>
+<p>Let’s say we have a collection of simple shapes that make up a more complicated shape, like a star, a smiley face or a heart.</p>
+<p>We can draw this at a particular location by specifying all of the coordinates of our basic shapes:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/xGwHq_J9j"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/xGwHq_J9j">
+    open example in new window
+  </a>
+</div>
+<p>If we want to draw this shape at a different location we’ll have to <em>manually</em> recompute all of the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates of the basic shapes:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/9-CBxr1ca"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/9-CBxr1ca">
+    open example in new window
+  </a>
+</div>
+<p>We can use variables, which helps a bit:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/7AeMM-06s"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/7AeMM-06s">
+    open example in new window
+  </a>
+</div>
+<p>These all work, but there’s another way to do this, which might seem more difficult at first, but once we get used to it, will allow us to perform other kinds of transformations on our shapes, like rotations and scaling.</p>
+<p>Instead of changing the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> locations of where we want to draw our shape on our canvas, we can change the location of our canvas’ origin. We’ll always draw our shapes at the \((0, 0)\) location, but we’ll change where that location is in our canvas. We can use the p5.js function <a href="https://p5js.org/reference/p5/translate"><code class="language-plaintext highlighter-rouge">translate()</code></a> to change our origin location.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/5rd2HyU5c"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/5rd2HyU5c">
+    open example in new window
+  </a>
+</div>
+<p>The code that actually draws the heart is exactly the same. We just changed where on our canvas the \((0, 0)\) reference point is.</p>
+<div class="scaled-images left w100">
+<img src="../../assets/images/week01/transform-00.jpg"/>
+</div>
+<div class="scaled-images left w100">
+<img src="../../assets/images/week01/transform-01.jpg"/>
+</div>
+<h2 id="pushing--poping">Push’ing &amp; Pop’ing</h2>
+<p>One thing to note is that calls to <code class="language-plaintext highlighter-rouge">translate()</code> are cumulative and permanent, so calling <code class="language-plaintext highlighter-rouge">translate(150, 150)</code> twice will actually move the origin to \((300, 300)\) and everything that is drawn afterwards will use the new origin location. This is just like when we call <code class="language-plaintext highlighter-rouge">fill(0)</code> and everything that is drawn afterwards gets filled in black.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/KmoPjGRfu"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/KmoPjGRfu">
+    open example in new window
+  </a>
+</div>
+<p>We can always <em>undo</em> our translations by using negative values, so calling <code class="language-plaintext highlighter-rouge">translate(150, 150)</code> followed by <code class="language-plaintext highlighter-rouge">translate(-150, -150)</code> will move the origin back to the top-left corner of our canvas.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Xc1_4qBVQ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Xc1_4qBVQ">
+    open example in new window
+  </a>
+</div>
+<p>An easier way to do this is to use the <a href="https://p5js.org/reference/p5/push"><code class="language-plaintext highlighter-rouge">push()</code></a> and <a href="https://p5js.org/reference/p5/pop"><code class="language-plaintext highlighter-rouge">pop()</code></a> functions. When we can <code class="language-plaintext highlighter-rouge">push()</code> we are telling p5.js to pay extra close attention to our transformations and keep track of them for us. After we are done drawing, we call <code class="language-plaintext highlighter-rouge">pop()</code>, which now tells p5.js to undo all of the transformations made after <code class="language-plaintext highlighter-rouge">push()</code>. Or, in other words, the <code class="language-plaintext highlighter-rouge">push()</code> function tells p5.js to <em>save</em> the current state of our transformations, and the <code class="language-plaintext highlighter-rouge">pop()</code> function tells p5.js to go back to that state.</p>
+<p>So instead of doing this to recover our initial origin:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">translate</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">);</span>
+<span class="c1">// draw shapes</span>
+<span class="nx">translate</span><span class="p">(</span><span class="o">-</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">150</span><span class="p">);</span>
+</code></pre></div></div>
+<p>We can do this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">push</span><span class="p">();</span>
+<span class="nx">translate</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">);</span>
+<span class="c1">// draw shapes</span>
+<span class="nx">pop</span><span class="p">();</span>
+</code></pre></div></div>
+<p>It’s good practice to always <em>wrap</em> our translations and transformations with calls to <code class="language-plaintext highlighter-rouge">push()</code> and <code class="language-plaintext highlighter-rouge">pop()</code>. This way we can always recover the initial location of our origin.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/T5i7Fe0NJ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/T5i7Fe0NJ">
+    open example in new window
+  </a>
+</div>
+<h2 id="rotation">Rotation</h2>
+<p>The other advantage of using <code class="language-plaintext highlighter-rouge">translate()</code> with <code class="language-plaintext highlighter-rouge">push()</code>/<code class="language-plaintext highlighter-rouge">pop()</code> is that it’s the easiest way to rotate our custom shapes.</p>
+<p>The p5.js <a href="https://p5js.org/reference/p5/rotate"><code class="language-plaintext highlighter-rouge">rotate()</code></a> function rotates our canvas around its origin.</p>
+<p>If we want to draw two hearts rotated by \(45^{\circ}\) at \((100, 100)\) and \((250, 250)\), we might try:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">rotate</span><span class="p">(</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">4</span><span class="p">);</span>
+<span class="nx">translate</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<span class="c1">// draw first heart</span>
+<span class="nx">translate</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">);</span>
+<span class="c1">// draw second heart</span>
+</code></pre></div></div>
+<p>But this might not have the desired effect, since <code class="language-plaintext highlighter-rouge">rotate()</code> doesn’t rotate our shapes, but the whole canvas!</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/uKQuVIr3U"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/uKQuVIr3U">
+    open example in new window
+  </a>
+</div>
+<p>This is important to remember: all of these transformation functions aren’t changing our shapes, but the underlying canvas, relative to its current origin.</p>
+<div class="scaled-images left w100">
+<img src="../../assets/images/week01/transform-00.jpg"/>
+</div>
+<div class="scaled-images left w100">
+<img src="../../assets/images/week01/transform-02.jpg"/>
+</div>
+<p>So, if we want to draw a rotated heart at \((100, 100)\) and another at \((250, 250)\), we first translate our origin, rotate, draw our shapes, undo all of the transformations, and then repeat at the different location:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">push</span><span class="p">();</span>
+<span class="nx">translate</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<span class="nx">rotate</span><span class="p">(</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">4</span><span class="p">);</span>
+<span class="c1">// draw first heart</span>
+<span class="nx">pop</span><span class="p">();</span>
+
+<span class="nx">push</span><span class="p">();</span>
+<span class="nx">translate</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">);</span>
+<span class="nx">rotate</span><span class="p">(</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">8</span><span class="p">);</span>
+<span class="c1">// draw second heart</span>
+<span class="nx">pop</span><span class="p">();</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/jXO-XHvb8"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/jXO-XHvb8">
+    open example in new window
+  </a>
+</div>
+<h2 id="more-transformations">More Transformations</h2>
+<p>Once we get used to how <code class="language-plaintext highlighter-rouge">translate()</code>, <code class="language-plaintext highlighter-rouge">push()</code> and <code class="language-plaintext highlighter-rouge">pop()</code> work we can even use them in conjunction with <a href="https://p5js.org/reference/p5/scale"><code class="language-plaintext highlighter-rouge">scale()</code></a> to change the size of our objects without having to recalculate new coordinates and lengths for our basic shapes.</p>
+<p>Again, we just have to remember that <code class="language-plaintext highlighter-rouge">scale()</code> is actually scaling our canvas and not our shapes, and that it works relative to the origin, where it grows (or shrinks) our shapes away from (or towards) the origin. Similar to how we used <code class="language-plaintext highlighter-rouge">rotate()</code>, if we want to change the size of shapes that are drawn in different places of our canvas, we first have to <code class="language-plaintext highlighter-rouge">translate()</code> to those locations, <code class="language-plaintext highlighter-rouge">scale()</code> the canvas and then draw:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">push</span><span class="p">();</span>
+<span class="nx">translate</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<span class="nx">scale</span><span class="p">(</span><span class="mf">0.6</span><span class="p">);</span>
+<span class="c1">// draw small heart</span>
+<span class="nx">pop</span><span class="p">();</span>
+
+<span class="nx">push</span><span class="p">();</span>
+<span class="nx">translate</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">);</span>
+<span class="nx">scale</span><span class="p">(</span><span class="mf">3.0</span><span class="p">);</span>
+<span class="c1">// draw big heart</span>
+<span class="nx">pop</span><span class="p">();</span>
+</code></pre></div></div>
+<p>And since we’re using <code class="language-plaintext highlighter-rouge">push()</code> and <code class="language-plaintext highlighter-rouge">pop()</code> we can easily combine calls to <code class="language-plaintext highlighter-rouge">scale()</code> and <code class="language-plaintext highlighter-rouge">rotate()</code>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/TKHl8dijK"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/TKHl8dijK">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../programming/index.html">Programming Computers</a></li>
+<li><a href="../javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../variables/index.html">Variables</a></li>
+<li><a href="index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

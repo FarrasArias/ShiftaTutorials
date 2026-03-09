@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Conditionals</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Conditionals</h1>
+<h2 id="mouse-over-shapes">Mouse Over Shapes</h2>
+<p>Now that we’ve seen how to create <a href="../../week01/variables/index.html">variables</a> to keep track of changing values and parameters in our code, let’s see how they can be used in boolean expressions to create interactive shapes.</p>
+<p>Let’s start with a square, centered on our canvas. Notice the use of variables for setting the location and dimensions of the <code class="language-plaintext highlighter-rouge">rect()</code>. This will be important soon.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/jLZVEU6rq"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/jLZVEU6rq">
+    open example in new window
+  </a>
+</div>
+<p>Now, let’s say we want to detect when the mouse is inside the square and change its color from white to gold.</p>
+<p>Our code structure could look something like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">mouse</span> <span class="nx">is</span> <span class="nx">inside</span> <span class="nx">the</span> <span class="nx">square</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">gold</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">white</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">rect</span><span class="p">(</span><span class="nx">rectX</span><span class="p">,</span> <span class="nx">rectY</span><span class="p">,</span> <span class="nx">rectWidth</span><span class="p">);</span>
+</code></pre></div></div>
+<p>We use the <code class="language-plaintext highlighter-rouge">if()</code> statement to specify that we have some code that shouldn’t be executed every time, but instead should only run if certain <em>conditions</em> are met. In our case we only want to execute the <code class="language-plaintext highlighter-rouge">fill(gold)</code> command <em>if</em> the mouse is inside the square during that iteration of our <code class="language-plaintext highlighter-rouge">draw()</code> loop. In case the mouse is not inside the square during a given iteration, the if condition is not met and the code specified by the <code class="language-plaintext highlighter-rouge">else</code> statement gets executed instead.</p>
+<p>Now we just have to figure out exactly how to calculate when the mouse is inside the square during an iteration of our <code class="language-plaintext highlighter-rouge">draw()</code> loop.</p>
+<p>We know that the <code class="language-plaintext highlighter-rouge">mouseX</code> and <code class="language-plaintext highlighter-rouge">mouseY</code> variables always hold the current location of our mouse, so we could use them to determine where the mouse is in relation to each of the four edges of the square.</p>
+<h2 id="square-edges">Square Edges</h2>
+<p>Let’s start with the leftmost edge. For the mouse to be inside the square, its x-position has to be to the right of the square’s leftmost edge. Since we have a variable for the x-position of the square this can be determined by asking the computer:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if(mouseX &gt; rectX)
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/w7AcLo3Ai"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/w7AcLo3Ai">
+    open example in new window
+  </a>
+</div>
+<p>As we move the mouse around the canvas we’ll notice that, yes, the square changes color when the mouse goes from the left side of the canvas into the square, but it also stays gold when the mouse exits on the right side, or when the mouse is above or below the square. Let’s fix that.</p>
+<p>Focusing on the x-direction only, the logic we want to implement could be described in words as: “fill the square with gold as long as the mouse is <em>between</em> the left and right edges of the square”.</p>
+<p>This could be expressed as the following equation:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">leftEdge</span> <span class="o">&lt;</span> <span class="nx">mouseX</span> <span class="o">&lt;</span> <span class="nx">rightEdge</span>
+</code></pre></div></div>
+<p>Unfortunately we can’t just put a double conditional like that inside an <code class="language-plaintext highlighter-rouge">if()</code> statement, but we can break it up using boolean logic. Since we want both conditions to be true, this is equivalent to:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">leftEdge</span> <span class="o">&lt;</span> <span class="nx">mouseX</span> <span class="nx">AND</span> <span class="nx">mouseX</span> <span class="o">&lt;</span> <span class="nx">rightEdge</span>
+</code></pre></div></div>
+<p>And this can be rearranged a bit to improve legibility, as “mouse is greater than left edge AND less than right edge”:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mouseX</span> <span class="o">&gt;</span> <span class="nx">leftEdge</span> <span class="nx">AND</span> <span class="nx">mouseX</span> <span class="o">&lt;</span> <span class="nx">rightEdge</span>
+</code></pre></div></div>
+<p>We don’t have the location of the rightmost edge, but we can calculate it from the rectangle’s x-position and its width:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">rightEdge</span> <span class="o">=</span> <span class="nx">rectX</span> <span class="o">+</span> <span class="nx">rectWidth</span>
+</code></pre></div></div>
+<p>Putting it into JavaScript and using our variables this becomes:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="p">(</span><span class="nx">mouseX</span> <span class="o">&gt;</span> <span class="nx">rectX</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseX</span> <span class="o">&lt;</span> <span class="nx">rightEdge</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/8bEIeXtHV"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/8bEIeXtHV">
+    open example in new window
+  </a>
+</div>
+<p>Better! But the square is still gold when the mouse is directly above or below the square.</p>
+<h1>🤔</h1>
+<p>We can go through the above reasoning again, but this time including the y-direction as well.</p>
+<p>A phrase that could describe what we want could be something like: “fill the square with gold if the mouse x-position is <em>between</em> the left and right edges of the square AND the mouse y-position is <em>between</em> its bottom and top edges”.</p>
+<p>The logic in pseudo-code would then be:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">mouseX</span> <span class="o">&gt;</span> <span class="nx">leftEdge</span> <span class="nx">AND</span> <span class="nx">mouseX</span> <span class="o">&lt;</span> <span class="nx">rightEdge</span> <span class="nx">AND</span>
+<span class="nx">mouseY</span> <span class="o">&gt;</span> <span class="nx">topEdge</span> <span class="nx">AND</span> <span class="nx">mouseY</span> <span class="o">&lt;</span> <span class="nx">bottomEdge</span>
+</code></pre></div></div>
+<p>The y-direction logic statements (<code class="language-plaintext highlighter-rouge">mouseY &lt; bottomEdge</code>) look “upside down”. We want to detect when the mouse is above the bottom edge, not below!</p>
+<p>This is actually correct the way it is though because <code class="language-plaintext highlighter-rouge">mouseY</code> grows towards the bottom of the screen.</p>
+<p>We just have to declare a <code class="language-plaintext highlighter-rouge">bottomEdge</code> variable and our JavaScript could look like:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">mouseX</span> <span class="o">&gt;</span> <span class="nx">rectX</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseX</span> <span class="o">&lt;</span> <span class="nx">rightEdge</span> <span class="o">&amp;&amp;</span>
+    <span class="nx">mouseY</span> <span class="o">&gt;</span> <span class="nx">rectY</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseY</span> <span class="o">&lt;</span> <span class="nx">bottomEdge</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/EqZNExq9y"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/EqZNExq9y">
+    open example in new window
+  </a>
+</div>
+<p>The <code class="language-plaintext highlighter-rouge">if()</code> statement in the code above is actually one long line, but the editor has separated it into more lines for better legibility.</p>
+<h2 id="beyond-one-square">Beyond One Square</h2>
+<p>Since we used variables to define all of the parameters for our square, we could easily change its dimensions and move it anywhere else on the screen by only changing its parameters <code class="language-plaintext highlighter-rouge">rectX</code>, <code class="language-plaintext highlighter-rouge">rectY</code>, <code class="language-plaintext highlighter-rouge">rectWidth</code> and <code class="language-plaintext highlighter-rouge">rectHeight</code>:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/SG0OB3O50"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/SG0OB3O50">
+    open example in new window
+  </a>
+</div>
+<p>We can even extend it to multiple shapes:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/IOAIaoJ2b"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/IOAIaoJ2b">
+    open example in new window
+  </a>
+</div>
+<p>There is a lot of repeated code here, which makes the sketch look messy and more complicated than it is.</p>
+<p>We’ll later see how to use <a href="../functions/index.html">functions</a>, <a href="../../week03/arrays/index.html">arrays</a> and <a href="../../week03/objects/index.html">objects</a> to clean this up and make it easier to understand, extend and maintain:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Htlpfx91a"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Htlpfx91a">
+    open example in new window
+  </a>
+</div>
+<h2 id="collision">Collision</h2>
+<p>This kind of logic is actually a common pattern in certain types of programming. It’s useful not just for detecting when our mouse is over objects, but also for detecting when different shapes overlap or collide, like in a video-game.</p>
+<p>In the sketch below, can we detect when our circle overlaps with the rectangle?</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ez8oUpy_o"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ez8oUpy_o">
+    open example in new window
+  </a>
+</div>
+<p>We can start with the logic from before, except it won’t detect when the circle overlaps with the rectangle, only when the center of the circle goes inside the rectangle.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZGC9WPXig"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZGC9WPXig">
+    open example in new window
+  </a>
+</div>
+<p>If we look at a diagram of what’s happening and what we want to happen, we can see that instead of detecting when the center of the circle is inside the rectangle, we should instead detect when the center of the circle is within \(r\) pixels from the edge of the rectangle (where \(r\) is the circle’s radius, or, half of its diameter):</p>
+<div class="scaled-images">
+<img src="../../assets/images/week02/overlap-00.jpg"/>
+</div>
+<p>If we extend the drawing to consider all four sides of the rectangle, we get something like this:</p>
+<div class="scaled-images">
+<img src="../../assets/images/week02/overlap-01.jpg"/>
+</div>
+<p>This looks exactly like our original situation of detecting whether the center of the circle is inside a rectangle, but now we just have to use a bigger rectangle.</p>
+<p>We can create some new variables for our new overlap rectangle:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">ellipseRadius</span> <span class="o">=</span> <span class="nx">ellipseDiam</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="kd">let</span> <span class="nx">oRectX</span> <span class="o">=</span> <span class="nx">rectX</span> <span class="o">-</span> <span class="nx">ellipseRadius</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">oRectY</span> <span class="o">=</span> <span class="nx">rectY</span> <span class="o">-</span> <span class="nx">ellipseRadius</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">oRightEdge</span> <span class="o">=</span> <span class="nx">rightEdge</span> <span class="o">+</span> <span class="nx">ellipseRadius</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">oBottomEdge</span> <span class="o">=</span> <span class="nx">bottomEdge</span> <span class="o">+</span> <span class="nx">ellipseRadius</span><span class="p">;</span>
+</code></pre></div></div>
+<p>And update the variables in the <code class="language-plaintext highlighter-rouge">if()</code> statement, but the logic is exactly the same:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">mouseX</span> <span class="o">&gt;</span> <span class="nx">oRectX</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseX</span> <span class="o">&lt;</span> <span class="nx">oRightEdge</span> <span class="o">&amp;&amp;</span>
+    <span class="nx">mouseY</span> <span class="o">&gt;</span> <span class="nx">oRectY</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseY</span> <span class="o">&lt;</span> <span class="nx">oBottomEdge</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Pm6T8XToP"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Pm6T8XToP">
+    open example in new window
+  </a>
+</div>
+<p>It would be a nice touch to have the circle and rectangle turn different colors when they overlap.</p>
+<p>We could do that by repeating the detection logic before drawing each shape:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// draw rectangle</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">mouseX</span> <span class="o">&gt;</span> <span class="nx">oRectX</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseX</span> <span class="o">&lt;</span> <span class="nx">oRightEdge</span> <span class="o">&amp;&amp;</span>
+    <span class="nx">mouseY</span> <span class="o">&gt;</span> <span class="nx">oRectY</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseY</span> <span class="o">&lt;</span> <span class="nx">oBottomEdge</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">rectColor</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">rect</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">,</span><span class="nx">w</span><span class="p">,</span><span class="nx">h</span><span class="p">);</span>
+
+<span class="c1">// draw circle</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">mouseX</span> <span class="o">&gt;</span> <span class="nx">oRectX</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseX</span> <span class="o">&lt;</span> <span class="nx">oRightEdge</span> <span class="o">&amp;&amp;</span>
+    <span class="nx">mouseY</span> <span class="o">&gt;</span> <span class="nx">oRectY</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseY</span> <span class="o">&lt;</span> <span class="nx">oBottomEdge</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">rectColor</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">ellipse</span><span class="p">(</span><span class="nx">mouseX</span><span class="p">,</span> <span class="nx">mouseY</span><span class="p">,</span> <span class="nx">diam</span><span class="p">,</span> <span class="nx">diam</span><span class="p">);</span>
+</code></pre></div></div>
+<p>But, this is unnecessary and makes our code harder to read.</p>
+<p>What we can do instead is calculate the overlap logic once, and save the result in a variable that we can check multiple times inside our <code class="language-plaintext highlighter-rouge">draw()</code> loop:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">overlap</span> <span class="o">=</span> <span class="nx">mouseX</span> <span class="o">&gt;</span> <span class="nx">oRectX</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseX</span> <span class="o">&lt;</span> <span class="nx">oRightEdge</span> <span class="o">&amp;&amp;</span>
+              <span class="nx">mouseY</span> <span class="o">&gt;</span> <span class="nx">oRectY</span> <span class="o">&amp;&amp;</span> <span class="nx">mouseY</span> <span class="o">&lt;</span> <span class="nx">oBottomEdge</span><span class="p">;</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/RIBXWiq2-"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/RIBXWiq2-">
+    open example in new window
+  </a>
+</div>
+<p>This could still be improved to account for the cases where it wrongly detects an overlap when the circle moves near the corners of the rectangle (a literal <a href="https://en.wikipedia.org/wiki/Corner_case">corner case</a>), but we’ll wait until we see <a href="../functions/index.html">functions</a> and a little bit of <a href="../../week05/vectors/index.html">trigonometry</a>.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="index.html">Conditionals</a></li>
+<li><a href="../patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../counters/index.html">Loops as Counters</a></li>
+<li><a href="../functions/index.html">Functions</a></li>
+<li><a href="../random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

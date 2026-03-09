@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Classes</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Classes</h1>
+<p>We’ve been learning about <a href="../arrays/index.html">arrays</a> and <a href="../objects/index.html">objects</a>, and those structures work really well to organize data: values that are related to each other can be grouped and accessed in different ways.</p>
+<p>Let’s review our object exercise. We have an array of obstacles, and each obstacle is an object that keeps track of its <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> positions, <code class="language-plaintext highlighter-rouge">diameter</code>, <code class="language-plaintext highlighter-rouge">fill color</code> and <code class="language-plaintext highlighter-rouge">overlap color</code>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/X7DALVA_q"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/X7DALVA_q">
+    open example in new window
+  </a>
+</div>
+<h2 id="classy-code">Classy Code</h2>
+<p>What if we also want to group behavior and functionality along with these values? So, not only do we want to store the <code class="language-plaintext highlighter-rouge">diameter</code> and the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> positions of an obstacle, but we also want to define <em>how</em> they behave and what happens when they collide with each other or the mouse.</p>
+<p>Right now the <code class="language-plaintext highlighter-rouge">draw()</code> function is responsible for checking for overlap. This can get really messy if we keep adding functionality or complexity to our obstacles, like, drawing multiple shapes upon overlap.</p>
+<p>This is a perfect case for using classes. We can think of classes as being super objects: objects store values indexed by names; classes do that too, but they also store their own functions for manipulating those values.</p>
+<p>The overall structure for defining a class looks something like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">ClassName</span> <span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">param0</span><span class="p">,</span> <span class="nx">param1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// initialize some internal values and properties</span>
+  <span class="p">}</span>
+
+  <span class="nx">functionName</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// do stuff with the internal values and properties</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Class definitions have a special function called <code class="language-plaintext highlighter-rouge">constructor()</code> that is used to initialize <em>instances</em> of our class and define internal variables. Class definitions also contain other functions that are specific to the class and are used to manipulate the internal values and parameters of class <em>instances</em>.</p>
+<p>What are <em>instances</em>?</p>
+<p>Let’s look at an example. We’ll redefine our obstacles from the example above to use an <code class="language-plaintext highlighter-rouge">Obstacle</code> class. We don’t need to define any behavior for these objects, so our class will only have a <code class="language-plaintext highlighter-rouge">constructor()</code> for now.</p>
+<p>In the constructor, when we want to assign values for an instance’s <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code>, <code class="language-plaintext highlighter-rouge">diameter</code> and <code class="language-plaintext highlighter-rouge">color</code> parameters, we prepend those variable names with the word <code class="language-plaintext highlighter-rouge">this</code>, to make it explicit that those values belong to one <em>instance</em> of the class <code class="language-plaintext highlighter-rouge">Obstacle</code>, more specifically, these values belong to the new obstacle that we’re creating with the <code class="language-plaintext highlighter-rouge">constructor()</code> function.</p>
+<p>And, since the obstacles are in a class now, the way we create a new obstacle based on our <code class="language-plaintext highlighter-rouge">Obstacle</code> class definition, is using the word <code class="language-plaintext highlighter-rouge">new</code>. This line of code will run the <code class="language-plaintext highlighter-rouge">constructor()</code> function in our <code class="language-plaintext highlighter-rouge">Obstacle</code> class definition and return a new <em>instance</em> of an <code class="language-plaintext highlighter-rouge">Obstacle</code>, with its own values for <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code>, <code class="language-plaintext highlighter-rouge">diameter</code> and color parameters:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">anObstacle</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Obstacle</span><span class="p">();</span>
+</code></pre></div></div>
+<p>We can even put that inside a loop to create multiple <em>instances</em> of <code class="language-plaintext highlighter-rouge">Obstacle</code> objects, each with their own parameters. The way we access a class instance parameters is exactly like how we access a plain JavaScript object’s parameters: using <em>dot notation</em>.</p>
+<p>If we have this in the constructor:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+</code></pre></div></div>
+<p>We can instantiate an object and access its <em>member</em> variables like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">mObs</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Obstacle</span><span class="p">();</span>
+<span class="nx">print</span><span class="p">(</span><span class="dl">"</span><span class="s2">x is: </span><span class="dl">"</span><span class="p">,</span> <span class="nx">mObs</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="dl">"</span><span class="s2"> y is: </span><span class="dl">"</span><span class="p">,</span> <span class="nx">mObs</span><span class="p">.</span><span class="nx">y</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/zspwKXIMx"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/zspwKXIMx">
+    open example in new window
+  </a>
+</div>
+<h2 id="classy-behavior">Classy Behavior</h2>
+<p>So, other than the class definition and how we instantiate our obstacles in <code class="language-plaintext highlighter-rouge">setup()</code>, not much has changed: the rest of the code, specially the code in <code class="language-plaintext highlighter-rouge">draw()</code>, has stayed exactly the same. The only difference is that now the parameters for each obstacle have been put inside a class object. The <code class="language-plaintext highlighter-rouge">draw()</code> function is still doing all of the work of checking for overlap with the mouse ellipse, but now each obstacle’s parameters come from a class object, not a plain JavaScript object. Let’s move that logic to functions inside our class.</p>
+<p>Since we only care about overlap with the mouse ellipse, let’s call that function <code class="language-plaintext highlighter-rouge">hovered()</code> and only check for overlap with the mouse ellipse. Since all of the information about the obstacle is available within itself using the <code class="language-plaintext highlighter-rouge">this</code> operator, the <code class="language-plaintext highlighter-rouge">hovered()</code> function doesn’t need any input parameters.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/CmGNj7rt2"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/CmGNj7rt2">
+    open example in new window
+  </a>
+</div>
+<p>The resulting overall behavior is the same, but all of the logic necessary for defining the functionality of our obstacles is now inside our <code class="language-plaintext highlighter-rouge">Obstacle</code> class definition and that makes it easier for us to read and update our code and add new functionality and behavior to our obstacles.</p>
+<h2 id="classy-encapsulation">Classy Encapsulation</h2>
+<p>Now that we have a way to <em>encapsulate</em> parameters, behavior and functionality for our obstacles inside a class, we can draw slightly more complex shapes when there’s an overlap with the mouse ellipse.</p>
+<p>In order to fully <em>encapsulate</em> this inside the class objects, let’s create a function inside our class that will be responsible for checking for overlap and for drawing the shape based on the result of the check. The logic will be similar to what is implemented in <code class="language-plaintext highlighter-rouge">draw()</code>, but now it will be the object’s responsibility to check for overlap and draw itself.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/FFQ9SNAk5"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/FFQ9SNAk5">
+    open example in new window
+  </a>
+</div>
+<p>This is what <em>encapsulation</em> means: we’ve separated the internal logic of our obstacles from our main <code class="language-plaintext highlighter-rouge">setup()</code> and <code class="language-plaintext highlighter-rouge">draw()</code> functions. If we look at the loops in our <code class="language-plaintext highlighter-rouge">setup()</code> and <code class="language-plaintext highlighter-rouge">draw()</code> functions, they are very easy to read and understand. One creates new <code class="language-plaintext highlighter-rouge">Obstacle</code> objects, the other draws every <code class="language-plaintext highlighter-rouge">Obstacle</code> object.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">numObs</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">anObstacle</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Obstacle</span><span class="p">();</span>
+    <span class="nx">allObstacles</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">anObstacle</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">draw</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">allObstacles</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">anObstacle</span> <span class="o">=</span> <span class="nx">allObstacles</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+    <span class="nx">anObstacle</span><span class="p">.</span><span class="nx">draw</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>If we are interested in the details of what happens inside our <code class="language-plaintext highlighter-rouge">Obstacle</code> objects we can look at the class implementation separately.</p>
+<h2 id="classy-drawings">Classy Drawings</h2>
+<p>Let’s add fancier drawings to our obstacles when they are hovered over by the mouse ellipse.</p>
+<p>We’ll draw \(4\) concentric ellipses instead of just one, with varying opacity and diameter values, where larger ellipses are more transparent and get drawn first.</p>
+<p>This calculation turns the sequence \((0, 1, 2, 3)\) into the following transparency values \((64, 128, 192, 256)\):</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">mAlpha</span> <span class="o">=</span> <span class="p">((</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">256</span><span class="p">;</span>
+</code></pre></div></div>
+<p>And this turns the sequence \((0, 1, 2, 3)\) into the following multipliers for the original diameter value \((4, 3, 2, 1)\):</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">mDiameterMultiplier</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="nx">i</span><span class="p">;</span>
+</code></pre></div></div>
+<p>Now when the mouse hovers over an obstacle, concentric circles get drawn, but all of the logic is implemented inside the <code class="language-plaintext highlighter-rouge">Obstacle</code> class: our main <code class="language-plaintext highlighter-rouge">setup()</code> and <code class="language-plaintext highlighter-rouge">draw()</code> functions stayed the same.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/gG464xVSH"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/gG464xVSH">
+    open example in new window
+  </a>
+</div>
+<p>Now it’s easier to add even more obstacles to our sketch and have obstacles with different number of <em>rings</em>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/q565eCcti"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/q565eCcti">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="index.html">Classes</a></li>
+<li><a href="../cycles/index.html">Cycles</a></li>
+<li><a href="../sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

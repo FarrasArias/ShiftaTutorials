@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Interactions</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Interactions</h1>
+<p>We’ve seen and used the p5.js special variables <a href="https://p5js.org/reference/p5/mouseX"><code class="language-plaintext highlighter-rouge">mouseX</code></a> and <a href="https://p5js.org/reference/p5/mouseY"><code class="language-plaintext highlighter-rouge">mouseY</code></a> when we looked at <a href="../../week01/variables/index.html">variables</a>, <a href="../../week02/conditionals/index.html">conditionals</a> and <a href="../../week02/functions/index.html">functions</a>.</p>
+<p>These variables always give us the current <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates of our mouse, relative to the \((0, 0)\) origin of our canvas.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/F3XVsdlkv"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/F3XVsdlkv">
+    open example in new window
+  </a>
+</div>
+<p>Now, we are going to see some other special variables and functions that will help us add interactivity to our sketches using the mouse and the keyboard.</p>
+<h2 id="mouse-variables">Mouse Variables</h2>
+<p>Another pair of special variables available to us in p5.js are the <a href="https://p5js.org/reference/p5/pmouseX"><code class="language-plaintext highlighter-rouge">pmouseX</code></a> and <a href="https://p5js.org/reference/p5/pmouseY"><code class="language-plaintext highlighter-rouge">pmouseY</code></a> variables. They are like the <code class="language-plaintext highlighter-rouge">mouseX</code> and <code class="language-plaintext highlighter-rouge">mouseY</code> variables, but they hold the <em>previous</em> position of our mouse.</p>
+<p>By comparing the current and previous positions of our mouse we can draw lines or shapes that are based on the speed in which a user moves the mouse.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/41CirwIOB"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/41CirwIOB">
+    open example in new window
+  </a>
+</div>
+<p>Another mouse-related special variable in p5.js is the <a href="https://p5js.org/reference/p5/mouseIsPressed"><code class="language-plaintext highlighter-rouge">mouseIsPressed</code></a> variable. This variable returns a <em>boolean</em> value that tells us whether any of the mouse buttons are currently pressed.</p>
+<p>If we query this variable using an <code class="language-plaintext highlighter-rouge">if</code> statement inside our <code class="language-plaintext highlighter-rouge">draw()</code> function it will return <code class="language-plaintext highlighter-rouge">true</code> if the user is holding down any of the mouse buttons, or a <code class="language-plaintext highlighter-rouge">false</code> otherwise. We can then use this simple interaction pattern to change something about our sketch, like the background color or even the fill color of our shapes.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="p">(</span><span class="nx">mouseIsPressed</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// a mouse button is being pressed</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="c1">// no button is being pressed</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/XPa-IjLtt"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/XPa-IjLtt">
+    open example in new window
+  </a>
+</div>
+<h2 id="mouse-functions">Mouse Functions</h2>
+<p>Let’s say we want to count the number of times an user has clicked the mouse. We could try to just add an <code class="language-plaintext highlighter-rouge">if()</code> statement to our <code class="language-plaintext highlighter-rouge">draw()</code> function like this and increment a variable every time <code class="language-plaintext highlighter-rouge">mouseIsPressed</code> is <code class="language-plaintext highlighter-rouge">true</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">draw</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">mouseIsPressed</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">clickCount</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/2qicG7dPq"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/2qicG7dPq">
+    open example in new window
+  </a>
+</div>
+<p>This doesn’t seem correct…</p>
+<p>What’s happening is that our <code class="language-plaintext highlighter-rouge">draw()</code> function executes faster than our clicks, so the <code class="language-plaintext highlighter-rouge">if()</code> statement and the increment command execute multiple times while we’re holding down the mouse button even if we’re really quick.</p>
+<p>If we want to be a little more precise when detecting mouse actions, we can use a couple of special functions available in p5.js.</p>
+<p>The way we use these functions is a little different from how we use most of the p5.js functions that we’ve seen so far.</p>
+<p>Usually, a function like <code class="language-plaintext highlighter-rouge">rect()</code> or <code class="language-plaintext highlighter-rouge">fill()</code> has been defined by the p5.js library and we call them in our code. These new mouse event functions are almost the opposite: p5.js knows when to call them, but we have to define them.</p>
+<p>For example, if we want to count the number of times the mouse is clicked we define a function called <code class="language-plaintext highlighter-rouge">mouseClicked()</code> like this and p5.js will call it just once per click:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mouseClicked</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">clickCount</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Xo6XxohE_"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Xo6XxohE_">
+    open example in new window
+  </a>
+</div>
+<p>And now we can use the <code class="language-plaintext highlighter-rouge">clickCount</code> variable to change some parameters in our sketch. In this case we’ll use the  number of clicks to compute the diameter for an ellipse. To make the changes more apparent, we’ll give the ellipse a starting diameter of \(20\) and we’ll increment it by \(4\) pixels per click:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">mDiam</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="nx">clickCount</span><span class="p">;</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/CPZLTJ2JP"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/CPZLTJ2JP">
+    open example in new window
+  </a>
+</div>
+<h2 id="functions-and-variables">Functions and Variables</h2>
+<p>Since the <code class="language-plaintext highlighter-rouge">mouseX</code> and <code class="language-plaintext highlighter-rouge">mouseY</code> variables are always available to us, we can use them inside the <code class="language-plaintext highlighter-rouge">mouseClicked()</code> function to get the location of a mouse click. In addition to increasing our ellipse size, we can now use clicks to move it.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/kP0syTm_8"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/kP0syTm_8">
+    open example in new window
+  </a>
+</div>
+<h2 id="more-events">More Events</h2>
+<p>These <em>event</em> functions provide better granularity for the actual mouse actions.</p>
+<p>There are separate functions that are called when a mouse button is <a href="https://p5js.org/reference/p5/mousePressed">pressed</a>, <a href="https://p5js.org/reference/p5/mouseReleased">released</a>, <a href="https://p5js.org/reference/p5/mouseClicked">clicked</a> or <a href="https://p5js.org/reference/p5/doubleClicked">double clicked</a>.</p>
+<p>There are also functions that are called when the mouse is <a href="https://p5js.org/reference/p5/mouseMoved">moved</a> or <a href="https://p5js.org/reference/p5/mouseDragged">dragged</a> (pressed + moved).</p>
+<p>We just have to define them in our code!</p>
+<p>Let’s add to the previous example.</p>
+<p>We’ll still move the ellipse on every click, and we’ll increase its diameter by \(4\) pixels per click, but now we’ll also increase the diameter by \(12\) on double-clicks, so we’ll need a counter for those, and a way to detect them.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">doubleClicked</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">doubleClickCount</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Done!!</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/hPBEKfhH5"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/hPBEKfhH5">
+    open example in new window
+  </a>
+</div>
+<p>But, it gets kind of boring to click so many times to get our ellipse to a certain size. Let’s say we just want to be able to stretch it out temporarily by dragging the mouse.</p>
+<p>This requires a couple of extra variables and a bit of extra logic.</p>
+<p>First, we need to detect when the mouse is pressed (button is down), which is different than a click when the button goes down and then up. When we detect a press, we’ll record the <code class="language-plaintext highlighter-rouge">mouseX</code> and <code class="language-plaintext highlighter-rouge">mouseY</code> position not only so we can move our ellipse later, but also so we can calculate the distance of our drag action.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mousePressed</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">mX</span> <span class="o">=</span> <span class="nx">mouseX</span><span class="p">;</span>
+  <span class="nx">mY</span> <span class="o">=</span> <span class="nx">mouseY</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>While the mouse is being dragged, we will calculate and store the sum of how far it has moved from the press location in the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> directions. The <code class="language-plaintext highlighter-rouge">mouseX</code> and <code class="language-plaintext highlighter-rouge">mouseY</code> variables are the current coordinates of our mouse, and <code class="language-plaintext highlighter-rouge">mX</code> and <code class="language-plaintext highlighter-rouge">mY</code> are the coordinates of where the mouse was when we pressed the button.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mouseDragged</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">dragDistance</span> <span class="o">=</span> <span class="nx">abs</span><span class="p">(</span><span class="nx">mouseX</span> <span class="o">-</span> <span class="nx">mX</span><span class="p">)</span> <span class="o">+</span> <span class="nx">abs</span><span class="p">(</span><span class="nx">mouseY</span> <span class="o">-</span> <span class="nx">mY</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Now in our <code class="language-plaintext highlighter-rouge">draw()</code> function we can just combine all of these contributions to the ellipse’s diameter:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">mDiam</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="nx">clickCount</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">*</span> <span class="nx">doubleClickCount</span> <span class="o">+</span> <span class="nx">dragDistance</span><span class="p">;</span>
+</code></pre></div></div>
+<p>We just have to remember to clear the <code class="language-plaintext highlighter-rouge">dragDistance</code> variable when the mouse is released because there is no more drag happening:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mouseReleased</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">dragDistance</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/lJKgp2IIY"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/lJKgp2IIY">
+    open example in new window
+  </a>
+</div>
+<h2 id="keyboard-events">Keyboard Events</h2>
+<p>Just like with the mouse, p5.js also has event functions that get called when an user interacts with the keyboard.</p>
+<p>The <a href="https://p5js.org/reference/p5/keyPressed"><code class="language-plaintext highlighter-rouge">keyPressed()</code></a> and <a href="https://p5js.org/reference/p5/keyReleased"><code class="language-plaintext highlighter-rouge">keyReleased()</code></a> functions can be defined to specify behavior and actions that we want our sketch to take when keys are pressed or released.</p>
+<p>If we want to pick a random grey value for our ellipse every time a key is pressed, we just have to define a <code class="language-plaintext highlighter-rouge">keyPressed()</code> function in our sketch:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">keyPressed</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">fillColor</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/UdSwBaV9L"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/UdSwBaV9L">
+    open example in new window
+  </a>
+</div>
+<p>Similar to the <code class="language-plaintext highlighter-rouge">mouseX</code> and <code class="language-plaintext highlighter-rouge">mouseY</code> variables, we can query the special p5.js <a href="https://p5js.org/reference/p5/key"><code class="language-plaintext highlighter-rouge">key</code></a> and <a href="https://p5js.org/reference/p5/keyCode"><code class="language-plaintext highlighter-rouge">keyCode</code></a> variables anywhere in our code to determine which keys are being pressed.</p>
+<p>The difference between <code class="language-plaintext highlighter-rouge">key</code> and <code class="language-plaintext highlighter-rouge">keyCode</code> is that <code class="language-plaintext highlighter-rouge">key</code> holds the letter associated with a key on the keyboard, while <code class="language-plaintext highlighter-rouge">keyCode</code> has a numerical value associated with that key. The <code class="language-plaintext highlighter-rouge">keyCode</code> variable is useful when we want to detect non-letter keys, like the left-, right-, up- and down- arrows, the delete and escape keys, etc.</p>
+<p>We can use key codes to move an ellipse around the screen and the <code class="language-plaintext highlighter-rouge">key</code> variable to reset its position:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/SNBPBinYR"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/SNBPBinYR">
+    open example in new window
+  </a>
+</div>
+<p>We can almost program a simple video-game now!</p>
+<h2 id="interactions-wih-time">Interactions wih Time</h2>
+<p>The p5.js library also gives us variables and functions that allow us to interact with time.</p>
+<p><em>WHAT?!?!</em></p>
+<p>Yeah. Let’s say we want something to happen at a specific time of day, or based on the current hour, or after a certain number of seconds has passed… that’s how we interact with time. We’ll soon see how to use these functions and variables to create <a href="../animations/index.html">animations</a>, but for now, let’s just see what they are and how to use them.</p>
+<p>Let’s say we want our background to change color periodically. In order to do that we’ll need a variable that records the last time time there was a background change, and then, once \(1\) seconds has passed, change the color and update the variable.</p>
+<p>We’ll use the p5.js <a href="https://p5js.org/reference/p5/millis"><code class="language-plaintext highlighter-rouge">millis()</code></a> function to get the number of milliseconds (thousandths of a second) that have elapsed since the start of our sketch (since the <code class="language-plaintext highlighter-rouge">setup()</code> function was first called).</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ilyYXfwfS"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ilyYXfwfS">
+    open example in new window
+  </a>
+</div>
+<p>We can also use the current time to change parameters of our sketch.</p>
+<p>Let’s say we want our background to be black at midnight, white at noon and then black again at midnight.</p>
+<p>We can use the <a href="https://p5js.org/reference/p5/hour"><code class="language-plaintext highlighter-rouge">hour()</code></a> function to get a value between \(0\) and \(23\) and then use it to calculate the background color. We have to do some math to change the afternoon hours in the range \([13, 23]\) into values in \([11, 1]\) in order to get the colors to go back to black after noon.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">currentHour</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">currentHour</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">-</span> <span class="nx">currentHour</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/GIkBvs3q4"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/GIkBvs3q4">
+    open example in new window
+  </a>
+</div>
+<p>We’ll see more about these functions when we look at animations.</p>
+<h2 id="mouse-fun">Mouse Fun</h2>
+<p>Let’s put some of these concepts together and create some more interesting sketches.</p>
+<p>Instead of just drawing an ellipse where our mouse is with <code class="language-plaintext highlighter-rouge">mouseX</code> and <code class="language-plaintext highlighter-rouge">mouseY</code>, we can use an array to keep track of our mouse position history and draw lines connecting every location it has been.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mouseMoved</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">mPos</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span> <span class="na">x</span><span class="p">:</span> <span class="nx">mouseX</span><span class="p">,</span> <span class="na">y</span><span class="p">:</span> <span class="nx">mouseY</span> <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Now our <code class="language-plaintext highlighter-rouge">mouseMoved()</code> function is responsible for adding points to the <code class="language-plaintext highlighter-rouge">mPos</code> array, and in <code class="language-plaintext highlighter-rouge">draw()</code> we go through every object in the array and draw lines connecting them.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/l7XSgtlFw"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/l7XSgtlFw">
+    open example in new window
+  </a>
+</div>
+<p>This is cool, but let’s add a time component to this to make older positions disappear.</p>
+<p>When we push our coordinates into the array, we’ll also include a number for the line segment weight:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mouseMoved</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">mPos</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span> <span class="na">x</span><span class="p">:</span> <span class="nx">mouseX</span><span class="p">,</span> <span class="na">y</span><span class="p">:</span> <span class="nx">mouseY</span><span class="p">,</span> <span class="na">w</span><span class="p">:</span> <span class="mi">24</span> <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Now, in our <code class="language-plaintext highlighter-rouge">draw()</code> function we’ll have two steps: first, we’ll decrease the <code class="language-plaintext highlighter-rouge">w</code> value of every position we’ve saved and remove positions whose <code class="language-plaintext highlighter-rouge">w</code> value has become smaller than \(0.5\). Then, in the second step, we’ll draw line segments using the remaining positions in the array, using the <code class="language-plaintext highlighter-rouge">w</code> parameter in the <code class="language-plaintext highlighter-rouge">strokeWeight()</code> function.</p>
+<p>This gives a cool trail effect to our mouse movements.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/w3nfyQ553"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/w3nfyQ553">
+    open example in new window
+  </a>
+</div>
+<p>We can change this slightly to have it only add points when the mouse is dragged, and only update the weights if the mouse is not pressed.</p>
+<p>In order to avoid unwanted interactions between new lines and old lines, we’ll have to clear the <code class="language-plaintext highlighter-rouge">mPos</code> array whenever a new line is started:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mousePressed</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">mPos</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">mPos</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>And we’ll change our <code class="language-plaintext highlighter-rouge">w</code> update logic a little bit to make older lines fade faster once the mouse is released:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">updateCount</span> <span class="o">=</span> <span class="nx">mPos</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nx">mPos</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">w</span> <span class="o">*=</span> <span class="mf">0.99</span> <span class="o">**</span> <span class="nx">updateCount</span><span class="p">;</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Qjv7xnWFm"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Qjv7xnWFm">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../arrays/index.html">Arrays</a></li>
+<li><a href="../strings/index.html">Strings</a></li>
+<li><a href="../objects/index.html">JavaScript Objects</a></li>
+<li><a href="../animations/index.html">Animations</a></li>
+<li><a href="index.html">Interactions</a></li>
+<li><a href="../maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

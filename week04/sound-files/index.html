@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Sound Files</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Sound Files</h1>
+<h2 id="note">NOTE:</h2>
+<p>To use the sound library, we have to make sure the <a href="https://p5js.org/reference/p5.sound/">p5.sound library</a> is included in our project’s <code class="language-plaintext highlighter-rouge">index.html</code> file after the p5.js file. It will look something like this:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/addons/p5.sound.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div></div>
+<h2 id="playing-sounds">Playing Sounds</h2>
+<p>Let’s load an audio file using the <a href="https://p5js.org/reference/p5/loadSound"><code class="language-plaintext highlighter-rouge">loadSound()</code></a> function and test it. This is similar to how we have loaded images, text files, datasets, etc using the <code class="language-plaintext highlighter-rouge">preload()</code> function.</p>
+<p>The <code class="language-plaintext highlighter-rouge">loadSound()</code> function returns a <a href="https://p5js.org/reference/p5.sound/p5.SoundFile/"><code class="language-plaintext highlighter-rouge">SoundFile</code></a> object, and we can use its <a href="https://p5js.org/reference/p5.SoundFile/play/"><code class="language-plaintext highlighter-rouge">play()</code></a> function to play the song whenever we click the mouse:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/kZLiBslTX"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/kZLiBslTX">
+    open example in new window
+  </a>
+</div>
+<p>What happens if we click the mouse multiple times? It sounds like the <code class="language-plaintext highlighter-rouge">song</code> object starts playing the file multiple times over itself.</p>
+<p>There are two ways we can fix this.</p>
+<p>First, we can specify the file’s <a href="https://p5js.org/reference/p5.SoundFile/playMode/"><code class="language-plaintext highlighter-rouge">playMode()</code></a> to be either <code class="language-plaintext highlighter-rouge">restart</code> or <code class="language-plaintext highlighter-rouge">untilDone</code>, and that will make it only play one instance of the file, either by starting the song over or not doing anything until it plays until the end:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/U8GL6qdUD"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/U8GL6qdUD">
+    open example in new window
+  </a>
+</div>
+<p>The other way is to check first if the object is already playing the file and only call <code class="language-plaintext highlighter-rouge">play()</code> if it’s not. We can also use <a href="https://p5js.org/reference/p5.SoundFile/isPlaying/"><code class="language-plaintext highlighter-rouge">isPlaying()</code></a> to change the background color as an indication of the play state:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/hABEaYEA1"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/hABEaYEA1">
+    open example in new window
+  </a>
+</div>
+<p>Since we’re already checking whether the sound is playing when we get a mouse click, we can also easily pause the song on alternate clicks. This way the canvas acts like a play/pause button. Every time there’s a click, pause if it’s playing, and continue playing if it’s paused.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/TGWwSbhyR"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/TGWwSbhyR">
+    open example in new window
+  </a>
+</div>
+<h2 id="seeing-sound">Seeing Sound</h2>
+<p>One more last thing, hopefully a fun one.</p>
+<p>Let’s visualize the songs while they’re playing.</p>
+<p>The p5.js <code class="language-plaintext highlighter-rouge">SoundFile</code> object doesn’t seem to have any function or variable that tells us the exact values of the samples that are currently playing. The closest thing it has is a <a href="https://p5js.org/reference/p5.SoundFile/getPeaks/"><code class="language-plaintext highlighter-rouge">getPeaks()</code></a> function that gives us a simplified, resampled, version of values for the entire sound file.</p>
+<p>The default length of the array returned by <code class="language-plaintext highlighter-rouge">getPeaks()</code> is \(5\) times the canvas <code class="language-plaintext highlighter-rouge">width</code>, so no matter how long the song is, the length of the peaks array will always be the same. The numbers in this array represent samples, which are like the pixels of sound files. In this case they have been normalized to a range of \([-1, 1]\), where numbers with larger absolute values represent louder samples.</p>
+<p>We can use this to map the sample values of the current song from \([-1, 1]\) to values between \([-width, width]\) that we can use to draw some ellipses:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">map</span><span class="p">(</span><span class="nx">songPeaks</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="nx">width</span><span class="p">,</span> <span class="nx">width</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Once we have that array of ellipse diameters, we just have to know which one to draw at each frame. That’s this code here in <code class="language-plaintext highlighter-rouge">drawWave()</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">tPos</span> <span class="o">=</span> <span class="nx">song</span><span class="p">.</span><span class="nx">currentTime</span><span class="p">()</span> <span class="o">/</span> <span class="nx">song</span><span class="p">.</span><span class="nx">duration</span><span class="p">();</span>
+<span class="kd">let</span> <span class="nx">dIdx</span> <span class="o">=</span> <span class="nx">floor</span><span class="p">(</span><span class="nx">tPos</span> <span class="o">*</span> <span class="nx">diameters</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="nx">DELAY</span><span class="p">);</span>
+<span class="nx">dIdx</span> <span class="o">=</span> <span class="nx">constrain</span><span class="p">(</span><span class="nx">dIdx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">diameters</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">diam</span> <span class="o">=</span> <span class="nx">diameters</span><span class="p">[</span><span class="nx">dIdx</span><span class="p">];</span>
+<span class="nx">ellipse</span><span class="p">(</span><span class="nx">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">diam</span><span class="p">);</span>
+</code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">tPos</code> variable uses the song’s <a href="https://p5js.org/reference/p5.SoundFile/currentTime/"><code class="language-plaintext highlighter-rouge">currentTime()</code></a> and <a href="https://p5js.org/reference/p5.SoundFile/duration/"><code class="language-plaintext highlighter-rouge">duration()</code></a> functions to determine how far we are along the song that is playing. Its value will always be between \([0, 1]\), and represents the percentage of the track that has been played.</p>
+<p>The <code class="language-plaintext highlighter-rouge">dIdx</code> variable turns the <code class="language-plaintext highlighter-rouge">tPos</code> value into an index value by multiplying the percentage by the length of the diameter array. <code class="language-plaintext highlighter-rouge">DELAY</code> is a constant that we added to account for delays between the screen and the computer’s speakers. We can play with that variable in the beginning of the file to shift which index we use at a given frame to account for delays when using bluetooth headphones or speakers.</p>
+<p>This value then goes through <code class="language-plaintext highlighter-rouge">floor()</code> and <code class="language-plaintext highlighter-rouge">constrain()</code> in order to guarantee that we are always using a whole-number integer (no decimal) that is within the array’s bounds.</p>
+<p>After that we use it to index into our arrays of diameters and draw an ellipse whose size is proportional to the volume of the current sample being played:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/TPQWZmkzZ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/TPQWZmkzZ">
+    open example in new window
+  </a>
+</div>
+<p>Try it out, and remember to adjust the <code class="language-plaintext highlighter-rouge">DELAY</code> value to get better synchronization if using bluetooth speakers/earbuds or if the browser is overloaded.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../images/index.html">Images</a></li>
+<li><a href="../videos/index.html">Videos</a></li>
+<li><a href="index.html">Sound Files</a></li>
+<li><a href="../sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>More Trigonometry and Vectors</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>More Trigonometry and Vectors</h1>
+<p>We just saw how to use the <a href="../sincos/index.html"><code class="language-plaintext highlighter-rouge">sin()</code> and <code class="language-plaintext highlighter-rouge">cos()</code></a> functions to create cycles.</p>
+<p>Let’s now take a look at other ways we can use these and other <a href="https://en.wikipedia.org/wiki/Trigonometric_functions">trigonometric functions</a> in our sketches.</p>
+<p>As a review: trigonometric functions are functions that, along with the <a href="https://en.wikipedia.org/wiki/Pythagorean_theorem">Pythagorean theorem</a>, define relations between the angles of a right triangle and the length of its sides:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week05/trigonometry-00.jpg"/>
+</div>
+<h2 id="polar-coordinates">Polar Coordinates</h2>
+<p>We can use these relations to derive formulas for translating between <a href="https://en.wikipedia.org/wiki/Cartesian_coordinate_system">Cartesian</a> and <a href="https://en.wikipedia.org/wiki/Polar_coordinate_system">polar</a> coordinate systems.</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week05/trigonometry-01.jpg"/>
+</div>
+<p>Cartesian coordinates are what we use to specify points on a plane (and pixels on a screen) using two numbers that represent distances in perpendicular directions. Polar coordinates also specify points on a plane, but using a distance and an angle.</p>
+<p>Just like we can use <code class="language-plaintext highlighter-rouge">for()</code> loops to iterate over the \((x, y)\) cartesian coordinates and create patterns in a grid, we can also iterate over the two variables in a polar coordinate system to create patterns.</p>
+<p>In this example, our outer <code class="language-plaintext highlighter-rouge">for()</code> loop iterates through different values for how far we want to be from the center of the canvas, in steps of \(20\) pixels, and the inner <code class="language-plaintext highlighter-rouge">for()</code> loop iterates through all possible angles from the positive x-axis, in steps of \(1^{\circ}\):</p>
+<div class="scaled-images left w100">
+<img src="../../assets/images/week05/trigonometry-02.jpg"/>
+</div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/bmn6wQ1G4"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/bmn6wQ1G4">
+    open example in new window
+  </a>
+</div>
+<p>This one is pretty simple and could’ve been done by drawing concentric ellipses. If we untangle some of our logic we’ll see we’re implementing the <a href="https://en.wikipedia.org/wiki/Unit_circle#Trigonometric_functions_on_the_unit_circle">trigonometric functions for defining a circle</a>.</p>
+<p>And that’s basically what the <code class="language-plaintext highlighter-rouge">for()</code> loops are doing: as long as we keep the angle used to calculate <code class="language-plaintext highlighter-rouge">x</code> equal to the angle used to calculate <code class="language-plaintext highlighter-rouge">y</code>, we are implementing the <a href="https://en.wikipedia.org/wiki/Circle#Parametric_form">parametric equation of a circle</a>:</p>
+
+\[\begin{align*} x &amp;= r \cdot cos(a) \\
+y &amp;= r \cdot sin(a)\end{align*}\]
+
+<p>But, what if we move the angle in our <code class="language-plaintext highlighter-rouge">x</code> calculation \(3\) times faster than the angle for <code class="language-plaintext highlighter-rouge">y</code>?</p>
+<p>If we just change this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">cos</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="nx">a</span><span class="p">));</span>
+</code></pre></div></div>
+<p>to this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">cos</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">a</span><span class="p">));</span>
+</code></pre></div></div>
+<p>we get this:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/rubKcJet3"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/rubKcJet3">
+    open example in new window
+  </a>
+</div>
+<p>Yeah… polar coordinates FTW! I don’t think we can draw <em>that</em> with circles.</p>
+<p>We can play with that value and see how the drawing changes. We can also add a different multiplier to the <code class="language-plaintext highlighter-rouge">y</code> angle as well:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">cos</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">a</span><span class="p">));</span>
+<span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">sin</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="nx">a</span><span class="p">));</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/GEZiG_ZtF"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/GEZiG_ZtF">
+    open example in new window
+  </a>
+</div>
+<p>Try out some new values for the angle multipliers in the code above ☝️. Cool, right?</p>
+<p>Or, use something else, like the <code class="language-plaintext highlighter-rouge">r</code> value, to increment the angle:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">cos</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="nx">a</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">r</span><span class="p">));</span>
+<span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">sin</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="nx">a</span><span class="p">));</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/0_Y0yn7F7"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/0_Y0yn7F7">
+    open example in new window
+  </a>
+</div>
+<p>Or, both:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">cos</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nx">a</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">r</span><span class="p">));</span>
+<span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">sin</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="nx">a</span><span class="p">));</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/DxBh1M06F"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/DxBh1M06F">
+    open example in new window
+  </a>
+</div>
+<h2 id="dimensions">Dimensions</h2>
+<p>Besides creating unexpected concentric patterns, we can also use polar coordinates to transform one-dimensional signals into 2-dimensional signals.</p>
+<p><em>What?</em></p>
+<p>Let’s say we have a one-dimensional signal, like time, or the number of people in a room, and we want to create a 2-dimensional visualization of this data.</p>
+<p>We can easily use polar coordinates to <em>map</em> a single value to a point in our canvas. This is also possible using cartesian coordinates directly (as we’ll see when we start processing <a href="../images/index.html">images</a>), but using polar coordinates is a bit simpler and perhaps more intuitive.</p>
+<p>Let’s start by using a single variable from a <code class="language-plaintext highlighter-rouge">for()</code> loop to derive our <code class="language-plaintext highlighter-rouge">r</code> values and <code class="language-plaintext highlighter-rouge">a</code> angles.</p>
+<p>If we make <code class="language-plaintext highlighter-rouge">r</code> grow proportional to the angle, we get a spiral:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/CJx8B5IdN"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/CJx8B5IdN">
+    open example in new window
+  </a>
+</div>
+<p>And if we increase the frequency of the angles, like we did before by multiplying them by a constant, and also increase the range of our <code class="language-plaintext highlighter-rouge">r</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">map</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">1.4</span> <span class="o">*</span> <span class="nx">maxRadius</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">cos</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="nx">a</span><span class="p">));</span>
+<span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">sin</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="nx">a</span><span class="p">));</span>
+</code></pre></div></div>
+<p>We get a tighter spiral that goes all the way to the corners of our canvas:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/TReOUnK3F"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/TReOUnK3F">
+    open example in new window
+  </a>
+</div>
+<p>We can also add an offset to our angles (this is often called the <a href="https://en.wikipedia.org/wiki/Phase_(waves)"><em>phase</em></a> of an angle) that changes where the spiral starts:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">cos</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="nx">a</span> <span class="o">-</span> <span class="nx">phaseVal</span><span class="p">));</span>
+<span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">sin</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="nx">a</span> <span class="o">-</span> <span class="nx">phaseVal</span><span class="p">));</span>
+</code></pre></div></div>
+<p>It’s kind of subtle, but if we re-run the following sketch and look at the center of the spiral we’ll notice the effect of the phase value:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/jHVl6Ujpf"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/jHVl6Ujpf">
+    open example in new window
+  </a>
+</div>
+<p>It’s easier to see its effects if that offset increases or decreases with every frame:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">cos</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="nx">a</span> <span class="o">-</span> <span class="mi">8</span> <span class="o">*</span> <span class="nx">frameCount</span><span class="p">));</span>
+<span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">sin</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="nx">a</span> <span class="o">-</span> <span class="mi">8</span> <span class="o">*</span> <span class="nx">frameCount</span><span class="p">));</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/wZBKzbmpg"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/wZBKzbmpg">
+    open example in new window
+  </a>
+</div>
+<p>Our canvas is spinning slowly, but the shape makes it seem like it’s a line that is being drawn infinitely, or circles that are growing ! We can play with the phase multiplier above ☝️ to make the spiral spin faster, slower and even backwards.</p>
+<p>If we make the the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> angles slightly out of sync, we get an effect that is almost 3D:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">cos</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">9</span> <span class="o">*</span> <span class="nx">a</span> <span class="o">-</span> <span class="mi">8</span> <span class="o">*</span> <span class="nx">frameCount</span><span class="p">));</span>
+<span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">r</span> <span class="o">*</span> <span class="nx">sin</span><span class="p">(</span><span class="nx">radians</span><span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="nx">a</span> <span class="o">-</span> <span class="mi">8</span> <span class="o">*</span> <span class="nx">frameCount</span><span class="p">));</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/WaUKMrtyz"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/WaUKMrtyz">
+    open example in new window
+  </a>
+</div>
+<h2 id="parametric-equations">Parametric Equations</h2>
+<p>Ok, in those last couple of examples with animations we were mapping <em>two</em> variables, our loop iterator and <code class="language-plaintext highlighter-rouge">frameCount</code>, to <em>two</em> other variables, <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code>.</p>
+<p>Let’s go back to mapping <em>one</em> independent variable to <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> locations.</p>
+<p>Equations that do this are sometimes called <a href="https://en.wikipedia.org/wiki/Parametric_equation">Parametric Equations</a>. In these equations, the relationship between <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> isn’t explicitly set, but their values are related through a third variable, our independent signal.</p>
+<p>Some examples of parametric equations, are:</p>
+<h3 id="lissajous-curves"><a href="https://en.wikipedia.org/wiki/Lissajous_curve">Lissajous Curves</a>.</h3>
+<p>We saw these earlier, but this is their official name and equations:</p>
+
+\[\begin{align*} x &amp;= A \cdot cos(\alpha t + \delta) \\
+y &amp;= B \cdot sin(\beta t) \end{align*}\]
+
+<p>where \(A\), \(B\), \(\alpha\), \(\beta\) and \(\delta\) are just different constants.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/GYdDCpGed"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/GYdDCpGed">
+    open example in new window
+  </a>
+</div>
+<p>We can change them above ☝️ and see what happens to the drawing.</p>
+<h3 id="the-butterfly-curve"><a href="https://en.wikipedia.org/wiki/Butterfly_curve_(transcendental)">The Butterfly Curve</a>:</h3>
+
+\[\begin{align*}
+x &amp;= sin(t) \cdot \left(\exp^{cos(t)} - 2 \cdot cos(4t) \right) \\
+y &amp;= cos(t) \cdot \left(\exp^{cos(t)} - 2 \cdot cos(4t) \right)
+\end{align*}\]
+
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/BguyBnLPD"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/BguyBnLPD">
+    open example in new window
+  </a>
+</div>
+<h3 id="cardioid-curves"><a href="https://en.wikipedia.org/wiki/Cardioid">Cardioid Curves</a>:</h3>
+
+\[\begin{align*}
+x &amp;= r \cdot \left(1 - cos(\alpha \cdot t) \right) \cdot cos(t) \\
+y &amp;= r \cdot \left(1 - cos(\alpha \cdot t) \right) \cdot sin(t)
+\end{align*}\]
+
+<p>where \(\alpha\) is just an integer constant that we can change.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/SrvjUkELi"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/SrvjUkELi">
+    open example in new window
+  </a>
+</div>
+<p>Change <code class="language-plaintext highlighter-rouge">alphaVal</code> above ☝️ and see what happens!</p>
+<p>Or, better yet, let’s have our <code class="language-plaintext highlighter-rouge">loop()</code> increase the value of <code class="language-plaintext highlighter-rouge">alphaVal</code>:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/LxBye1J6n"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/LxBye1J6n">
+    open example in new window
+  </a>
+</div>
+<h3 id="bonus-curve"><a href="https://mathworld.wolfram.com/HeartCurve.html">Bonus Curve</a>:</h3>
+<p>And, finally, this special kind of cardioid curve:</p>
+
+\[\begin{align*} x &amp;= 16 \cdot sin^3(t) \\
+y &amp;= 13 \cdot cos(t) - 5 \cdot cos(2t) - 2 \cdot cos(3t) - cos(4t) \end{align*}\]
+
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/gGk2wUk3b"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/gGk2wUk3b">
+    open example in new window
+  </a>
+</div>
+<p>Pretty cool!</p>
+<h2 id="point-distances--euclidean-distances--l2-distances">Point Distances / Euclidean Distances / L2 Distances</h2>
+<p>Polar coordinates are lots of fun, and can also be very useful when we need to calculate the distance or the angle between two points.</p>
+<p>If we image two points on our screen, with coordinates \((x_0, y_0)\) and \((x_1, y_1)\), we can get the distance between them by using the Pythagorean theorem:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week05/trigonometry-03.jpg"/>
+</div>
+<p>In this sketch the distance between two moving points is calculated using the formula for <a href="https://en.wikipedia.org/wiki/Euclidean_distance">Euclidean Distance</a> \(\sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}\) and the p5.js function <a href="https://p5js.org/reference/p5/dist"><code class="language-plaintext highlighter-rouge">dist()</code></a>. When those distances are used as the diameter for two circles centered on the canvas, we can see that they are exactly the same:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZpMRkDtCM"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZpMRkDtCM">
+    open example in new window
+  </a>
+</div>
+<h2 id="angles">Angles</h2>
+<p>Similarly, we can use the formula that calculates the polar angle of a point to get the angle between two points:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week05/trigonometry-04.jpg"/>
+</div>
+<p>Or, the angle between a point and itself in the future.</p>
+<p>If a moving point at \((x, y)\) has velocity \(v_x\) and \(v_y\), its position in the near future will be \((x + v_x, y + v_y)\). We can calculate the angle between the point now and the point in the future to get its heading angle:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week05/trigonometry-05.jpg"/>
+</div>
+<p>We can use the heading angle of a moving object to rotate its shape and emphasize its direction of motion:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/SqaUjqGvq"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/SqaUjqGvq">
+    open example in new window
+  </a>
+</div>
+<h2 id="vectors">Vectors</h2>
+<p>p5.js actually has a class called <a href="https://p5js.org/reference/p5/p5.Vector/"><code class="language-plaintext highlighter-rouge">Vector</code></a> that can help with geometry calculations like these. The simplest way to think about a vector is that it specifies a point \((x, y)\) in space, relative to the \((0, 0)\) origin. Vectors are actually more than that, but to do the distance and angle calculations that we’ve seen, it’s fine to think of vectors as points with an \((x, y)\) coordinate.</p>
+<p>This drawing shows two vectors/points and if we subtract \(_1\) from \(v_0\), we get a third vector that holds information about the distance and direction between them.</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week05/trigonometry-06.jpg"/>
+</div>
+<p>The vectors in p5.js actually have builtin functions to calculate distances and angles. We can create two vectors and get the distance between them like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">v0</span> <span class="o">=</span> <span class="nx">createVector</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">v1</span> <span class="o">=</span> <span class="nx">createVector</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">v0</span><span class="p">.</span><span class="nx">distance</span><span class="p">(</span><span class="nx">v1</span><span class="p">);</span>
+</code></pre></div></div>
+<p>and the angle like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">v0</span> <span class="o">=</span> <span class="nx">createVector</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">v1</span> <span class="o">=</span> <span class="nx">createVector</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">v0</span><span class="p">.</span><span class="nx">angleBetween</span><span class="p">(</span><span class="nx">v1</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Let’s use vectors to redo some of the sketches above.</p>
+<h2 id="vector-distances">Vector Distances</h2>
+<p>Instead of pushing JavaScript objects with \(4\) parameters \((x, y, vx, vy)\), we now have objects with two vectors, one for the location and one for the velocity of the objects.</p>
+<p>In draw, anytime we had <code class="language-plaintext highlighter-rouge">p.x</code> now we’ll have to use <code class="language-plaintext highlighter-rouge">p.loc.x</code>. Likewise for velocity, <code class="language-plaintext highlighter-rouge">p.vx</code> becomes <code class="language-plaintext highlighter-rouge">p.vel.x</code>. It might a bit more letters to type, but the related quantities are in a vector, which helps to do some math, like updating the location.</p>
+<p>Instead of this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">p</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">vx</span><span class="p">;</span>
+<span class="nx">p</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">vy</span><span class="p">;</span>
+</code></pre></div></div>
+<p>We can just do:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">p</span><span class="p">.</span><span class="nx">loc</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">vel</span><span class="p">);</span>
+</code></pre></div></div>
+<p>And the distance between the two circles can now be calculated with:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">ps</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">loc</span><span class="p">.</span><span class="nx">dist</span><span class="p">(</span><span class="nx">ps</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">loc</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/9xx13qjZP"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/9xx13qjZP">
+    open example in new window
+  </a>
+</div>
+<h2 id="vector-angles">Vector Angles</h2>
+<p>For the angles, it’s very similar. We can always call <code class="language-plaintext highlighter-rouge">v0.angleBetween(v1)</code> to get the angle between two vectors. We just have to think about which \(2\) vectors we need the angle between.</p>
+<p>In the example where we are trying to get heading angles, the vector that points in the direction of movement is <code class="language-plaintext highlighter-rouge">p.vel</code>. Since in p5.js an angle of \(0^\circ\) points in the direction along the x-axis, the angle that we need to rotate our objects is gonna be relative to this reference vector of zero rotation.</p>
+<p>The code is mostly the same as the previous sketch, with the vector addition for location updates, but now we do:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">xAxis</span> <span class="o">=</span> <span class="nx">createVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">hAngle</span> <span class="o">=</span> <span class="nx">xAxis</span><span class="p">.</span><span class="nx">angleBetween</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">vel</span><span class="p">);</span>
+</code></pre></div></div>
+<p>This way we get the heading angles relative to the reference point of zero rotation, and then use that value to rotate our objects.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/68Q5wrokg"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/68Q5wrokg">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../classes/index.html">Classes</a></li>
+<li><a href="../cycles/index.html">Cycles</a></li>
+<li><a href="../sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Functions</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Functions</h1>
+<h2 id="organize-and-repeat">Organize and Repeat</h2>
+<p>We saw how to use <a href="../patterns/index.html"><code class="language-plaintext highlighter-rouge">for()</code></a> loops to run the same code over and over and create patterns.</p>
+<p>There’s another method we can use to repeat actions in our code: functions.</p>
+<p>Functions are predefined, named, sequences of commands that can be easily re-executed. In addition to this <em>encapsulation</em> that facilitates repeating sequences of commands, functions are also <em>parameterizable</em>, which allows them to have similar but different behavior, depending on information that gets sent to them during their execution. More about this in a bit.</p>
+<p>This is how we define a function in JavaScript:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">functionName</span><span class="p">(</span><span class="nx">param0</span><span class="p">,</span> <span class="nx">param1</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+  <span class="nx">command0</span><span class="p">;</span>
+  <span class="nx">command1</span><span class="p">;</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>We’ve already seen many predefined p5.js functions, like <code class="language-plaintext highlighter-rouge">rect()</code>, <code class="language-plaintext highlighter-rouge">ellipse()</code>, <code class="language-plaintext highlighter-rouge">line()</code>, etc. They all take parameters that affect how and where the shapes get drawn, like the x and y positions, shape width and height. But now we will see how to define our own functions.</p>
+<p>Let’s see one case where defining a function can simplify the code we write and decrease the number of variable we have to keep around.</p>
+<p>We’ve seen how to draw simple shapes like squares, rectangles and ellipses, but what if we wanted to draw a heart?</p>
+<p>We can start by trying to piece together some simple shapes like triangles and ellipses or arcs:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/VLcKw3Lu1"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/VLcKw3Lu1">
+    open example in new window
+  </a>
+</div>
+<p>Doesn’t look so bad if we turn off the shape strokes:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/d0RXiJS3K"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/d0RXiJS3K">
+    open example in new window
+  </a>
+</div>
+<p>And what if now we want to draw many hearts, of potentially different sizes, in different locations?</p>
+<p>We could try to come up with the specific pixel locations for all of our hearts like this:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/0Ma3DR5HQ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/0Ma3DR5HQ">
+    open example in new window
+  </a>
+</div>
+<p>But this is tedious and prone to mistakes.</p>
+<p>It would be a better idea to come up with a generic way of describing the heart shapes and then just repeat those steps in different locations of our canvas.</p>
+<p>One possible way to do this is to pick a point sort of in the center of our heart shape, and then define all the other points in terms of the location of this point. For example, in the drawing below, the black point is our reference point (\(x_0\), \(y_0\)), and we’ll describe all of the red points relative to it:</p>
+<div class="scaled-images">
+<img src="../../assets/images/week02/heart-00.jpg"/>
+</div>
+<p>For our heart, let’s set \(x_0 = 200\) and \(y_0 = 150\) and express all of the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> parameters of our shapes in terms of these two variables:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/fWqOx2u9U"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/fWqOx2u9U">
+    open example in new window
+  </a>
+</div>
+<p>Now, we could copy-paste the lines that draws the shapes and just change the values of \(x_0\) and \(y_0\) before calling them:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/8UQDXlWOb"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/8UQDXlWOb">
+    open example in new window
+  </a>
+</div>
+<p>This is already easier to read and modify, but let’s say that now we want to parameterize the size of our heart shape. We would have to very carefully find all places in our sketch where we are drawing hearts in order to update the correct lines of code with the changes.</p>
+<p>Functions can help here. We’ll use a function to <em>encapsulate</em> all the commands and values that are used when drawing a heart and that way when we need to update how we draw the heart later, we’ll only have to change our code in one place.</p>
+<p>Let’s wrap our current heart-drawing commands inside a <code class="language-plaintext highlighter-rouge">heart()</code> function that takes two parameters, x and y locations, and draws a heart:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">heart</span><span class="p">(</span><span class="nx">x0</span><span class="p">,</span> <span class="nx">y0</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">ellipse</span><span class="p">(</span><span class="nx">x0</span> <span class="o">-</span> <span class="mi">40</span><span class="p">,</span> <span class="nx">y0</span> <span class="o">-</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+  <span class="nx">ellipse</span><span class="p">(</span><span class="nx">x0</span> <span class="o">+</span> <span class="mi">40</span><span class="p">,</span> <span class="nx">y0</span> <span class="o">-</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+  <span class="nx">triangle</span><span class="p">(</span><span class="nx">x0</span> <span class="o">-</span> <span class="mi">88</span><span class="p">,</span> <span class="nx">y0</span><span class="p">,</span> <span class="nx">x0</span> <span class="o">+</span> <span class="mi">88</span><span class="p">,</span> <span class="nx">y0</span><span class="p">,</span> <span class="nx">x0</span><span class="p">,</span> <span class="nx">y0</span> <span class="o">+</span> <span class="mi">135</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>We just copied the code from before, but now that these lines are inside a function, the <code class="language-plaintext highlighter-rouge">x0</code> and <code class="language-plaintext highlighter-rouge">y0</code> parameters reference specific x and y locations that get passes to the function each time it is <em>called</em>. Drawing the heart in different locations is as easy as this now:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/qBPTEhE6I"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/qBPTEhE6I">
+    open example in new window
+  </a>
+</div>
+<p>And now we can invest in adding a size parameter to our heart shape:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/xTVlTFlBH"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/xTVlTFlBH">
+    open example in new window
+  </a>
+</div>
+<p>The math is not very intuitive, but it only had to be figured out once, and now we can call our <code class="language-plaintext highlighter-rouge">heart()</code> function repeatedly at different locations and with different sizes:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/VUMYTzsIT"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/VUMYTzsIT">
+    open example in new window
+  </a>
+</div>
+<p>Or use <a href="../patterns/index.html"><code class="language-plaintext highlighter-rouge">for()</code></a> loops to create patterns on our canvas:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/v096x_jMT"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/v096x_jMT">
+    open example in new window
+  </a>
+</div>
+<p>That vary in size based on the distance from the center of the canvas:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/pVStO6jxX"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/pVStO6jxX">
+    open example in new window
+  </a>
+</div>
+<h2 id="compute-and-return">Compute and Return</h2>
+<p>We just saw how to define a function to <em>capture</em> a procedure (a list of commands), that can later be recalled.</p>
+<p>Functions can also be defined to act a little bit more like the <a href="https://en.wikipedia.org/wiki/Function_(mathematics)">mathematical functions</a> that we might have learned about in algebra class: a set of operations that maps a list of inputs to output values.</p>
+<p>Let’s see what that means by revisiting a collision detection situation:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/UB-XWHKuP"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/UB-XWHKuP">
+    open example in new window
+  </a>
+</div>
+<p>If we want to detect when the mouse circle is overlapping with the larger circle, we can first calculate the distance between the center of the two circles and see if that value is smaller than the sum of their radii:</p>
+<div class="scaled-images">
+<img src="../../assets/images/week02/overlap-02.jpg"/>
+</div>
+<div class="scaled-images">
+<img src="../../assets/images/week02/overlap-03.jpg"/>
+</div>
+<p>We can calculate the <a href="https://en.wikipedia.org/wiki/Euclidean_distance#Two_dimensions"><em>Euclidean</em> distance</a> between the two circles using this formula, where \(x_0\) and \(y_0\) are the locations of the big circle and \(x_m\) and \(y_m\) are the locations of the mouse circle:</p>
+
+\[\displaystyle distance = \sqrt{(x_m - x_0)^2 + (y_m - y_0)^2}\]
+
+<p>It’s kind of a mouthful, but it’s not that hard to implement in JavaScript. There’s a built in <code class="language-plaintext highlighter-rouge">sqrt()</code> function, and we can raise numbers to a power using a double-asterisk <code class="language-plaintext highlighter-rouge">**</code>, so \(3^{12}\), for example, becomes <code class="language-plaintext highlighter-rouge">3 ** 12</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">sqrt</span><span class="p">((</span><span class="nx">mouseX</span> <span class="o">-</span> <span class="nx">x0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="nx">mouseY</span> <span class="o">-</span> <span class="nx">y0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Finally, we can check for overlap by comparing this distance with the sum of the circles’ <em>radii</em>, which is half of their diameters:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span><span class="p">(</span><span class="nx">d</span> <span class="o">&lt;</span> <span class="nx">oDiam</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="nx">mDiam</span> <span class="o">/</span> <span class="mi">2</span><span class="p">){</span>
+  <span class="c1">// overlap !</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/8ZRnyGWwr"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/8ZRnyGWwr">
+    open example in new window
+  </a>
+</div>
+<p>It works, but … what if we have more than just one obstacle circle?</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/444Zq22any"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/444Zq22any">
+    open example in new window
+  </a>
+</div>
+<p>We could put a bunch of <code class="language-plaintext highlighter-rouge">sqrt((mouseX - xi)**2 + (mouseY - yi)**2)</code> expressions all over our code, but this quickly becomes hard to read and adjust:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/iKnvWbH94"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/iKnvWbH94">
+    open example in new window
+  </a>
+</div>
+<p>As it is, it wouldn’t be very simple to update this code to also change the color of the obstacle circles upon collision.</p>
+<p>Let’s use functions to simplify it.</p>
+<p>The first function we’ll declare is a function that receives two pairs of (\(x\), \(y\)) coordinates, and calculates the Euclidean distance between them:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">euclidean</span><span class="p">(</span><span class="nx">x0</span><span class="p">,</span> <span class="nx">y0</span><span class="p">,</span> <span class="nx">x1</span><span class="p">,</span> <span class="nx">y1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">sqrt</span><span class="p">((</span><span class="nx">x1</span> <span class="o">-</span> <span class="nx">x0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="nx">y1</span> <span class="o">-</span> <span class="nx">y0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This does the exact same calculation as we were doing above, except now the values for the second circle come from the function parameters <code class="language-plaintext highlighter-rouge">x1</code> and <code class="language-plaintext highlighter-rouge">y1</code>, and not the <a href="https://en.wikipedia.org/wiki/Hard_coding"><em>hardcoded</em></a> values <code class="language-plaintext highlighter-rouge">mouseX</code> and <code class="language-plaintext highlighter-rouge">mouseY</code>. This way we can reuse this function for computing any distance between any pair of points in our canvas.</p>
+<p>The other thing to note is the last line of the function: <code class="language-plaintext highlighter-rouge">return d;</code>. This tells the function that the value in the <code class="language-plaintext highlighter-rouge">d</code> variable is to be used somewhere else, so after doing the calculation, it should make this value available to whatever part of the code invoked (or, called) the function. So, if we call the function like this: <code class="language-plaintext highlighter-rouge">let mDist = euclidean(3, 6, 6, 2)</code>, the variable <code class="language-plaintext highlighter-rouge">mDist</code> would have the value <code class="language-plaintext highlighter-rouge">5</code>;</p>
+<p>Putting this in our code:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/dZFmGMkbe"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/dZFmGMkbe">
+    open example in new window
+  </a>
+</div>
+<p>This is already better, but we still have some repeated code.</p>
+<p>Maybe we can simplify this even further by creating a function that receives <em>six</em> values, for the locations and diameters of two circles, and returns a boolean that tells whether the two circles are overlapping or not.</p>
+<p>We can reuse the <code class="language-plaintext highlighter-rouge">euclidean()</code> function that we already have and write an overlap function like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">ellipseOverlap</span><span class="p">(</span><span class="nx">x0</span><span class="p">,</span> <span class="nx">y0</span><span class="p">,</span> <span class="nx">diam0</span><span class="p">,</span> <span class="nx">x1</span><span class="p">,</span> <span class="nx">y1</span><span class="p">,</span> <span class="nx">diam1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">euclidean</span><span class="p">(</span><span class="nx">x0</span><span class="p">,</span> <span class="nx">y0</span><span class="p">,</span> <span class="nx">x1</span><span class="p">,</span> <span class="nx">y1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nx">d</span> <span class="o">&lt;</span> <span class="nx">diam0</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="nx">diam1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This time the <code class="language-plaintext highlighter-rouge">return</code> statement will compute and return the boolean value of the expression <code class="language-plaintext highlighter-rouge">(d &lt; diam0 / 2 + diam1 / 2)</code>. It will be <code class="language-plaintext highlighter-rouge">true</code> if the circles overlap, or <code class="language-plaintext highlighter-rouge">false</code> otherwise.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Z4nagBNTZ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Z4nagBNTZ">
+    open example in new window
+  </a>
+</div>
+<p>Now that we have separate variables that tell us whether our mouse circle is overlapping with any of the obstacle circles, we can more easily change the color of the obstacle circles and add some other visual indications to our sketch:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/cJ8ryLXID"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/cJ8ryLXID">
+    open example in new window
+  </a>
+</div>
+<p>The <code class="language-plaintext highlighter-rouge">||</code> in the statement <code class="language-plaintext highlighter-rouge">if (o0 || o1 || o2 || o3 || o4)</code> is the logical <em>OR</em> operator. An expression built with the <code class="language-plaintext highlighter-rouge">||</code>  operator evaluates to <code class="language-plaintext highlighter-rouge">true</code> if any one of its conditions is true. In our case, we’re asking if there is overlap on <em>any</em> of the obstacles, and if so, to change the color of the mouse circle.</p>
+<p>We can now refactor the drawing of the obstacles into another function that doesn’t have to return anything, but will draw the obstacle with the right color depending on whether there is an overlap or not:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">obstacle</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">overlap</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">overlap</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// draw with overlap colors and styles</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// draw white circle</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>And it’s easy to add more obstacles now:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Z7H4RJXv4"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Z7H4RJXv4">
+    open example in new window
+  </a>
+</div>
+<p>And, looking at the code, we can actually put the <code class="language-plaintext highlighter-rouge">ellipseOverlap()</code> function call inside the <code class="language-plaintext highlighter-rouge">obstacle()</code> function, as long as the new function returns whether there is an overlap or not:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">obstacle</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">overlap</span> <span class="o">=</span> <span class="nx">ellipseOverlap</span><span class="p">(</span><span class="nx">mouseX</span><span class="p">,</span> <span class="nx">mouseY</span><span class="p">,</span> <span class="nx">mDiam</span><span class="p">,</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">,</span> <span class="nx">oDiam</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">overlap</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// draw with overlap colors and styles</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// draw white circle</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">overlap</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The code for the overlap function became a little more complicated, but we only have to write it once. The benefit is that our main code becomes even easier to read and maintain, add and remove obstacles, etc:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/2A9QJrOcR"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/2A9QJrOcR">
+    open example in new window
+  </a>
+</div>
+<p>We’ll see how <a href="../../week03/arrays/index.html">arrays</a> that keep track of lists of numbers could help us add more obstacles to a sketch like this without having to enumerate their values individually like we’re doing here with <code class="language-plaintext highlighter-rouge">x0</code>, <code class="language-plaintext highlighter-rouge">x1</code>, <code class="language-plaintext highlighter-rouge">x2</code>, etc.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../conditionals/index.html">Conditionals</a></li>
+<li><a href="../patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../counters/index.html">Loops as Counters</a></li>
+<li><a href="index.html">Functions</a></li>
+<li><a href="../random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

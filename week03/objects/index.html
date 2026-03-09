@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>JavaScript Objects</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>JavaScript Objects</h1>
+<h2 id="array-review">Array Review</h2>
+<p>Let’s start with the sketch we were looking at when we talked about <a href="../arrays/index.html">arrays</a>.</p>
+<p>This sketch has \(9\) obstacle ellipses, and each obstacle has its own <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> position that is kept in the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> arrays. These positions are defined when the arrays are declared, outside the <code class="language-plaintext highlighter-rouge">setup()</code> and <code class="language-plaintext highlighter-rouge">draw()</code> functions.</p>
+<p>When we want to draw an obstacle we get values from the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> arrays using the same <em>index</em> value. For example, the position for the \(4^{th}\) obstacle is given by <code class="language-plaintext highlighter-rouge">(x[3], y[3])</code>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/S--4o9Nzw"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/S--4o9Nzw">
+    open example in new window
+  </a>
+</div>
+<p>Let’s say we now want each obstacle to also have its own diameter.</p>
+<p>Easy. We’ll just declare a new empty array called <code class="language-plaintext highlighter-rouge">diameter</code>, and inside the <code class="language-plaintext highlighter-rouge">setup()</code> function we’ll fill it with as many diameter values as we have members in the <code class="language-plaintext highlighter-rouge">x</code> array. We can even use the <code class="language-plaintext highlighter-rouge">random()</code> function again to give them all different diameters between <code class="language-plaintext highlighter-rouge">oDiam / 2</code> and <code class="language-plaintext highlighter-rouge">oDiam</code>.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">md</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="nx">oDiam</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">oDiam</span><span class="p">);</span>
+  <span class="nx">diameter</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">md</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Checking for overlap becomes:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">ellipseOverlap</span><span class="p">(</span><span class="nx">mouseX</span><span class="p">,</span> <span class="nx">mouseY</span><span class="p">,</span> <span class="nx">mDiam</span><span class="p">,</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">y</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">diameter</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+</code></pre></div></div>
+<p>And, drawing all the obstacles becomes:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">ellipse</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">y</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">diameter</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/XK9Pc24G0"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/XK9Pc24G0">
+    open example in new window
+  </a>
+</div>
+<p>Cool. That works.</p>
+<h2 id="more-parameters">More Parameters</h2>
+<p>And now, if we want to give each obstacle a different fill color and overlap color… we could keep adding arrays:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">fColor</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="kd">let</span> <span class="nx">oColor</span> <span class="o">=</span> <span class="p">[];</span>
+</code></pre></div></div>
+<p>But this can get really confusing really fast.</p>
+<p>What if we forget to add a parameter for one of the obstacles?</p>
+<p>What if we switch <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> values for one of the obstacles?</p>
+<p>What if we need to rearrange the order of one of the arrays, how can we replicate the change in the other arrays?</p>
+<p>Once the object that we’re trying to represent starts to have many different parameters, we can take advantage of another JavaScript data structure: the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>.</p>
+<p>JavaScript objects are similar to arrays, in the sense that they help keep related values together using a single variable. For example, for our obstacles, we could declare a single <code class="language-plaintext highlighter-rouge">obstacle</code> object like this, with data organized in <em>key</em>-<em>value</em> pairs:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">obstacle</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">x</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+  <span class="na">y</span><span class="p">:</span> <span class="mi">115</span><span class="p">,</span>
+  <span class="na">diameter</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+  <span class="na">fColor</span><span class="p">:</span> <span class="nx">color</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="na">oColor</span><span class="p">:</span> <span class="nx">color</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>This is telling the computer that we want to have a variable called <code class="language-plaintext highlighter-rouge">obstacle</code>, and that this variable has other variables inside of it, and those variables have values that should be kept close to each other. The advantage of doing it this way is that we, and the computer, can think about this data more efficiently if it’s kept together and labeled.</p>
+<p>This:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">obstacle</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">x</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+  <span class="na">y</span><span class="p">:</span> <span class="mi">115</span><span class="p">,</span>
+  <span class="na">diameter</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+  <span class="na">fColor</span><span class="p">:</span> <span class="nx">color</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+  <span class="na">oColor</span><span class="p">:</span> <span class="nx">color</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>is easier to think about than this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">obstacle</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="nx">color</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="nx">color</span><span class="p">(</span><span class="mi">100</span><span class="p">)];</span>
+</code></pre></div></div>
+<p>and easier to do calculations with than this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">355</span><span class="p">,</span> <span class="mi">45</span><span class="p">];</span>
+<span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">115</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">340</span><span class="p">];</span>
+<span class="kd">let</span> <span class="nx">diameter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">56</span><span class="p">];</span>
+<span class="kd">let</span> <span class="nx">fColor</span> <span class="o">=</span> <span class="p">[</span><span class="nx">color</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="nx">color</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="nx">color</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="nx">color</span><span class="p">(</span><span class="mi">255</span><span class="p">)];</span>
+<span class="kd">let</span> <span class="nx">oColor</span> <span class="o">=</span> <span class="p">[</span><span class="nx">color</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="nx">color</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="nx">color</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="nx">color</span><span class="p">(</span><span class="mi">100</span><span class="p">)];</span>
+</code></pre></div></div>
+<p>If objects are like variables that have other variables inside of it, how do we access their values?</p>
+<p>Just like arrays have a special syntax for accessing their members by index using the square brackets (<code class="language-plaintext highlighter-rouge">[]</code>), objects have a special syntax for accessing members by their name. If we want to get the <code class="language-plaintext highlighter-rouge">x</code> position of our obstacle we can use: <code class="language-plaintext highlighter-rouge">obstacle.x</code> or <code class="language-plaintext highlighter-rouge">obstacle["x"]</code>. Similarly, the diameter would be: <code class="language-plaintext highlighter-rouge">obstacle.diameter</code> or <code class="language-plaintext highlighter-rouge">obstacle["diameter"]</code>.</p>
+<p>We’ll give preference to the <em>dot notation</em>, but if we have objects whose members have names with spaces, or special characters, we will have to use the square brackets notation <code class="language-plaintext highlighter-rouge">[]</code>.</p>
+<h2 id="many-objects">Many Objects</h2>
+<p>Now let’s combine arrays and objects and create an empty array to hold our obstacle objects:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">allObstacles</span> <span class="o">=</span> <span class="p">[];</span>
+</code></pre></div></div>
+<p>Then in our <code class="language-plaintext highlighter-rouge">setup()</code> function we can use a <code class="language-plaintext highlighter-rouge">for()</code> loop to add \(9\) obstacles to this array like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">;</span> <span class="nx">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">anObstacle</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">x</span><span class="p">:</span> <span class="nx">random</span><span class="p">(</span><span class="nx">width</span><span class="p">),</span>
+    <span class="na">y</span><span class="p">:</span> <span class="nx">random</span><span class="p">(</span><span class="nx">height</span><span class="p">),</span>
+    <span class="na">diameter</span><span class="p">:</span> <span class="nx">random</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
+    <span class="na">fColor</span><span class="p">:</span> <span class="nx">color</span><span class="p">(</span><span class="nx">random</span><span class="p">(</span><span class="mi">255</span><span class="p">)),</span>
+    <span class="na">oColor</span><span class="p">:</span> <span class="nx">color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">190</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+  <span class="p">};</span>
+
+  <span class="nx">allObstacles</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">anObstacle</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The loop executes \(9\) times and each time random values are picked for <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates, fill color and diameter. In addition to that, all obstacles have the same fill and overlap colors.</p>
+<p>The rest of our code is very similar, but now instead of accessing parameters in different arrays using an index, like:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">ellipse</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">y</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">diameter</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+</code></pre></div></div>
+<p>We first get our object from the array, and then access its properties by name:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">anObstacle</span> <span class="o">=</span> <span class="nx">obstacles</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+<span class="nx">ellipse</span><span class="p">(</span><span class="nx">anObstacle</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">anObstacle</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span> <span class="nx">anObstacle</span><span class="p">.</span><span class="nx">diameter</span><span class="p">);</span>
+</code></pre></div></div>
+<p>The rest is pretty similar. We just have to remember to also get the fill and overlap colors from the object itself before drawing the ellipse.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">mOverlap</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">anObstacle</span><span class="p">.</span><span class="nx">oColor</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="nx">fill</span><span class="p">(</span><span class="nx">anObstacle</span><span class="p">.</span><span class="nx">fColor</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">ellipse</span><span class="p">(</span><span class="nx">anObstacle</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span> <span class="nx">anObstacle</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span> <span class="nx">anObstacle</span><span class="p">.</span><span class="nx">diameter</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/7v8q-YF94"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/7v8q-YF94">
+    open example in new window
+  </a>
+</div>
+<p>This is powerful because now we have a way of addressing each of our objects at once, with all of their parameters. No need to keep multiple arrays with separate parameters scattered around our code.</p>
+<p>Here’s a list of obstacles. Each member of this list has all of its parameters inside.</p>
+<h2 id="keeping-it-together">Keeping It Together</h2>
+<p>One advantage of keeping all of the information about an obstacle together is that it’s easier to access them all at once, or make them have some relation to each other, or rearrange the order in which they are drawn.</p>
+<p>Let’s say that instead of \(9\) obstacles we want to draw \(590\).</p>
+<p>And, we also want the color of the obstacles to be related to their diameter and we want to draw the largest obstacles first, and the smaller ones on top of them.</p>
+<p>Let’s start by adjusting the color.</p>
+<p>When we create the obstacle and pick a random value for the diameter, we will also create a variable that holds the diameter as a percentage of the max diameter. When the random diameter is close to the max, <code class="language-plaintext highlighter-rouge">pctDiam</code> will be close to \(1.0\), when it’s smaller, it will be closer to \(0\).</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">oDiam</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="nx">maxDiam</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">maxDiam</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">pctDiam</span> <span class="o">=</span> <span class="nx">oDiam</span> <span class="o">/</span> <span class="nx">maxDiam</span><span class="p">;</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/FScgsqLKX"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/FScgsqLKX">
+    open example in new window
+  </a>
+</div>
+<p>Ok. The color works. But we still want to draw the bigger diameters first.</p>
+<p>In order to do that we have to sort the array of obstacles by their diameter. JavaScript arrays have a builtin function to do that called <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort"><code class="language-plaintext highlighter-rouge">sort()</code></a>. If our array had only numbers or words, all we would have to do was call <code class="language-plaintext highlighter-rouge">allObstacles.sort()</code>, but since our array has a bunch of custom objects we have to tell the <code class="language-plaintext highlighter-rouge">sort()</code> function how to order them.</p>
+<p>We’ll see how to do this in detail at a later time, but it involves giving <code class="language-plaintext highlighter-rouge">sort()</code> a function that specifies which parameter of our objects we want to sort by.</p>
+<p>That’s what this function does:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">byDiameter</span><span class="p">(</span><span class="nx">obsA</span><span class="p">,</span> <span class="nx">obsB</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">obsB</span><span class="p">.</span><span class="nx">diameter</span> <span class="o">-</span> <span class="nx">obsA</span><span class="p">.</span><span class="nx">diameter</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>And when we call <code class="language-plaintext highlighter-rouge">sort()</code> like this, it will sort the obstacles by diameter from largest to smallest:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">allObstacles</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="nx">byDiameter</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/l27k2dsat"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/l27k2dsat">
+    open example in new window
+  </a>
+</div>
+<p>Next we’re gonna take a look at how to organize our objects so we can more easily change their shapes and colors when they collide.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../arrays/index.html">Arrays</a></li>
+<li><a href="../strings/index.html">Strings</a></li>
+<li><a href="index.html">JavaScript Objects</a></li>
+<li><a href="../animations/index.html">Animations</a></li>
+<li><a href="../interactions/index.html">Interactions</a></li>
+<li><a href="../maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

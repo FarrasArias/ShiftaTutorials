@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Intro to p5.js</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Intro to p5.js</h1>
+<p>Now that we’ve seen how to <a href="../p5-setup/index.html">start a p5.js project</a>, let’s take a closer look at how p5.js works and how we can start writing code for our projects.</p>
+<p>This is a simple <code class="language-plaintext highlighter-rouge">sketch.js</code> example that we can start with:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">createCanvas</span><span class="p">(</span><span class="nx">windowWidth</span><span class="p">,</span> <span class="nx">windowHeight</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">draw</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">background</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+  <span class="nx">ellipse</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/bvmSu50O6a"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/bvmSu50O6a">
+    open example in new window
+  </a>
+</div>
+<h2 id="setup--draw">Setup &amp; Draw</h2>
+<p>As we mentioned previously, our project code, or <em>sketch</em>, is divided into two main sections, or <em>functions</em>, a <code class="language-plaintext highlighter-rouge">setup()</code> function and a <code class="language-plaintext highlighter-rouge">draw()</code> function.</p>
+<p>We specify what each of these functions will do by adding code inside their curly braces (<code class="language-plaintext highlighter-rouge">{</code> <code class="language-plaintext highlighter-rouge">}</code>).</p>
+<p>In the example above, the <code class="language-plaintext highlighter-rouge">createCanvas(windowWidth, windowHeight)</code> command belongs to the <code class="language-plaintext highlighter-rouge">setup()</code> function and the other two commands, <code class="language-plaintext highlighter-rouge">background(220, 20, 20)</code> and <code class="language-plaintext highlighter-rouge">ellipse(120, 120, 50, 50)</code>, are inside the <code class="language-plaintext highlighter-rouge">draw()</code> function.</p>
+<p>The difference between these two parts of our code is that the code inside the <code class="language-plaintext highlighter-rouge">setup()</code> function only gets executed once, while the code inside our <code class="language-plaintext highlighter-rouge">draw()</code> function runs repeatedly, over and over and over and over…</p>
+<h3 id="setup"><code class="language-plaintext highlighter-rouge">setup()</code></h3>
+<p>The <code class="language-plaintext highlighter-rouge">setup()</code> function runs when we first load our page and the <code class="language-plaintext highlighter-rouge">html</code> file includes the p5.js library, and then our <code class="language-plaintext highlighter-rouge">sketch.js</code> file. The commands that we put inside the <code class="language-plaintext highlighter-rouge">setup()</code> function usually have to do with <em>setting up</em> our environment and canvas: How big do we want our canvas to be? Do we need a canvas? What color mode are we using? Should we specify image positioning using their corners or center? What’s our default font style and size? Do we have to load any external files?</p>
+<p>We don’t always have to answer all of these questions in our <code class="language-plaintext highlighter-rouge">setup()</code> function, and we can always change how we do things later in our code, but for parameters and settings that are fixed, it’s more efficient to just set them up once, at the beginning of our program, by putting commands in the <code class="language-plaintext highlighter-rouge">setup()</code> function.</p>
+<p>In the example above, our <code class="language-plaintext highlighter-rouge">setup()</code> function just sets the area where we can draw and detect interactions, our canvas, to be as big as our window.</p>
+<p>If, for example, in our project, we were only ever gonna draw blue shapes, with thick orange outlines, we can add the commands for setting those up in our <code class="language-plaintext highlighter-rouge">setup()</code> function:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">strokeWeight</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<span class="nx">stroke</span><span class="p">(</span><span class="dl">'</span><span class="s1">orange</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">fill</span><span class="p">(</span><span class="dl">'</span><span class="s1">blue</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/Z6jv5gVTo"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/Z6jv5gVTo">
+    open example in new window
+  </a>
+</div>
+<h3 id="draw"><code class="language-plaintext highlighter-rouge">draw()</code></h3>
+<p>This is where we’ll want to put commands that actually <em>draw</em> anything on the screen, whether they are shapes, images, movie frames or animations.</p>
+<p>For example, the commands for drawing the ellipses in the code above:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">ellipse</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+<span class="nx">ellipse</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+<span class="nx">ellipse</span><span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+<span class="nx">ellipse</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Even though they look like they are static, those ellipses are actually being redrawn on the screen many times a second.</p>
+<p>Unlike the <code class="language-plaintext highlighter-rouge">setup()</code> function, the <code class="language-plaintext highlighter-rouge">draw()</code> function runs repeatedly as long as our project’s webpage is open, and whatever code we put inside its <code class="language-plaintext highlighter-rouge">{ }</code> will execute about 60 times per second. This is what allows us to create animations and handle interactions.</p>
+<p>Without worrying too much about the details, but just to check that whatever we put inside <code class="language-plaintext highlighter-rouge">draw()</code> is always running, let’s modify the code above and use the number of times that the <code class="language-plaintext highlighter-rouge">draw()</code> function has executed to move the ellipses across the canvas:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/tmnnt_GsQ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/tmnnt_GsQ">
+    open example in new window
+  </a>
+</div>
+<p>That special <code class="language-plaintext highlighter-rouge">frameCount</code> keyword keeps track of how many times our code has executed and we can use that value to draw our ellipses at a slightly different location every time.</p>
+<p>We’ll sometimes refer to each execution of the <code class="language-plaintext highlighter-rouge">draw()</code> function as a <em>frame</em> because it is often used to redraw our entire canvas every time it runs, just like a film or flip-book animation frame.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../programming/index.html">Programming Computers</a></li>
+<li><a href="../javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="index.html">Intro to p5.js</a></li>
+<li><a href="../drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../variables/index.html">Variables</a></li>
+<li><a href="../transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

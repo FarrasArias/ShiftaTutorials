@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Drawing: Shapes and Colors</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Drawing: Shapes and Colors</h1>
+<p>We briefly saw some commands for drawing shapes on our canvas in the <a href="../p5-intro/index.html">previous section</a>, when we looked at the overall organization of a p5.js project.</p>
+<p>Let’s take a more detailed look at our canvas, the commands we can use for drawing shapes and how to represent colors in our p5.js sketches.</p>
+<h2 id="the-canvas">The Canvas</h2>
+<p>First, a quick introduction to the canvas.</p>
+<p>The canvas is the section of our page where we can actually draw things. There’s an actual <code class="language-plaintext highlighter-rouge">html</code> <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas"><code class="language-plaintext highlighter-rouge">&lt;canvas&gt;</code></a> element on our page that is responsible for displaying our drawings, but we don’t have to worry about interacting directly with it. When we use the <a href="https://p5js.org/reference/p5/createCanvas"><code class="language-plaintext highlighter-rouge">createCanvas()</code></a> command, p5.js will automatically take care of creating and placing this <code class="language-plaintext highlighter-rouge">&lt;canvas&gt;</code> element on our page.</p>
+<p>The <code class="language-plaintext highlighter-rouge">createCanvas()</code> command takes two parameters, or, two numbers, that specify a <code class="language-plaintext highlighter-rouge">width</code> and a <code class="language-plaintext highlighter-rouge">height</code> for our drawing area. We can always give it specific values in pixels, like: <code class="language-plaintext highlighter-rouge">createCanvas(640, 480)</code> or <code class="language-plaintext highlighter-rouge">createCanvas(1920, 1080)</code>, but if we want our canvas to be proportional to our browser window, we can use the special p5.js keywords <code class="language-plaintext highlighter-rouge">windowWidth</code> and <code class="language-plaintext highlighter-rouge">windowHeight</code> to make the canvas take up as much space as possible on our page: <code class="language-plaintext highlighter-rouge">createCanvas(windowWidth, windowHeight)</code>.</p>
+<p>We can see the difference by running the following two sketches:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/AHvLeXMJM"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/AHvLeXMJM">
+    open example in new window
+  </a>
+</div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/FJCJwnz7V"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/FJCJwnz7V">
+    open example in new window
+  </a>
+</div>
+<p>And, whether our canvas is created with specific pixel dimensions or using <code class="language-plaintext highlighter-rouge">(windowWidth, windowHeight)</code>, we can always ask p5.js for the exact size of our canvas by accessing the <a href="https://p5js.org/reference/p5/width"><code class="language-plaintext highlighter-rouge">width</code></a> and <a href="https://p5js.org/reference/p5/height"><code class="language-plaintext highlighter-rouge">height</code></a> <em>variables</em>.</p>
+<p>(clear any cookie warnings and look at the <em>Console</em> section after running the sketch below)</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/E_GTsCI-4"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/E_GTsCI-4">
+    open example in new window
+  </a>
+</div>
+<h2 id="coordinate-system">Coordinate System</h2>
+<p>Before we start drawing, we just need to understand how the canvas is oriented and how to specify locations within its boundaries.</p>
+<p>Just like <code class="language-plaintext highlighter-rouge">createCanvas()</code> required two numbers, for \((width, height)\), to define the size of our canvas, specifying locations on our canvas also requires two numbers, or coordinates, \((x, y)\). This is because in p5.js our canvas is a two-dimensional <a href="https://en.wikipedia.org/wiki/Cartesian_coordinate_system#Two_dimensions">cartesian plane</a>, where the first dimension represents the horizontal distance from the origin, and the second dimension the vertical distance. Unlike the traditional cartesian coordinate system from geometry, in p5.js, and most other computer graphics contexts, the origin of our canvas is on the top left corner and the vertical dimension grows downwards.</p>
+<div class="scaled-images">
+<img src="../../assets/images/week01/canvas-00.jpg"/>
+</div>
+<p>And now, the p5.js <a href="https://p5js.org/reference/p5/width"><code class="language-plaintext highlighter-rouge">width</code></a> and <a href="https://p5js.org/reference/p5/height"><code class="language-plaintext highlighter-rouge">height</code></a> variables can be very useful when we want to specify positions that are relative to the overall size of our canvas. For example, the pixel that’s exactly in the center of our canvas can always be specified with coordinates \((\frac{width}{2}, \frac{height}{2})\), independent of the exact size of our canvas.</p>
+<p>Likewise, the pixel furthest away from the origin has coordinates \((width - 1, height - 1)\). The \(-1\) is necessary because even though our canvas is \(width\) pixels wide and \(height\) pixels tall, we have a pixel at \((0, 0)\), and if the first pixel along the \(x\) direction is at coordinate \(0\), the second pixel at coordinate \(1\), …, etc, …, the last pixel will be at coordinate \(width - 1\).</p>
+<div class="scaled-images">
+<img src="../../assets/images/week01/canvas-01.jpg"/>
+</div>
+<h2 id="drawing-shapes">Drawing Shapes</h2>
+<p>Now that we know how to use coordinates to specify locations on our canvas we can start drawing.</p>
+<p>The p5.js commands <a href="https://p5js.org/reference/p5/rect"><code class="language-plaintext highlighter-rouge">rect()</code></a> and <a href="https://p5js.org/reference/p5/ellipse"><code class="language-plaintext highlighter-rouge">ellipse()</code></a> can be used to draw rectangles and ellipses, respectively. They’re very similar in a lot of ways, but also have some differences worth noting.</p>
+<p>In their simplest form, they both take \(3\) parameters: <code class="language-plaintext highlighter-rouge">x-location</code>, <code class="language-plaintext highlighter-rouge">y-location</code> and <code class="language-plaintext highlighter-rouge">size</code>.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">rect</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">80</span><span class="p">);</span>
+<span class="nx">ellipse</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+</code></pre></div></div>
+<p>If we want the shapes to have different proportions, we just have to use a fourth parameter for the <code class="language-plaintext highlighter-rouge">height</code> of the shape:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">rect</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">40</span><span class="p">);</span>
+<span class="nx">ellipse</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/TyHTKL3db"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/TyHTKL3db">
+    open example in new window
+  </a>
+</div>
+<p>We can play with the coordinates and sizes on the sketch above ☝️ to gain some familiarity and intuition about the coordinate system and these two functions.</p>
+<p>Now, for some of the differences between <code class="language-plaintext highlighter-rouge">rect()</code> and <code class="language-plaintext highlighter-rouge">ellipse()</code>. Let’s say we want to draw an ellipse to the right of a rectangle. They’ll be next to each other, in the same vertical location, so we could try something like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">rect</span><span class="p">(</span><span class="mi">210</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">80</span><span class="p">);</span>
+<span class="nx">ellipse</span><span class="p">(</span><span class="mi">310</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">80</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/2iZYx1nuv"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/2iZYx1nuv">
+    open example in new window
+  </a>
+</div>
+<h1>🤔</h1>
+<p>Even though the first \(2\) parameters for <code class="language-plaintext highlighter-rouge">rect()</code> and <code class="language-plaintext highlighter-rouge">ellipse()</code> specify <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates, what they mean is different. For <code class="language-plaintext highlighter-rouge">rect()</code>, we specify the top-left corner of our shape and for <code class="language-plaintext highlighter-rouge">ellipse()</code> we specify its center.</p>
+<p>Drawing them next to each other requires some adjusting to the coordinates. We can offset the ellipse’s <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> location by half of its diameter:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">rect</span><span class="p">(</span><span class="mi">210</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">80</span><span class="p">);</span>
+<span class="nx">ellipse</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span> <span class="mi">340</span><span class="p">,</span> <span class="mi">80</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/KiSnvsQhf"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/KiSnvsQhf">
+    open example in new window
+  </a>
+</div>
+<p>We can also use the p5.js functions <a href="https://p5js.org/reference/p5/rectMode"><code class="language-plaintext highlighter-rouge">rectMode()</code></a> and <a href="https://p5js.org/reference/p5/ellipseMode"><code class="language-plaintext highlighter-rouge">ellipseMode()</code></a> to change how rectangles and ellipses are drawn.</p>
+<p>To draw rectangles by specifying their center location, we can use</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">rectMode</span><span class="p">(</span><span class="nx">CENTER</span><span class="p">);</span>
+</code></pre></div></div>
+<p>To draw ellipses by specifying their top-left corner, we can use:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">ellipseMode</span><span class="p">(</span><span class="nx">CORNER</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/3frUheLXu"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/3frUheLXu">
+    open example in new window
+  </a>
+</div>
+<p>One thing to note is that once we call <code class="language-plaintext highlighter-rouge">rectMode()</code> or <code class="language-plaintext highlighter-rouge">ellipseMode()</code>, every shape that we draw afterwards will be drawn using the mode specified. To undo this, we can call:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">rectMode</span><span class="p">(</span><span class="nx">CORNER</span><span class="p">);</span>
+<span class="nx">ellipseMode</span><span class="p">(</span><span class="nx">CENTER</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/WTddwWpvG"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/WTddwWpvG">
+    open example in new window
+  </a>
+</div>
+<p>Or, better yet, we can just pick one mode in the beginning, whichever we think will be most useful for our sketch, and keep it throughout the whole sketch.</p>
+<p>Let’s say we want to draw a grid of squares, rectangles and circles. In this situation, where we are starting at the top-left corner of our canvas and drawing to the right and to the bottom, it might be easier to do math for the locations of the top-left corners of our shapes. Since we’ll keep the same mode throughout the whole sketch, we can just put <code class="language-plaintext highlighter-rouge">ellipseMode(CORNER)</code> inside our <code class="language-plaintext highlighter-rouge">setup()</code> function.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/NL-wqSSL1"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/NL-wqSSL1">
+    open example in new window
+  </a>
+</div>
+<p>But, on the other hand, if we are drawing concentric shapes, or placing them relative to the center of the canvas, we might find it easier to use <code class="language-plaintext highlighter-rouge">rectMode(CENTER)</code> throughout our whole sketch:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/hmROElyh4"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/hmROElyh4">
+    open example in new window
+  </a>
+</div>
+<h2 id="more-shapes">More Shapes</h2>
+<p>p5.js has commands for a bunch of <a href="https://p5js.org/reference/#group-Shape">other shapes</a> besides rectangles and ellipses.</p>
+<p>The <a href="https://p5js.org/reference/p5/quad"><code class="language-plaintext highlighter-rouge">quad()</code></a> function can be used to draw non-rectangle quadrilaterals by specifying \(4\) pairs of <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates.</p>
+<p>Similarly, the <a href="https://p5js.org/reference/p5/triangle"><code class="language-plaintext highlighter-rouge">triangle()</code></a> function draws a triangle from \(3\) pairs of <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/rkWRuOQ26"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/rkWRuOQ26">
+    open example in new window
+  </a>
+</div>
+<p>The <a href="https://p5js.org/reference/p5/arc"><code class="language-plaintext highlighter-rouge">arc()</code></a> function draws partial ellipses, and its first \(4\) parameters are just like the <code class="language-plaintext highlighter-rouge">ellipse()</code> parameters for <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates, <code class="language-plaintext highlighter-rouge">width</code> and <code class="language-plaintext highlighter-rouge">height</code>, but the 5\(^{th}\) an 6\(^{th}\) parameters specify the angles of where the arc starts and stops, respectively.</p>
+<p>Angles in p5.js are measured in <a href="https://en.wikipedia.org/wiki/Radian">radians</a> in relation to the positive <code class="language-plaintext highlighter-rouge">x</code> direction. And because our <code class="language-plaintext highlighter-rouge">y</code> values increase as we go down the canvas, increasing angles will also go towards this positive <code class="language-plaintext highlighter-rouge">y</code> direction.</p>
+<p>How angles are measured in p5.js and degree/radian equivalents for some common angles:</p>
+<div class="scaled-images">
+<img src="../../assets/images/week01/drawing-angles.jpg"/>
+</div>
+<p>So now, we can use this drawing as reference to help us draw some partial ellipses:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/12qrmbjku"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/12qrmbjku">
+    open example in new window
+  </a>
+</div>
+<h2 id="non-regular-and-custom-shapes">Non-regular and Custom Shapes</h2>
+<p>p5.js has a method for allowing us to draw custom and non-regular shapes.</p>
+<p>First, we call the <a href="https://p5js.org/reference/p5/beginShape"><code class="language-plaintext highlighter-rouge">beginShape()</code></a> function, then we add as many vertices as we want to our shape, with the <a href="https://p5js.org/reference/p5/vertex"><code class="language-plaintext highlighter-rouge">vertex()</code></a> function, in the order they are to drawn, and finally we let p5.js know we finished our shape by calling the <a href="https://p5js.org/reference/p5/endShape"><code class="language-plaintext highlighter-rouge">endShape()</code></a> function.</p>
+<p>We can call <code class="language-plaintext highlighter-rouge">endShape(CLOSE)</code> to close our shape without having to replicate the first vertex as the last vertex.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/_ewE9wElh"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/_ewE9wElh">
+    open example in new window
+  </a>
+</div>
+<h2 id="colors">Colors</h2>
+<p>We saw some possibilities for drawing shapes.</p>
+<p>Let’s talk about colors.</p>
+<p>The default color mode for p5.js sketches is <code class="language-plaintext highlighter-rouge">RGB</code>, or <code class="language-plaintext highlighter-rouge">RGBA</code>, which means that colors are specified using \(3\) or \(4\) values between \(0\) and \(255\).</p>
+<p>The first value corresponds to the amount of red in the color, the second to the amount of green and the third to the amount of blue. Those are the \(3\) color channels in <code class="language-plaintext highlighter-rouge">RGB</code> mode because they correspond to the physical pixels on a monitor, which have tiny red, green and blue lights.</p>
+<p>The fourth value, when specified, corresponds to the amount of opacity of our color, where \(0\) is a fully transparent color and \(255\) fully opaque.</p>
+<p>We can also specify <code class="language-plaintext highlighter-rouge">RGB</code> colors by just using \(1\) value. This is a shortcut to specify that all three values for the red, green and blue channels are the same, and the result is a grayscale color.</p>
+<p>Besides the <code class="language-plaintext highlighter-rouge">background()</code> command, which we’ve been using to specify the pink color of our background, we can also use the <a href="https://p5js.org/reference/p5/fill"><code class="language-plaintext highlighter-rouge">fill()</code></a> and <a href="https://p5js.org/reference/p5/stroke"><code class="language-plaintext highlighter-rouge">stroke()</code></a> commands to specify the fill and outline colors for our shapes.</p>
+<p>And, just like the <code class="language-plaintext highlighter-rouge">rectMode()</code> and <code class="language-plaintext highlighter-rouge">ellipseMode()</code> commands, once we call <code class="language-plaintext highlighter-rouge">fill()</code> or <code class="language-plaintext highlighter-rouge">stroke()</code>, everything drawn afterwards will have the same color.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/EgHkkOsUR"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/EgHkkOsUR">
+    open example in new window
+  </a>
+</div>
+<p>Colors can also be specified using <a href="https://www.w3schools.com/tags/ref_colornames.asp">html color names</a>, or <a href="https://www.w3schools.com/html/html_colors_hex.asp">hex notation</a>.</p>
+<p>Hex notation might be familiar from image-editing software. It contains the exact same information as the <code class="language-plaintext highlighter-rouge">RGB</code> format, but represented in <a href="https://byjus.com/maths/hexadecimal-number-system/">hexadecimal notation</a>, where each of the \(3\) channel values between \(0\) and \(255\) is represented as a hexadecimal number between <code class="language-plaintext highlighter-rouge">00</code> and <code class="language-plaintext highlighter-rouge">FF</code>, where <code class="language-plaintext highlighter-rouge">FF</code> is the hexadecimal notation for the number \(255\).</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/oCr-eh9CB"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/oCr-eh9CB">
+    open example in new window
+  </a>
+</div>
+<p>We can explore the equivalencies between all of these representations in the sketch below.</p>
+<p>The sliders can be used to select values for the \(3\) <code class="language-plaintext highlighter-rouge">RGB</code> channels of the background color. The <code class="language-plaintext highlighter-rouge">RGB</code> and hex representations of this color are then written out, and the closest of the \(140\) html colors is displayed in a rectangle.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/4ycW7yWmV"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/4ycW7yWmV">
+    open example in new window
+  </a>
+</div>
+<h3 id="color-modes">Color Modes</h3>
+<p>In addition to the default <code class="language-plaintext highlighter-rouge">RGB</code> color mode, p5.js also allows us to describe colors using the <code class="language-plaintext highlighter-rouge">HSB</code> color mode.</p>
+<p><code class="language-plaintext highlighter-rouge">HSB</code> stands for Hue, Saturation and Brightness, and sometimes is also referred to as <a href="https://en.wikipedia.org/wiki/HSL_and_HSV"><code class="language-plaintext highlighter-rouge">HSV</code></a> for Hue-Saturation-Value.</p>
+<p>The Hue value describes the color itself: whether it’s red, blue, purple, orange, etc. The Saturation and Brightness components are attributes of the color, where Saturation describes how “<em>colorful</em>” the color is and Brightness its “<em>illuminance</em>”. Decreasing the saturation value will make the color more gray, where decreasing its Brightness will make it more black.</p>
+<p>In order to enable the <code class="language-plaintext highlighter-rouge">HSB</code> color mode in p5.js we have to call the <a href="https://p5js.org/reference/p5/colorMode"><code class="language-plaintext highlighter-rouge">colorMode()</code></a> function with <code class="language-plaintext highlighter-rouge">HSB</code> for its parameter: <code class="language-plaintext highlighter-rouge">colorMode(HSB)</code>.</p>
+<p>After that, all of the color commands like <code class="language-plaintext highlighter-rouge">background()</code>, <code class="language-plaintext highlighter-rouge">fill()</code> and <code class="language-plaintext highlighter-rouge">stroke()</code> will interpret their \(3\) parameters as <code class="language-plaintext highlighter-rouge">HSB</code> values.</p>
+<p>In <code class="language-plaintext highlighter-rouge">HSB</code> mode the Hue value has a range from \(0\) to \(359\), and Saturation and Brightness go from \(0\) to \(100\). The unit for Saturation and Brightness is \(\%\), where the Hue value is represented in degrees. This means that hue values wrap around their range, and a hue value of \(359\) is actually right next to the hue value of \(0\).</p>
+<p>This sketch is very similar to the previous one, but now the \(3\) sliders control the Hue, Saturation and Brightness values for our background color.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/b4WQsPPyN"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/b4WQsPPyN">
+    open example in new window
+  </a>
+</div>
+<p>Some people find it easier to interpolate between colors and create color transitions in the <code class="language-plaintext highlighter-rouge">HSB</code> space because we can go through a wide palette of colors by just varying hue value. Where in <code class="language-plaintext highlighter-rouge">RGB</code> we always have to account for all \(3\) channels when creating transitions or interpolating colors.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../programming/index.html">Programming Computers</a></li>
+<li><a href="../javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../variables/index.html">Variables</a></li>
+<li><a href="../transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

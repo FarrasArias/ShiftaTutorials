@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Strings</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Strings</h1>
+<h2 id="introduction-drawing-words">Introduction: Drawing Words</h2>
+<p>We’ve seen variables that hold <em>numbers</em>, <em>booleans</em>, <em>arrays</em> and <em>objects</em>. Now, let’s take a look at a different JavaScript datatype: <em>strings</em>.</p>
+<p>A string holds text data. It is a list/array of characters, specified within single (‘ ‘), double (“ “) or back (<code class="language-plaintext highlighter-rouge">` `</code>) quote symbols. And, just like other values, it can be assigned to variables:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">s0</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">This is a string</span><span class="dl">"</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">s1</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">This is also a string!</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">s2</span> <span class="o">=</span> <span class="s2">`Another string`</span><span class="p">;</span>
+</code></pre></div></div>
+<p>In p5.js we use the <a href="https://p5js.org/reference/p5/text"><code class="language-plaintext highlighter-rouge">text()</code></a> function to draw strings on the screen.</p>
+<p>In addition to the string (or the variable that holds the string), we also have to give the <code class="language-plaintext highlighter-rouge">text()</code> function the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates where the text is to be drawn:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">s0</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">This is a string</span><span class="dl">"</span><span class="p">;</span>
+<span class="nx">text</span><span class="p">(</span><span class="nx">s0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/N7dBcauPF"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/N7dBcauPF">
+    open example in new window
+  </a>
+</div>
+<p>In addition to <code class="language-plaintext highlighter-rouge">text()</code>, p5.js also has a bunch of <a href="https://p5js.org/reference/#group-Typography">functions</a> for controlling typography and text properties like font size, font type, alignments, etc:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/cy5No5rwW"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/cy5No5rwW">
+    open example in new window
+  </a>
+</div>
+<p>Text <a href="https://p5js.org/reference/p5/textAlign">alignment</a> is something worth reading about and experimenting with:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/B7k5Ytn_v"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/B7k5Ytn_v">
+    open example in new window
+  </a>
+</div>
+<p>In cases where our text is really long, we can have it wrap around and display in multiple lines by giving the <code class="language-plaintext highlighter-rouge">text()</code> function a couple of extra parameters:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/dZpYMQAEJ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/dZpYMQAEJ">
+    open example in new window
+  </a>
+</div>
+<p>This is just like <code class="language-plaintext highlighter-rouge">rect()</code> where we specify <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code> locations and <code class="language-plaintext highlighter-rouge">width</code>, <code class="language-plaintext highlighter-rouge">height</code>, except the width and height now are for a textbox.</p>
+<h2 id="strings-as-arrays">Strings as Arrays</h2>
+<p>Since strings are arrays of characters, and used often, JavaScript also provides us with special functions and variables for manipulating them.</p>
+<p>For example, the variable <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length"><code class="language-plaintext highlighter-rouge">length</code></a> can be used to check how many characters are in the string:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">s0</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">This is a string</span><span class="dl">"</span><span class="p">;</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">s0</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span> <span class="c1">// should print: 16</span>
+</code></pre></div></div>
+<p>The function <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase"><code class="language-plaintext highlighter-rouge">toUpperCase()</code></a>, for example, can be used to turn every letter in a string into uppercase letters:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">s0</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">This is a string</span><span class="dl">"</span><span class="p">;</span>
+<span class="nx">print</span><span class="p">(</span><span class="nx">s0</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">());</span> <span class="c1">// should print: THIS IS A STRING</span>
+</code></pre></div></div>
+<p>There are a whole bunch of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">functions</a> for strings.</p>
+<p>And just like with an array of numbers, we can iterate over a string and draw its characters one at a time:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ic4ok1ann"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ic4ok1ann">
+    open example in new window
+  </a>
+</div>
+<p>Independent of the size of the string, we can always iterate over it using <code class="language-plaintext highlighter-rouge">length</code> and accessing the letters using array index notation:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/tVJ12ATX2"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/tVJ12ATX2">
+    open example in new window
+  </a>
+</div>
+<p>This is trying to fit all of the letters of a long sentence along the diagonal of our canvas, but instead we could first split the sentence into words, and then iterate over the array of words:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/2M95jO8ab"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/2M95jO8ab">
+    open example in new window
+  </a>
+</div>
+<p>If we look at the documentation for the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split"><code class="language-plaintext highlighter-rouge">split()</code></a> function we’ll see that it takes a string as its parameter, and that string is used to split the original string into many substrings. We used the space character (<code class="language-plaintext highlighter-rouge">" "</code>) to split the sentence into words, but we could’ve used any string as the split parameter.</p>
+<p>And if we want to avoid having words that go beyond the edge of our canvas, we use the p5.js function <a href="https://p5js.org/reference/p5/textWidth"><code class="language-plaintext highlighter-rouge">textWidth()</code></a> to calculate the width of each word, and use that to adjust the x-location of the word if it will overflow:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/JkBUZgdQr"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/JkBUZgdQr">
+    open example in new window
+  </a>
+</div>
+<h2 id="more-splitting">More Splitting</h2>
+<p>Let’s create a sketch that draws a random winner from a list of names.</p>
+<p>We first start by defining a string with all of the names:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">s0</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">thiago, alice, bob, chewbacca, dany, elisa</span><span class="dl">"</span><span class="p">;</span>
+</code></pre></div></div>
+<p>And splitting it into an array of names:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">words</span> <span class="o">=</span> <span class="nx">s0</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">"</span><span class="s2">, </span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Now, every time we re-run the sketch, it will select the winner based on a random value that represents the index of that name in our array:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mouseClicked</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">chosenIndex</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">words</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The problem with the above code is that the numbers returned by <code class="language-plaintext highlighter-rouge">random()</code> can be fractional and have a decimal portion, like: \(1.3, 2.62, 0.78\), etc. and those are not valid array indexes. In order to use values returned by the <code class="language-plaintext highlighter-rouge">random()</code> function as indexes to arrays, we first have to turn them into whole numbers (integers), by dropping the fractional part.</p>
+<p>One way to do that is by using the <a href="https://p5js.org/reference/p5/floor"><code class="language-plaintext highlighter-rouge">floor()</code></a> function, which calculates the closest whole integer value that is less than or equal to the number given as the parameter. Or, in other words, it just drops the fractional part, which is exactly what we want.</p>
+<p>So, instead of:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">chosenIndex</span> <span class="o">=</span> <span class="nx">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">words</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+</code></pre></div></div>
+<p>We’ll use:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">chosenIndex</span> <span class="o">=</span> <span class="nx">floor</span><span class="p">(</span><span class="nx">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">words</span><span class="p">.</span><span class="nx">length</span><span class="p">));</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/4efFuRnvn"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/4efFuRnvn">
+    open example in new window
+  </a>
+</div>
+<h2 id="loading-fonts">Loading Fonts</h2>
+<p>We can specify the font to use by passing a string to <code class="language-plaintext highlighter-rouge">textFont()</code> with the font name, but this only works if that font is installed on the computer where the sketch is running, or if we use generic font family names (<code class="language-plaintext highlighter-rouge">serif</code>, <code class="language-plaintext highlighter-rouge">sans-serif</code>, <code class="language-plaintext highlighter-rouge">monospace</code>).</p>
+<p>If we want to use very special, custom fonts, we have to tell p5.js to load the font file first, and then pass it to <code class="language-plaintext highlighter-rouge">textFont()</code>.</p>
+<p>The first step is to find or create a font file. For free and open-source fonts, check out the <a href="https://www.theleagueofmoveabletype.com/">League of Moveable Type</a> and <a href="https://fontlibrary.org/">Open Font Library</a>.</p>
+<p>Once we have a font file (.otf or .ttf), we can place it next to our <code class="language-plaintext highlighter-rouge">sketch.js</code> file and load it using <a href="https://p5js.org/reference/p5/loadFont"><code class="language-plaintext highlighter-rouge">loadFont()</code></a> in the <code class="language-plaintext highlighter-rouge">preload()</code> part of our sketch.</p>
+<p>Then we can use it to draw our texts:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/JW97r1_s4"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/JW97r1_s4">
+    open example in new window
+  </a>
+</div>
+<p>So, in p5js, not only are our strings instances of a class, but we also have a <a href="https://p5js.org/reference/p5/p5.Font/">Font</a> class with its own special functions for manipulating text. One of these functions, <a href="https://p5js.org/reference/p5.Font/textBounds/"><code class="language-plaintext highlighter-rouge">textBounds()</code></a> returns a bounding box for the given text.</p>
+<p>The box that is returned is an object with \(4\) parameters: \(x\), \(y\), \(w\), \(h\) for the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> location, <code class="language-plaintext highlighter-rouge">width</code> and <code class="language-plaintext highlighter-rouge">height</code> of the text.</p>
+<p>We can use this information to draw rectangles around our text:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/TA1GRq1Dw"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/TA1GRq1Dw">
+    open example in new window
+  </a>
+</div>
+<p>Another special function in the Font class is <a href="https://p5js.org/reference/p5.Font/textToPoints/"><code class="language-plaintext highlighter-rouge">textToPoints()</code></a>. This function returns an array of points that follow the specified text. Once we have those points, we can make small modifications to their values before using them to create a shape.</p>
+<p>In this sketch we are adding a small random number to each point’s <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> locations before drawing them:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/z3QI6kJyQ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/z3QI6kJyQ">
+    open example in new window
+  </a>
+</div>
+<h2 id="loading-text-files">Loading Text Files</h2>
+<p>One last thing about working with texts and strings.</p>
+<p>Just like there are <code class="language-plaintext highlighter-rouge">loadJSON()</code> and <code class="language-plaintext highlighter-rouge">loadTable()</code> functions, p5.js also has a <a href="https://p5js.org/reference/p5/loadStrings"><code class="language-plaintext highlighter-rouge">loadStrings()</code></a> function that can be used to read a text file (from our computer or the internet).</p>
+<p>The result of calling the <code class="language-plaintext highlighter-rouge">loadStrings()</code> function is an array with the lines of the text file, so, if we use a <code class="language-plaintext highlighter-rouge">for()</code> loop we can iterate through the resulting array and draw one line of the text file at a time:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/O-q2k8pNX"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/O-q2k8pNX">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../arrays/index.html">Arrays</a></li>
+<li><a href="index.html">Strings</a></li>
+<li><a href="../objects/index.html">JavaScript Objects</a></li>
+<li><a href="../animations/index.html">Animations</a></li>
+<li><a href="../interactions/index.html">Interactions</a></li>
+<li><a href="../maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

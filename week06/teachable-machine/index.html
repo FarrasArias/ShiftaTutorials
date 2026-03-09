@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Teachable Machine</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Teachable Machine</h1>
+<p>We’ve seen how to use the <a href="https://ml5js.org/">ml5 library</a> to detect faces and hands on images, and briefly mentioned that it can be used to detect objects or classify images coming from video streams.</p>
+<p>Let’s set up a sketch to do classification on a video stream.</p>
+<p>We’ll start by modifying our hand detection sketch to work with the camera. We’ll have to add a capture stream, and instead of calling <code class="language-plaintext highlighter-rouge">detect()</code> just once on a static image, we’ll have to keep calling <code class="language-plaintext highlighter-rouge">detect()</code> every time we’re done detecting. So our detection callback function will look like this now:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">doneDetecting</span><span class="p">(</span><span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">mResults</span> <span class="o">=</span> <span class="nx">results</span><span class="p">;</span>
+  <span class="nx">model</span><span class="p">.</span><span class="nx">detect</span><span class="p">(</span><span class="nx">mCamera</span><span class="p">,</span> <span class="nx">doneDetecting</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Since we’re drawing the video stream at every frame of <code class="language-plaintext highlighter-rouge">draw()</code>, and we might be drawing faster than detecting, we can’t rely on drawing the landmarks inside the callback function anymore. What we can do is copy the results of the detection to a global variable to make sure they are available in our <code class="language-plaintext highlighter-rouge">draw()</code> function. That’s what <code class="language-plaintext highlighter-rouge">mResults = results;</code> is doing.</p>
+<p>The rest of the sketch should look very familiar, we run <code class="language-plaintext highlighter-rouge">detect()</code>, make the results available globally, and run <code class="language-plaintext highlighter-rouge">detect()</code> again. Then, in <code class="language-plaintext highlighter-rouge">draw()</code>, we iterate through the latest results and draw landmark points for detected hands:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/xQrvjIfCT"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/xQrvjIfCT">
+    open example in new window
+  </a>
+</div>
+<p>This works and we could use specific landmark locations to detect basic gestures like pinches or taps.</p>
+<h2 id="classification-model">Classification Model</h2>
+<p>Let’s try the image classification model from <code class="language-plaintext highlighter-rouge">ml5</code>.</p>
+<p>Since the <code class="language-plaintext highlighter-rouge">ml5</code> library wraps up a bunch of different models into consistent interfaces, we can swap our hand model for a classification model with some minor changes.</p>
+<p>The new model is instantiated like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">model</span> <span class="o">=</span> <span class="nx">ml5</span><span class="p">.</span><span class="nx">imageClassifier</span><span class="p">(</span><span class="dl">"</span><span class="s2">MobileNet</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+<p>And used like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">model</span><span class="p">.</span><span class="nx">classify</span><span class="p">(</span><span class="nx">mCamera</span><span class="p">,</span> <span class="nx">doneDetecting</span><span class="p">);</span>
+</code></pre></div></div>
+<p>The results are not lists of hands or faces and their landmark objects, but lists of detected objects and how confident the model is about its classification of the image. For example:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">wig</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">confidence</span><span class="dl">"</span><span class="p">:</span> <span class="mf">0.195567</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">mask</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">confidence</span><span class="dl">"</span><span class="p">:</span> <span class="mf">0.026581</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">neck tie</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">confidence</span><span class="dl">"</span><span class="p">:</span> <span class="mf">0.025564</span>
+  <span class="p">},</span>
+<span class="p">]</span>
+</code></pre></div></div>
+<p>By default, the model only outputs the top-3 classes, but this can be adjusted with the <code class="language-plaintext highlighter-rouge">{topk: K}</code> parameter to the model constructor, where <code class="language-plaintext highlighter-rouge">K</code> is an integer that specifies how many classes to report.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/C-ZVXe2Xm"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/C-ZVXe2Xm">
+    open example in new window
+  </a>
+</div>
+<p>Like previously mentioned, the <code class="language-plaintext highlighter-rouge">ml5</code> documentation doesn’t really specify which version of <code class="language-plaintext highlighter-rouge">MobileNetV2</code> was used, nor does it specify which classes this model detects.</p>
+<p>The <code class="language-plaintext highlighter-rouge">wig, mask, neck tie</code> result was for a picture of a human face 🤔.</p>
+<p>Other images give slightly more accurate, or rather, reasonable, results:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week06/tm-classification-00.jpg"/>
+</div>
+<p>They’re very specific in some cases, and in other cases, wildly varying.</p>
+<p>This isn’t a problem, but if we’re going to use this model it would help to know exactly what classes it was trained to identify. We might also want to add, remove or edit the classes in the model.</p>
+<p>Luckily, there’s a separate project that helps us do just that.</p>
+<h2 id="teachable-machine">Teachable Machine</h2>
+<p><a href="https://teachablemachine.withgoogle.com/">Teachable Machine</a> is a web-based platform that helps us collect data and finetune certain types of models.</p>
+<p>When we access the site we first have to choose the type of project we’re working on, so it sets up the correct framework and initial model for our tuning. Let’s see how to use it to augment an image classification model.</p>
+<p>Again, these are models that look at an image and predict what class of objects it represents. It can be used to differentiate between breeds of dogs, or classify digits written on envelopes. What we want to do, though, is use a classification model to detect and interpret American Sign Language signs.</p>
+<p>We looked at the hand pose model from <code class="language-plaintext highlighter-rouge">ml5</code>, and we could use that to detect hand landmarks, but then we would need to manually come up with specific landmark relationships for each of the letters we want to detect. With the proper data, we can just train an image classification model to do the same thing, but in a more automated fashion.</p>
+<h3 id="the-data">The Data</h3>
+<p>We’ll go to <a href="https://teachablemachine.withgoogle.com/">Teachable Machine</a>, select <em>Image Project</em> and then <em>Standard image model</em>. We’re greeted with this interface:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week06/tm-interface-00.jpg"/>
+</div>
+<p>We can start by adding a class for the letter ‘A’. Once we give it a name, we could start uploading hand signal images we find on the internet, but the interface gives us a simpler way to do this: video. If we click the Webcam button, we can use video to generate a series of images of the hand signal for the letter ‘A’.</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week06/tm-interface-01.jpg"/>
+</div>
+<p>When generating images for training a classification model, it’s good to have as large of a variety of images as possible. The hand signal should always be for the letter ‘A’, but its position on the screen, the distance from the camera, the lighting, the background, etc… should all be different from image to image.</p>
+<p>We want the model to pick up on the common elements of all of the images.</p>
+<div class="video-container w100">
+<video autoplay="" class="video" loop="" muted="" playsinline="">
+<source src="../../assets/images/week06/tm-capture-00.webm" type="video/webm"/>
+<source src="../../assets/images/week06/tm-capture-00.mp4" type="video/mp4"/>
+</video>
+</div>
+<p>Sometimes it’s a good idea to add an “<em>empty</em>” class to our dataset with images that aren’t part of any other class. For this example, this could be a series of images without hands, or with hands that aren’t showing any of the alphabet signals.</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week06/tm-interface-02.jpg"/>
+</div>
+<p>Once we’ve collected enough varied images for all of the classes we want to detect, we can press the <em>Train Model</em> button. This will use our images to modify a pre-trained model and make it so it only detects the classes that we’re specifying.</p>
+<p>Once the model is ready, Teachable Machine gives us an interface for testing it, but more importantly, it gives us a way to add it to a <code class="language-plaintext highlighter-rouge">p5.js</code> sketch using <code class="language-plaintext highlighter-rouge">ml5</code>.</p>
+<h3 id="the-model">The Model</h3>
+<p>When we click on the <em>Export Model</em> button, we get a screen like this:</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week06/tm-export-00.jpg"/>
+</div>
+<p>We want to select the <em>Tensorflow.js</em> tab and the <em>Upload</em> option, and then click the <em>Upload my model</em> button.</p>
+<p>Once the model is done uploading, we want to copy the url it gives us for our finetuned model.</p>
+<p>For this example it was:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://teachablemachine.withgoogle.com/models/hrStMX1V2/
+</code></pre></div></div>
+<p>Save the url somewhere. Don’t worry too much about the <code class="language-plaintext highlighter-rouge">p5.js</code> example code that Teachable Machine provides. It was written for an older version of <code class="language-plaintext highlighter-rouge">p5.js</code> and an older version of <code class="language-plaintext highlighter-rouge">ml5</code>, and it doesn’t work, so we’ll just modify the code we already have working.</p>
+<h3 id="the-p5js-code">The <code class="language-plaintext highlighter-rouge">p5.js</code> Code</h3>
+<p>If we start with the plain image classifier example from above, all we have to do is change the line that instantiates our model to use the model that we finetuned.</p>
+<p>We do this with:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">model</span> <span class="o">=</span> <span class="nx">ml5</span><span class="p">.</span><span class="nx">imageClassifier</span><span class="p">(</span><span class="nx">modelUrl</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">/model.json</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Where <code class="language-plaintext highlighter-rouge">modelUrl</code> is the url we got from Teachable Machine above.</p>
+<p>And that’s it ! Done ! We now have a custom, finetuned, image classification model.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/3plC1NlxY"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/3plC1NlxY">
+    open example in new window
+  </a>
+</div>
+<p>We can change the output a little bit, adjust it to make something visual or auditory happen based on the letters detected, but the majority of the code for setting up the camera, the model and the detection, stays the same.</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week06/tm-result-00.jpg"/>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../concurrency/index.html">Concurrency</a></li>
+<li><a href="../ml5/index.html">ml5</a></li>
+<li><a href="index.html">Teachable Machine</a></li>
+<li><a href="../transformers/index.html">Transformers.js</a></li>
+<li><a href="../gradio/index.html">Gradio Models</a></li>
+<li><a href="../gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

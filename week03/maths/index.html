@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Maths: mod and map</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Maths: mod and map</h1>
+<h2 id="boundary-conditions">Boundary Conditions</h2>
+<p>Now that we know how to set up animations using the <code class="language-plaintext highlighter-rouge">draw()</code> cycle, and also detect user input using event functions, we’ll very often find ourselves having to deal with <em>boundary conditions</em>. Boundary conditions sometimes involve physical boundaries on our canvas, like, detecting and deciding what to do when a shape moves beyond our screen boundary, Other times, these boundary conditions involve setting limits for the minimum and maximum values a variable can have.</p>
+<p>In this tutorial we are going to take a look at \(2\) strategies/techniques/functions for handling boundary conditions elegantly.</p>
+<h2 id="mod">Mod</h2>
+<p>Let’s consider a simple animation of a circle that moves across our canvas.</p>
+<p>We’ll use the p5.js <a href="https://p5js.org/reference/p5/frameCount"><code class="language-plaintext highlighter-rouge">frameCount</code></a> variable to set the <code class="language-plaintext highlighter-rouge">x</code> location of our circle. This variable keeps track of how many times the <code class="language-plaintext highlighter-rouge">draw()</code> function has executed in our program, and since it starts at \(0\) and grows indefinitely, our circle will start at \(0\) and go infinitely to the right, eventually leaving the screen.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/sq5gwzjWb"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/sq5gwzjWb">
+    open example in new window
+  </a>
+</div>
+<p>If we wanted to keep the circle always on the screen, we could create a separate variable that increments once per frame, just like <code class="language-plaintext highlighter-rouge">frameCount</code>, but once it gets bigger than <code class="language-plaintext highlighter-rouge">width</code> it resets back to \(0\).</p>
+<p>This also has the advantage of letting us control the speed of the circle by changing how much <code class="language-plaintext highlighter-rouge">x</code> grows with each <code class="language-plaintext highlighter-rouge">draw()</code>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/s8NNTlNKp"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/s8NNTlNKp">
+    open example in new window
+  </a>
+</div>
+<p>Try it out! Change <code class="language-plaintext highlighter-rouge">x += 4</code> to <code class="language-plaintext highlighter-rouge">x += 8</code>, or <code class="language-plaintext highlighter-rouge">x += 12</code> on the sketch above ☝️.</p>
+<p>Another way to write this exact same logic, but without an <code class="language-plaintext highlighter-rouge">if()</code> statement, is using the <a href="https://betterexplained.com/articles/fun-with-modular-arithmetic/">modulo operator</a> (<code class="language-plaintext highlighter-rouge">%</code>). This operator calculates the remainder of a division between two numbers.</p>
+<p>\(\frac{10}{2} = 5\) (remainder: \(0\))</p>
+<p>\(\frac{11}{3} = 3\) (remainder: \(2\))</p>
+<p>\(\frac{13}{6} = 2\) (remainder: \(1\))</p>
+<p>In JavaScript:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">10</span> <span class="o">%</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">// 0</span>
+<span class="mi">11</span> <span class="o">%</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">// 2</span>
+<span class="mi">13</span> <span class="o">%</span> <span class="mi">6</span><span class="p">;</span> <span class="c1">// 1</span>
+</code></pre></div></div>
+<p>And this is useful to us because we can use the modulo operator to create repeating sequences of numbers.</p>
+<p>Let’s say we have a variable that grows and grows and grows, and we want it to <em>reset</em> back to \(0\) once it gets to \(10\). So, we have a sequence \([0,1,2,3,4,...,10,11,12,13,...,20,21,22,23,...]\) and we want to get another sequence \([0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8,9, 0,1,2,...]\). The second sequence is just the list of values we get when we calculate the <em>remainder</em> of dividing all of the numbers on the first sequence by \(10\).</p>
+<p>More generally, if we have a variable <code class="language-plaintext highlighter-rouge">X</code> that grows and grows and grows and we want a sequence that repeats after \(N\) values, all we have to do is calculate <code class="language-plaintext highlighter-rouge">X % N</code>.</p>
+<p>If we want to repeat the sequence after <code class="language-plaintext highlighter-rouge">width</code> elements, so, turn \([0,1,2,3,4,...,10,11,12,13,...,20,21,22,23,...]\) into \([0,1,2,...,width - 2,width - 1, 0,1,2,...,width - 2,width-1, 0,1,...]\), we can just use the remainder of the natural numbers when they are divided by <code class="language-plaintext highlighter-rouge">width</code>.</p>
+<p>In our case, using p5.js, the <a href="https://p5js.org/reference/p5/frameCount"><code class="language-plaintext highlighter-rouge">frameCount</code></a> variable already gives us a sequence of the natural numbers. And, since in this example we want the circle to reset to \(0\) once it gets to <code class="language-plaintext highlighter-rouge">width</code>, all we have to do is set the <code class="language-plaintext highlighter-rouge">x</code> position of our circle to be <code class="language-plaintext highlighter-rouge">frameCount % width</code>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/KanH50nEv"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/KanH50nEv">
+    open example in new window
+  </a>
+</div>
+<p>And if we now want to make it move faster, we just multiply the <code class="language-plaintext highlighter-rouge">frameCount</code> variable by a constant, so instead of growing by \(1\) it grows by \(2\) or by \(3\), etc:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">2</span> <span class="o">*</span> <span class="nx">frameCount</span><span class="p">;</span> <span class="c1">// [0, 2, 4, 6, 8, ...]</span>
+<span class="mi">3</span> <span class="o">*</span> <span class="nx">frameCount</span><span class="p">;</span> <span class="c1">// [0, 3, 6, 9, 12, ...]</span>
+</code></pre></div></div>
+<p>Either way, no matter how fast our initial sequence grows, as long as we calculate its remainder when divided by <code class="language-plaintext highlighter-rouge">width</code>, the <code class="language-plaintext highlighter-rouge">x</code> position of our circle will wrap around to \(0\) once it gets bigger than <code class="language-plaintext highlighter-rouge">width</code>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/-QT45J7JU"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/-QT45J7JU">
+    open example in new window
+  </a>
+</div>
+<p>It’s good to keep the modulo operator (<code class="language-plaintext highlighter-rouge">%</code>) in mind whenever we are working with <em>sequences</em>, or, <em>cycles</em>, and want to create a sequence of values that <em>start over</em>, or <em>reset</em>.</p>
+<p>For example, let’s say we want to cycle our background colors between \(3\) values, changing color every time there’s a click on the canvas.</p>
+<p>We can just create a variable that will count the number of clicks and use the modulo operator (<code class="language-plaintext highlighter-rouge">%</code>) to calculate which color to show. In this case, the <code class="language-plaintext highlighter-rouge">clickCount</code> variable is the sequence that just grows and grows and grows, but since what we want is a sequence that repeats after \(3\) values, we’ll use <code class="language-plaintext highlighter-rouge">% 3</code>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZK24vFjmJ"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZK24vFjmJ">
+    open example in new window
+  </a>
+</div>
+<p>And what if we want the background color to change automatically every second?</p>
+<p>There is a function in p5.js called <a href="https://p5js.org/reference/p5/second"><code class="language-plaintext highlighter-rouge">second()</code></a> that gives us the number of seconds from our computer’s clock. This number itself repeats after \(60\) values, but since we still only have \(3\) options for colors, we’ll still use <code class="language-plaintext highlighter-rouge">% 3</code>.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/0-XZ391uE"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/0-XZ391uE">
+    open example in new window
+  </a>
+</div>
+<p>This is an example of converting an <em>input</em> signal that we don’t control into an <em>output</em> parameter to control our animation.</p>
+<p>Let’s look at this in more detail.</p>
+<h2 id="tying-variables-together">Tying Variables Together</h2>
+<p>It’s not uncommon to want to use a value read or generated in one part of your program to control the physical properties of objects in other parts of your program. This is how we can create drawings that are reactive to user input, or animations that vary according to data that comes from a sensor or from a database somewhere on the internet.</p>
+<p>In these situations, we will have to define relationships between our <em>input</em> signals and the parameters we want to use for our <em>output</em>. And very often the input signals and output parameters don’t even have the same ranges, units or data types. For example, we might want to convert temperatures measured in <code class="language-plaintext highlighter-rouge">Celsius</code> to circle diameters in <code class="language-plaintext highlighter-rouge">pixels</code>, or the passage of time measured in <code class="language-plaintext highlighter-rouge">seconds</code> to a fill color specified in <code class="language-plaintext highlighter-rouge">RGB</code>.</p>
+<p>Let’s look at an example.</p>
+<p>This is a sketch that draws a circle at <code class="language-plaintext highlighter-rouge">(mouseX, mouseY)</code> and sets the circle diameter to be equal to the <code class="language-plaintext highlighter-rouge">mouseY</code> value: the further down the canvas, the bigger the circle; the circle is almost not visible when the mouse is near the top of the canvas, and, likewise, it’s kind of too big when it’s at the very bottom.</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/J9txjcvGj"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/J9txjcvGj">
+    open example in new window
+  </a>
+</div>
+<p>One way to make this a bit more controllable is to set a <code class="language-plaintext highlighter-rouge">maxDiameter</code> variable and then calculate the actual diameter as a percentage of this value based on the mouse position:</p>
+
+\[diameter = \frac{mouseY}{height} \times maxDiameter\]
+
+<p>The \(\frac{mouseY}{height}\) term is the location of the mouse as a percentage of the canvas height: it goes from \(0\%\) when <code class="language-plaintext highlighter-rouge">mouseY</code> is \(0\), to \(100\%\) when <code class="language-plaintext highlighter-rouge">mouseY</code> is equal to <code class="language-plaintext highlighter-rouge">height</code>.</p>
+<p>We can now use this to set the diameter:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/PEHUu0w-y"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/PEHUu0w-y">
+    open example in new window
+  </a>
+</div>
+<p>And we can do something similar if we want to set a minimum value for the circle diameter:</p>
+
+\[diameter = \frac{mouseY}{height} \times (maxDiameter - minDiameter) + minDiameter\]
+
+<p>The \((maxDiameter - minDiameter)\) term is the magnitude of our output (how much it’s allowed to vary), and multiplying it by \(\frac{mouseY}{height}\) gives us how far along this magnitude our output should be. We still have to add the \(minDiameter\) term to make sure our output is in the range \([minDiameter, maxDiameter]\):</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/t1C6SSfop"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/t1C6SSfop">
+    open example in new window
+  </a>
+</div>
+<p>We have just created a very precise relationship that sets our circle’s diameter based on an input signal.</p>
+<h2 id="map">Map</h2>
+<p>Let’s say that now we want to have the logic reversed: larger circle at the top of the screen, and smaller circle at the bottom. We could use this logic:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">mDiamInv</span> <span class="o">=</span> <span class="p">(</span><span class="nx">mouseY</span> <span class="o">/</span> <span class="nx">height</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nx">maxDiam</span> <span class="o">-</span> <span class="nx">minDiam</span><span class="p">)</span> <span class="o">+</span> <span class="nx">minDiam</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">mDiam</span> <span class="o">=</span> <span class="nx">maxDiam</span> <span class="o">-</span> <span class="nx">mDiamInv</span> <span class="o">+</span> <span class="nx">minDiam</span><span class="p">;</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/6AdmlEjeR"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/6AdmlEjeR">
+    open example in new window
+  </a>
+</div>
+<p>The logic for calculating the circle diameter is getting a bit complicated…</p>
+<p>This is where <a href="https://p5js.org/reference/p5/map"><code class="language-plaintext highlighter-rouge">map()</code></a> comes in. It’s a function that maps a value from one range to another.</p>
+<p>If we want to map the value of <code class="language-plaintext highlighter-rouge">mouseY</code> from <code class="language-plaintext highlighter-rouge">height</code> values to <code class="language-plaintext highlighter-rouge">diameter</code> values, \([0, height] \rightarrow [40, 200]\), we can just write:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">mDiam</span> <span class="o">=</span> <span class="nx">map</span><span class="p">(</span><span class="nx">mouseY</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">height</span><span class="p">,</span> <span class="nx">minDiam</span><span class="p">,</span> <span class="nx">maxDiam</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/XJlqeKXnW"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/XJlqeKXnW">
+    open example in new window
+  </a>
+</div>
+<p>Likewise, if we want to reverse the logic and have larger circle at the top of the screen and smaller circle at the bottom, we just swap <code class="language-plaintext highlighter-rouge">minDiam</code> and <code class="language-plaintext highlighter-rouge">maxDiam</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">mDiam</span> <span class="o">=</span> <span class="nx">map</span><span class="p">(</span><span class="nx">mouseY</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">height</span><span class="p">,</span> <span class="nx">maxDiam</span><span class="p">,</span> <span class="nx">minDiam</span><span class="p">);</span>
+</code></pre></div></div>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/1xiOT--Ci"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/1xiOT--Ci">
+    open example in new window
+  </a>
+</div>
+<h2 id="mapping-between-ranges">Mapping Between Ranges</h2>
+<p><a href="https://p5js.org/reference/p5/map"><code class="language-plaintext highlighter-rouge">map()</code></a> is useful in other situations too. Let’s say we want to draw evenly spaced vertical lines on our canvas.</p>
+<p>We have a <code class="language-plaintext highlighter-rouge">for()</code> loop that counts from \(0\) to \(16\) and with <code class="language-plaintext highlighter-rouge">map()</code> we can just transform the counter variable to the position we want because we know our counter has a range \([0, 16]\) and our line positions will have a range \([0, width]\):</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/NqqsgY5IA"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/NqqsgY5IA">
+    open example in new window
+  </a>
+</div>
+<p>We can map the same counter to two different output ranges: \([0, 16] \rightarrow [0, width]\) and \([0, 16] \rightarrow [width, 0]\). The first going from left to right and the other from right to left, as the counter increases:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/2CbfzdpbU"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/2CbfzdpbU">
+    open example in new window
+  </a>
+</div>
+<p>Using the same counter we can map \([0, 16] \rightarrow [0, width]\) and \([0, 16] \rightarrow [0, \frac{width}{10}]\):</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/zJ9WBx5Mz"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/zJ9WBx5Mz">
+    open example in new window
+  </a>
+</div>
+<p>Or, with an offset for one of the output ranges, map \([0, 16] \rightarrow [0, width]\) and \([0, 16] \rightarrow [\frac{width}{4}, \frac{width}{3}]\):</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/xoCvCTcuz"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/xoCvCTcuz">
+    open example in new window
+  </a>
+</div>
+<p>We can even do something where our counter \([0, 16]\) gets mapped to <em>three</em> different output ranges:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/xwmzj1UIx"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/xwmzj1UIx">
+    open example in new window
+  </a>
+</div>
+<h2 id="mapping-between-units">Mapping Between Units</h2>
+<p>It’s also very useful to use the <code class="language-plaintext highlighter-rouge">map()</code> function if we want to draw time.</p>
+<p>In this example we map the seconds value from our computer’s clock to the diameter of a circle. We know seconds has a range \([0, 59]\), so it’s just a matter of choosing the smallest and largest values we want for our diameter.</p>
+<p>Let’s map \([0, 59] \rightarrow [20, width]\) for the diameter, and while we’re at it, let’s also map the seconds value to the amount of green in our <code class="language-plaintext highlighter-rouge">fill()</code> color. We know each of the \(3\) color parameters has a maximum value of \(255\), and if we always want a bit of green in our color we can map \([0, 59] \rightarrow [128, 255]\).</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/thbVYgT-l"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/thbVYgT-l">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../arrays/index.html">Arrays</a></li>
+<li><a href="../strings/index.html">Strings</a></li>
+<li><a href="../objects/index.html">JavaScript Objects</a></li>
+<li><a href="../animations/index.html">Animations</a></li>
+<li><a href="../interactions/index.html">Interactions</a></li>
+<li><a href="index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

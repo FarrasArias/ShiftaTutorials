@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Programming Computers</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class=”body-section-content”>
+<h1>Programming Computers</h1>
+
+<h2 id=”what-is-data”>What Is Data?</h2>
+<p>As sophisticated as computers might appear, the underlying principle of how they work is surprisingly straightforward. At their core, computers are systems designed to <em>store</em> and <em>manipulate</em> data. <strong>Data</strong> refers to raw, unprocessed symbols or values (numbers, signals, characters) that, on their own, carry no inherent meaning. When data is organized and interpreted within a meaningful context, it becomes <strong>information</strong>.</p>
+<p>Take a Video Game for example. The computer stores a collection of raw data: 3D mesh files, texture images, audio samples, executable code. None of it “means” anything in isolation. But when the game engine processes that data in real time (tracking the player’s position, applying physics rules, rendering each frame) it becomes information: the player is moving right, the enemy’s health is dropping, the next level is loading.</p>
+
+<h2 id=”binary”>Binary: The Language of Machines</h2>
+<p>How does a computer actually store data? The answer lies in the physics of its electronic components. At the hardware level, computers are built primarily from two fundamental types of components: <a href=”https://en.wikipedia.org/wiki/Capacitor”>capacitors</a> and <a href=”https://en.wikipedia.org/wiki/Transistor”>transistors</a>.</p>
+<p>A <strong>capacitor</strong> stores electrical charge between two conductive plates. When charged, it represents an <em>on</em> state; when discharged, an <em>off</em> state. This is the basis of <a href=”https://en.wikipedia.org/wiki/Dynamic_random-access_memory”>DRAM</a> (Dynamic RAM): the type of short-term working memory used in computers. Because capacitors gradually leak their charge, DRAM must be constantly refreshed, which is why it is called <em>dynamic</em>.</p>
+<p>A <strong>transistor</strong> acts as an electronic switch. When a voltage is applied to its control terminal (the gate), it allows current to flow between its other two terminals (the <em>on</em> state). Without that voltage, current is blocked (the <em>off</em> state). Modern processors contain billions of transistors, and their switching behavior is the basis of all computation and logic.</p>
+<p>In \(1937\), Claude Shannon wrote his master’s thesis “<a href=”https://en.wikipedia.org/wiki/A_Symbolic_Analysis_of_Relay_and_Switching_Circuits”>A Symbolic Analysis of Relay and Switching Circuits</a>” at MIT. In it, he proved that these on/off electrical states could be described and manipulated using <a href=”https://en.wikipedia.org/wiki/Boolean_algebra”>Boolean Algebra</a>, a branch of mathematics that operates exclusively on two values: \(1\) and \(0\). This insight allowed engineers to design arbitrarily complex circuits from simple, repeatable building blocks, and remains the mathematical foundation of all digital computing today.</p>
+<div class=”scaled-images”>
+<img src=”../../assets/images/week01/shannon-switches.jpg”/>
+</div>
+<p><em>Different representations of the logic operations implemented by Shannon using electrical switches</em></p>
+
+<h2 id=”representing-data”>Representing Data</h2>
+<p>The conceptual unit that maps to these two electronic states is called a <a href=”https://en.wikipedia.org/wiki/Bit”><strong>bit</strong></a> (short for <em>binary digit</em>). A single bit holds exactly one of two values: \(0\) (off, false) or \(1\) (on, true).</p>
+<p>Let's say we want to represent numbers. With one bit we can represent only two distinct states. To represent more values, we combine bits. Two bits give us \(2^2 = 4\) combinations (<code class=”language-plaintext highlighter-rouge”>00</code>, <code class=”language-plaintext highlighter-rouge”>01</code>, <code class=”language-plaintext highlighter-rouge”>10</code>, <code class=”language-plaintext highlighter-rouge”>11</code>), which we can map to the numbers 0, 1, 2, and 3. Three bits yield \(2^3 = 8\) combinations. In general, \(n\) bits can represent \(2^n\) distinct values: exponential growth from a tiny building block.</p>
+<p>When we group 8 bits together, we get a <a href=”https://en.wikipedia.org/wiki/Byte”><strong>byte</strong></a>. A byte can represent \(2^8 = 256\) different values (we start at 0 and go all the way through 255). The choice of 8 wasn’t arbitrary: the <a href=”https://en.wikipedia.org/wiki/ASCII”>ASCII</a> character encoding standard (which maps letters, digits and symbols to numbers) requires 7 bits for its 128 characters, so 8 bits offered a clean power-of-2 boundary with room for extensions. IBM’s standardization of the 8-bit byte with the System/360 in \(1964\) cemented its universal adoption. This counting system (where each position represents a successive power of 2) is called the <a href=”https://en.wikipedia.org/wiki/Binary_number”>binary numeral system</a>, and it is the native language of digital computers.</p>
+
+<h3 id=”data-types”>Data Types</h3>
+<p>Numbers are just one kind of data. What about letters, decimal values, or logical conditions? The solution, consistent with everything above, is to agree on conventions for what particular bit patterns mean. For characters, ASCII assigns a unique number to each symbol. The letter <code class=”language-plaintext highlighter-rouge”>’A’</code> maps to the number 65, stored in binary as <code class=”language-plaintext highlighter-rouge”>01000001</code>. But how does the computer know whether a given byte represents the number 65 or the letter ‘A’? Through context: additional structural information tells the system how to <em>interpret</em> the raw bits. This extra information is nothing more than, you guessed it, more bits! For example, we might add a 0 at the beginning of our data to signal this is a number, or a one to signal this is a letter. In reality this extra contextual information is much more complex, but the concept remains the same: More bits to represent more variations in data.</p>
+<p>This is the concept behind <strong>data types</strong>. Modern programming languages define several primitive (built-in) types that the computer handles natively:</p>
+<ul>
+<li><strong>Integers</strong> (<code class=”language-plaintext highlighter-rouge”>int</code>): whole numbers, positive or negative. E.g., <code class=”language-plaintext highlighter-rouge”>-3</code>, <code class=”language-plaintext highlighter-rouge”>0</code>, <code class=”language-plaintext highlighter-rouge”>42</code></li>
+<li><strong>Floating-point numbers</strong> (<code class=”language-plaintext highlighter-rouge”>float</code>): numbers with decimal components. E.g., <code class=”language-plaintext highlighter-rouge”>3.14</code>, <code class=”language-plaintext highlighter-rouge”>-0.5</code></li>
+<li><strong>Characters</strong> (<code class=”language-plaintext highlighter-rouge”>char</code>): individual letters or symbols. E.g., <code class=”language-plaintext highlighter-rouge”>’A’</code>, <code class=”language-plaintext highlighter-rouge”>’!’</code></li>
+<li><strong>Strings</strong> (<code class=”language-plaintext highlighter-rouge”>string</code>): sequences of characters forming words or text. E.g., <code class=”language-plaintext highlighter-rouge”>”Hello”</code></li>
+<li><strong>Booleans</strong> (<code class=”language-plaintext highlighter-rouge”>bool</code>): logical values, either <code class=”language-plaintext highlighter-rouge”>true</code> or <code class=”language-plaintext highlighter-rouge”>false</code>: the most fundamental unit of meaning in computing</li>
+</ul>
+<p>Many more data types can be built from these primitives (arrays, objects, images, audio buffers) but these five form the foundation. When you declare a variable in a program and assign it a value, you are telling the computer both <em>what</em> to store and <em>how</em> to interpret it.</p>
+
+<h3 id=”key-concepts-review”>Key Concepts</h3>
+<ul>
+<li>A <strong>bit</strong> is the smallest unit of data: either <code class=”language-plaintext highlighter-rouge”>0</code> or <code class=”language-plaintext highlighter-rouge”>1</code>, corresponding to the off/false or on/true state of an electronic component</li>
+<li>Combining \(n\) bits gives \(2^n\) possible values: exponential growth from a tiny building block</li>
+<li>8 bits form a <strong>byte</strong>, representing 256 distinct values (0–255)</li>
+<li>The <strong>binary numeral system</strong> (base 2) is the native number system of digital hardware</li>
+<li><strong>Boolean algebra</strong> maps directly to the on/off states of transistors, enabling logical operations in circuits</li>
+<li><strong>Data types</strong> give meaning to raw bit patterns by defining how sequences of bits should be interpreted</li>
+<li>The distinction between <strong>data</strong> (raw values) and <strong>information</strong> (interpreted, contextualized data) underpins all of computing</li>
+</ul>
+
+<h2 id=”the-turing-machine”>The Turing Machine</h2>
+<p>We now have a mechanism for storing data. But storage alone is insufficient, we also need a systematic way to <em>process</em> it. This is where Alan Turing’s contribution becomes essential.</p>
+<p>English mathematician <a href=”https://en.wikipedia.org/wiki/Alan_Turing”>Alan Turing</a> published his landmark paper “On Computable Numbers, with an Application to the Entscheidungsproblem” in \(1936\). In it, he described an abstract computational device, now called the <a href=”https://en.wikipedia.org/wiki/Turing_machine”>Turing Machine</a>, that defined, for the first time, what it formally means to “compute” something.</p>
+<p>The Turing Machine is a conceptual model, not a physical device. It consists of four components:</p>
+<ul>
+<li>An <strong>infinite tape</strong>: a sequence of cells stretching in both directions, each containing a symbol from a finite alphabet (e.g., <code class=”language-plaintext highlighter-rouge”>0</code>, <code class=”language-plaintext highlighter-rouge”>1</code>, or blank)</li>
+<li>A <strong>read/write head</strong>: positioned over one cell at a time, it reads the current symbol, optionally writes a new one, then moves one position left or right</li>
+<li>A <strong>state register</strong>: holds the machine’s current internal <em>state</em>, a finite set of configurations representing its “memory” of what it has done so far</li>
+<li>A <strong>transition table</strong> (the rulebook): a complete specification of the machine’s behavior. Given any combination of current state and current symbol, it specifies: what symbol to write, which direction to move the head, and which state to transition into next. The machine halts when it reaches a designated <em>halt</em> state.</li>
+</ul>
+<div class=”scaled-images”>
+<img src=”../../assets/images/week01/turing-machine.jpg”/>
+</div>
+<p><em>Simplified representation of a Turing Machine with instruction set \(\{\) \(X\), \(Y\), \(\varnothing\), \(\forall\) \(\}\)</em></p>
+<p>What makes this remarkable is that despite its simplicity, Turing proved that any computation that can be described algorithmically can be carried out by such a machine. This is the heart of the <a href=”https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis”>Church-Turing thesis</a>: any effectively computable function can be computed by a Turing Machine. A machine with just a handful of primitive operations, read, write, move, change state, can, in principle, compute anything that any computer can compute. Your laptop, phone, and the microcontroller in a coffee machine are all, in this formal sense, Turing-equivalent.</p>
+
+<h2 id=”programming”>Programming</h2>
+<p>The Turing Machine gave us a theoretical framework for computation. From it, the concept of a <em>program</em> emerges naturally: a finite, well-defined set of rules, a transition table, that specifies how to transform input data into output. Programming is, at its core, the act of writing those rules.</p>
+<p>Some form of programmable computation has existed since at least the \(1830\)s, when <a href=”https://en.wikipedia.org/wiki/Ada_Lovelace”>Ada Lovelace</a> wrote what is widely considered the first algorithm intended for execution by a machine, a sequence of operations for Charles Babbage’s Analytical Engine to compute Bernoulli numbers. Early mechanical computers were programmed using punched cards: physical pieces of cardboard with holes at specific positions, where the presence or absence of a hole determined which mechanical connections were made.</p>
+<p>By the \(1940\)s, electronic computers had arrived, and the programming paradigm evolved accordingly. But the first programs were still written as explicit sequences of on/off signals, directly manipulating electronic switches. This is what we now call <strong>machine code</strong>: the lowest-level form of instructions a processor can execute.</p>
+
+<h2 id=”languages”>Languages</h2>
+<p>Writing machine code by hand is tedious and error-prone. The natural response was to develop progressively more expressive ways of giving instructions to computers, what we call <strong>programming languages</strong>. Each successive generation adds a layer of abstraction over the one below it, hiding complexity and letting programmers focus on <em>what</em> they want to do rather than <em>how</em> the hardware should do it.</p>
+
+<h3 id=”assembly”>Assembly Language</h3>
+<p>The first step up from machine code was <a href=”https://en.wikipedia.org/wiki/Assembly_language”>assembly language</a>: a human-readable notation where each instruction corresponds directly to a single machine-level operation. Instead of writing raw binary, a programmer might write <code class=”language-plaintext highlighter-rouge”>MOV AX, 1</code> to load the value 1 into a specific register, or <code class=”language-plaintext highlighter-rouge”>ADD AX, BX</code> to add two values. Assembly is still used in performance-critical contexts today, embedded systems, operating system kernels, device drivers, but it demands that the programmer manage memory addresses, registers, and hardware specifics directly, making it powerful but laborious.</p>
+
+<h3 id=”compiled-languages”>Compiled Languages</h3>
+<p>The next abstraction layer brought <strong>compiled languages</strong>. A programmer writes instructions in a higher-level syntax, closer to human reasoning, and a separate program called a <strong>compiler</strong> translates the entire source code into machine-executable instructions <em>before</em> the program runs. The work of <a href=”https://en.wikipedia.org/wiki/Grace_Hopper”>Grace Hopper</a>, American computer scientist and US Navy Admiral, was foundational here: in the early \(1950\)s, Hopper demonstrated that English-like terms could describe program instructions in a machine-independent way and developed some of the first compilers, which led to languages like FORTRAN, ALGOL and COBOL.</p>
+<p>Here is a simple example in C++:</p>
+<div class=”language-cpp highlighter-rouge”><div class=”highlight”><pre class=”highlight”><code>#include &lt;iostream&gt;
+
+void printSomething() {
+    std::cout &lt;&lt; “Hello, World!”;
+}</code></pre></div></div>
+<p>That single <code class=”language-plaintext highlighter-rouge”>std::cout</code> call compiles down to dozens of low-level assembly instructions: loading characters into registers, making system calls to write to the screen, managing the call stack. The compiler handles all of that invisibly. Common compiled languages include C, C++ and C#, the naming is intentional: C++ builds on C (the <code class=”language-plaintext highlighter-rouge”>++</code> is C’s own increment operator, meaning “one step beyond”), and C# takes its name from the musical sharp symbol, implying yet another step up.</p>
+
+<h3 id=”interpreted-languages”>Interpreted Languages</h3>
+<p>The trend continued with <strong>interpreted languages</strong>, which add another abstraction layer. Instead of compiling the entire program before it runs, an <em>interpreter</em> reads and executes code line by line at runtime, making development faster and more flexible, at some cost to raw execution speed. Here is the equivalent output in Python:</p>
+<div class=”language-python highlighter-rouge”><div class=”highlight”><pre class=”highlight”><code>print(“Hello, World!”)</code></pre></div></div>
+<p>One instruction to the programmer; internally, a chain of operations that eventually reduces to the same kind of machine-level steps as the C++ version. What was considered “high-level” in the \(1950\)s is very different from today. The trend of abstraction continues: visual programming environments let users construct programs by connecting nodes and blocks rather than writing text; AI-assisted coding lets users describe intent in plain language and have code generated for them. These new layers haven’t fully replaced text-based programming, but they are a meaningful part of computing’s ongoing evolution.</p>
+
+<h2 id=”javascript-and-p5js”>JavaScript and p5.js</h2>
+<p>The language we will use in this course is <strong>JavaScript</strong>, a high-level, interpreted language originally designed to run inside web browsers. Being interpreted means our code is executed line by line by the browser’s JavaScript engine, with no separate compilation step. This makes it fast to write, test and iterate, particularly well-suited for creative and exploratory work.</p>
+<p>JavaScript is also a <em>multi-paradigm</em> language, meaning it supports different styles of programming. And like most general-purpose languages, it is extended through <em>libraries</em>, collections of pre-written code that add functionality without requiring you to build everything from scratch.</p>
+<p>The library we will use is <a href=”https://p5js.org/”>p5.js</a>, a JavaScript library built specifically for creative coding, with a focus on accessibility and visual expression. p5.js simplifies drawing shapes, working with color, animating content, and responding to mouse and keyboard input, all directly in a browser window. JavaScript’s flexibility, the very feature that makes it approachable for beginners, can also be a source of subtle bugs, since it enforces fewer rules than many other languages. This tradeoff is worth keeping in mind as you develop your coding instincts.</p>
+
+<h2 id=”references”>References</h2>
+<p>This has been a condensed and particular narrative of some key moments in computing history. Many other figures, perspectives and stories are equally important. Some starting points:</p>
+<ul>
+<li><a href=”https://phoenixperry.medium.com/an-alternate-history-of-computing-a-sketch-1811197814ff”>A sketch for an alternate history of computing</a></li>
+<li><a href=”https://www.scientificamerican.com/article/the-story-of-nasas-real-ldquo-hidden-figures-rdquo/”>The Story of NASA’s <em>Hidden Figures</em></a></li>
+<li><a href=”https://rhizome.org/editorial/2013/feb/19/queer-computing-1/”>Rhizome’s Queer History of Computing</a></li>
+<li><a href=”https://cutpathways.podbean.com/e/a-byte-size-history-of-computing/”>The Wild West of Computing</a></li>
+</ul>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="index.html">Programming Computers</a></li>
+<li><a href="../javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../variables/index.html">Variables</a></li>
+<li><a href="../transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

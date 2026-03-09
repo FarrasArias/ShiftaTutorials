@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Gemini API</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Gemini API</h1>
+<p>Ok. Let’s look at even bigger models!</p>
+<p>Hugging Face and <code class="language-plaintext highlighter-rouge">Gradio</code> apps are really good ways to experiment with open source models, but sometimes we might want to look at some of the commercial models, like <code class="language-plaintext highlighter-rouge">chatGPT</code> or <code class="language-plaintext highlighter-rouge">Gemini</code>.</p>
+<p>The process/code is similar to how we used models through <code class="language-plaintext highlighter-rouge">Gradio</code> because we’ll need to make API requests to servers:</p>
+<div class="scaled-images left w75">
+<img src="../../assets/images/week06/gemini-server-00.jpg"/>
+</div>
+<h2 id="gemini">Gemini</h2>
+<p>Let’s take a look at how to use Google’s <code class="language-plaintext highlighter-rouge">Gemini</code> models to describe images.</p>
+<p>We’ll start with the plain <code class="language-plaintext highlighter-rouge">Transformers.js</code> image description sketch we had a few tutorials back:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZuwaVgRID"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/ZuwaVgRID">
+    open example in new window
+  </a>
+</div>
+<p>Let’s remove the <code class="language-plaintext highlighter-rouge">Transformers.js</code> code and get the sketch ready for a new model:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/5oLO0FGaq"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/5oLO0FGaq">
+    open example in new window
+  </a>
+</div>
+<p>We’ve also added a text input field for pasting a Gemini “<em>API key</em>”.</p>
+<p>What’s an <em>API key</em> ? It’s how companies keep track of who is using their APIs and services. In this case, it’s how Google keeps track of how often we use Gemini and if we’re not going over any of the limits of their free tier.</p>
+<p>In order to get an <em>API key</em> we have to be logged into a Google account and start an AI Studio project <a href="https://aistudio.google.com/">here</a>. Clicking on the <em>Get API key</em> button and then the <em>+ Create API key</em> button should be enough to start a project and get a key.</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week06/gemini-key-00.jpg"/>
+</div>
+<p>We have to save this key somewhere safe. It’s like a password for logging into the Gemini servers.</p>
+<p>Now, we can head over to the Gemini API documentation <a href="https://ai.google.dev/gemini-api/docs/text-generation#javascript">here</a>, and see how to add a Gemini client to our <code class="language-plaintext highlighter-rouge">p5.js</code> sketch.</p>
+<div class="scaled-images left">
+<img src="../../assets/images/week06/gemini-api-00.jpg"/>
+</div>
+<p>Again, we’ll have to adapt this to work in a <code class="language-plaintext highlighter-rouge">p5.js</code> sketch. It’s not that bad.</p>
+<p>Because we need an API key when creating a <code class="language-plaintext highlighter-rouge">GoogleGenAI</code> object, we’ll just put most of our model code inside the <code class="language-plaintext highlighter-rouge">describeFrame()</code> function. Even the code that sets up the model.</p>
+<p>This way, when we hit the <em>Describe</em> button for the first time, our <code class="language-plaintext highlighter-rouge">gemini</code> variable will be un-instantiated, and we’ll load the library, read the API key value from the text box, and create a <code class="language-plaintext highlighter-rouge">GoogleGenAI</code> object:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">gemini</span><span class="p">){</span>
+  <span class="kd">let</span> <span class="nx">module</span> <span class="o">=</span> <span class="k">await</span> <span class="k">import</span><span class="p">(</span><span class="nx">gUrl</span><span class="p">);</span>
+  <span class="nx">gemini</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">module</span><span class="p">.</span><span class="nx">GoogleGenAI</span><span class="p">({</span> <span class="na">apiKey</span><span class="p">:</span> <span class="nx">apiText</span><span class="p">.</span><span class="nx">value</span> <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Here’s the code so far. Same as before, but different:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/g_Z1QQ5yD"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/g_Z1QQ5yD">
+    open example in new window
+  </a>
+</div>
+<p>If we dig around the API documentation enough, eventually we’ll find <a href="https://ai.google.dev/gemini-api/docs/image-understanding#javascript_1">this bit of code</a> that describes how to send images to the model.</p>
+<p>Again, we have to adapt this to <code class="language-plaintext highlighter-rouge">p5.js</code>.</p>
+<p>The first thing we have to do is make sure our image’s <code class="language-plaintext highlighter-rouge">dataURL</code> is in <code class="language-plaintext highlighter-rouge">jpeg</code> format, and remove the header that specifies that it’s in <code class="language-plaintext highlighter-rouge">jpeg</code> format:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">imgUrl</span> <span class="o">=</span> <span class="nx">mCamera</span><span class="p">.</span><span class="nx">canvas</span>
+  <span class="p">.</span><span class="nx">toDataURL</span><span class="p">(</span><span class="dl">"</span><span class="s2">image/jpeg</span><span class="dl">"</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="dl">"</span><span class="s2">data:image/jpeg;base64,</span><span class="dl">"</span><span class="p">,</span> <span class="dl">""</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Then we can create an image data object:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">imgData</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">data</span><span class="p">:</span> <span class="nx">imgUrl</span><span class="p">,</span>
+  <span class="na">mimeType</span><span class="p">:</span> <span class="dl">"</span><span class="s2">image/jpeg</span><span class="dl">"</span><span class="p">,</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>And, finally, call the model with the image data and a prompt asking it to describe the image:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">gemini</span><span class="p">.</span><span class="nx">models</span><span class="p">.</span><span class="nx">generateContent</span><span class="p">({</span>
+  <span class="na">model</span><span class="p">:</span> <span class="dl">"</span><span class="s2">gemini-2.0-flash</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">contents</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">text</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Describe this image</span><span class="dl">"</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="na">inlineData</span><span class="p">:</span> <span class="nx">imgData</span> <span class="p">}</span>
+  <span class="p">],</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<p>The description will be in <code class="language-plaintext highlighter-rouge">response.text</code>.</p>
+<p>Now we can run this sketch and get some descriptions from Gemini. We just have to make sure we have our API key in the text box:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/D0EjbXv30"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/D0EjbXv30">
+    open example in new window
+  </a>
+</div>
+<h2 id="chatting-with-gemini">Chatting with Gemini</h2>
+<p>Chatting with the model is even easier, in terms of the code. It can be exactly the same as above, but we don’t need to encode an image:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">gemini</span><span class="p">.</span><span class="nx">models</span><span class="p">.</span><span class="nx">generateContent</span><span class="p">({</span>
+  <span class="na">model</span><span class="p">:</span> <span class="dl">"</span><span class="s2">gemini-2.0-flash</span><span class="dl">"</span><span class="p">,</span>
+  <span class="na">contents</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">text</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Why is the sky blue?</span><span class="dl">"</span> <span class="p">}</span>
+  <span class="p">],</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<p>Here’s a sketch with an extra text box for inputting questions to the model:</p>
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/FHMs5kya3"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/FHMs5kya3">
+    open example in new window
+  </a>
+</div>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../concurrency/index.html">Concurrency</a></li>
+<li><a href="../ml5/index.html">ml5</a></li>
+<li><a href="../teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../transformers/index.html">Transformers.js</a></li>
+<li><a href="../gradio/index.html">Gradio Models</a></li>
+<li><a href="index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

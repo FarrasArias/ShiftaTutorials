@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Setting up p5.js</title>
+<meta content="2506 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2506 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Setting up p5.js</h1>
+<p>Let’s see how to start a <a href="https://p5js.org/">p5.js</a> project.</p>
+<h2 id="web-editor">Web Editor</h2>
+<p>The easiest way to get started with p5.js is to use the p5.js web editor available at: <a href="https://editor.p5js.org/">https://editor.p5js.org/</a>.</p>
+<p>We can start writing and executing p5.js code right away, but it’s best to set up an account first so we can save and share our projects later.</p>
+<p>It might also be helpful to take a look at the overall structure and organization of a p5.js project.</p>
+<p>The <code class="language-plaintext highlighter-rouge">sketch.js</code> file that the editor shows us by default is where we’ll do most of our work, but there are actually \(2\) other files that are needed to make a p5.js project run properly.</p>
+<p>We can click on the \(\boldsymbol{&gt;}\) symbol right underneath the play button towards the top-left corner of our screen to open up the editor’s file manager:</p>
+<div class="video-container w66">
+<video autoplay="" class="video" loop="" muted="" playsinline="">
+<source src="../../assets/images/week01/editor-00.webm" type="video/webm"/>
+<source src="../../assets/images/week01/editor-00.mp4" type="video/mp4"/>
+</video>
+</div>
+<h3 id="html">html</h3>
+<p>Let’s start with the <code class="language-plaintext highlighter-rouge">index.html</code> file since this is the file that gets loaded first when our project is opened in a browser. This file is responsible for loading a few other files with JavaScript code, and setting up a couple of basic <code class="language-plaintext highlighter-rouge">html</code> elements where the results of our JavaScript code can be drawn.</p>
+<p>The <code class="language-plaintext highlighter-rouge">index.html</code> file in the editor has the minimum amount of code needed for a basic p5.js project.</p>
+<p>We don’t have to understand everything in this file, but a few lines are worth highlighting:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/p5.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div></div>
+<p>and</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"sketch.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div></div>
+<p>These two lines are responsible for loading the JavaScript code used by our project into the webpage being shown by our browser. The first line loads the p5.js library from a CDN (Content Delivery Service: a server online). This file contains a bunch of pre-written code that we will use in our projects.</p>
+<p>The other line loads our <code class="language-plaintext highlighter-rouge">sketch.js</code> JavaScript file, which is the file initially shown by the editor, and where we will write most of the code for our projects and assignments.</p>
+<p>Before we look at the JavaScrip file, a few more lines of <code class="language-plaintext highlighter-rouge">html</code>:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;body&gt;</span>
+  <span class="nt">&lt;main&gt;&lt;/main&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre></div></div>
+<p>These lines setup a blank html page, with an empty <a href="https://www.w3schools.com/tags/tag_main.asp"><code class="language-plaintext highlighter-rouge">&lt;main&gt;</code></a> html component. This component is what our JavaScript code will look for when it starts drawing things to the screen.</p>
+<h3 id="css">CSS</h3>
+<p>The <code class="language-plaintext highlighter-rouge">style.css</code> file in the editor is used to set physical properties for our html elements, but since we barely have any html elements (just a <code class="language-plaintext highlighter-rouge">&lt;body&gt;</code>, a <code class="language-plaintext highlighter-rouge">&lt;main&gt;</code> and a <code class="language-plaintext highlighter-rouge">&lt;canvas&gt;</code>) it’s a pretty simple file and we don’t have to worry too much about it.</p>
+<h3 id="javascript">JavaScript</h3>
+<p>Back to JavaScript.</p>
+<p>We will write our project’s code in the <code class="language-plaintext highlighter-rouge">sketch.js</code> file, and we should, eventually, understand everything that it contains.</p>
+<p>A very simple <code class="language-plaintext highlighter-rouge">sketch.js</code> file that we can start with, can look like this:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">createCanvas</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">400</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">draw</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">background</span><span class="p">(</span><span class="mi">220</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This file has two sections, one called <code class="language-plaintext highlighter-rouge">setup</code> and another called <code class="language-plaintext highlighter-rouge">draw</code>. Commands for the <code class="language-plaintext highlighter-rouge">setup</code> section are grouped within its brackets (<code class="language-plaintext highlighter-rouge">{</code> <code class="language-plaintext highlighter-rouge">}</code>), just like the commands for the <code class="language-plaintext highlighter-rouge">draw</code> section are grouped within brackets.</p>
+<p>Most of our p5.js projects will be organized this way, with a <code class="language-plaintext highlighter-rouge">setup</code> section that usually sets up some parameters for our project, followed by a <code class="language-plaintext highlighter-rouge">draw</code> section, which runs repeatedly and is responsible for actually drawing (shapes, images, etc) on the screen and handling user interactivity, amongst other things.</p>
+<p>Right now our <code class="language-plaintext highlighter-rouge">setup</code> section just specifies that we want a canvas that is \(400\) by \(400\) pixels in size, and our <code class="language-plaintext highlighter-rouge">draw</code> section just fills up our canvas with a light grey background.</p>
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../programming/index.html">Programming Computers</a></li>
+<li><a href="../javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="index.html">Setting up p5.js</a></li>
+<li><a href="../p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../variables/index.html">Variables</a></li>
+<li><a href="../transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+</summary>
+<ul>
+<li><a href="../../week06/neural-nets/index.html">Intro to Neural Networks</a></li>
+<li><a href="../../week06/concurrency/index.html">Concurrency</a></li>
+<li><a href="../../week06/ml5/index.html">ml5</a></li>
+<li><a href="../../week06/teachable-machine/index.html">Teachable Machine</a></li>
+<li><a href="../../week06/transformers/index.html">Transformers.js</a></li>
+<li><a href="../../week06/gradio/index.html">Gradio Models</a></li>
+<li><a href="../../week06/gemini/index.html">Gemini API</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
