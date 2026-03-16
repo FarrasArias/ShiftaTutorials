@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GenXP — Week 02 / Session 1 — Time & Motion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; }
+
+    .remark-slide-content {
+      background-color: #0f0f0f;
+      color: #f0ece4;
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      line-height: 1.6;
+      padding: 2.5em 3.5em 3em;
+    }
+
+    .remark-slide-content.title-slide {
+      background-color: #0f0f0f;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 3em 3.5em;
+    }
+    .remark-slide-content.title-slide h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: 2.4em;
+      font-weight: 700;
+      color: #f0ece4;
+      border: none;
+      padding-bottom: 0;
+      letter-spacing: -2px;
+      line-height: 1.1;
+    }
+    .remark-slide-content.title-slide h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.1em;
+      color: #FF4D1C;
+      font-weight: 400;
+      margin-top: 0.5em;
+    }
+    .remark-slide-content.title-slide .kicker {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72em;
+      color: #555;
+      margin-top: 2em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .remark-slide-content.section-slide {
+      background-color: #FF4D1C;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .remark-slide-content.section-slide h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: 2.6em;
+      color: #0f0f0f;
+      border: none;
+      padding: 0;
+      letter-spacing: -2px;
+      line-height: 1.1;
+    }
+    .remark-slide-content.section-slide h2 {
+      color: rgba(0,0,0,0.5);
+      font-size: 1em;
+      margin-top: 0.5em;
+    }
+
+    .remark-slide-content.dark-slide { background-color: #1a1a1a; }
+    .remark-slide-content.code-slide { background-color: #0d0d0d; font-size: 19px; }
+
+    h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.6em;
+      font-weight: 700;
+      color: #FF4D1C;
+      border-bottom: 2px solid #FF4D1C;
+      padding-bottom: 0.3em;
+      margin-bottom: 0.8em;
+      letter-spacing: -0.5px;
+    }
+    h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.1em;
+      color: #C5F74F;
+      font-weight: 400;
+      margin-bottom: 0.6em;
+      margin-top: 1em;
+    }
+    h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1em;
+      color: #f0ece4;
+      font-weight: 600;
+      margin-bottom: 0.4em;
+      margin-top: 0.8em;
+    }
+    ul, ol { padding-left: 1.4em; }
+    li { margin: 0.45em 0; line-height: 1.5; }
+    a { color: #FF4D1C; text-decoration: none; border-bottom: 1px solid #FF4D1C; }
+
+    .remark-inline-code {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82em;
+      background: #1e1e1e;
+      color: #C5F74F;
+      padding: 0.1em 0.4em;
+      border-radius: 3px;
+    }
+    .remark-code { font-family: 'Space Mono', monospace; font-size: 0.78em; line-height: 1.5; }
+    pre { border-radius: 6px; overflow: hidden; }
+
+    blockquote {
+      border-left: 3px solid #FF4D1C;
+      padding-left: 1.2em;
+      color: #aaa;
+      font-style: italic;
+      margin: 0.8em 0;
+      font-size: 0.95em;
+    }
+
+    .huge    { font-size: 3.5em; font-family: 'Space Mono', monospace; line-height: 1; }
+    .big     { font-size: 1.6em; font-family: 'Space Mono', monospace; }
+    .small   { font-size: 0.82em; color: #888; }
+    .mono    { font-family: 'Space Mono', monospace; }
+    .accent  { color: #FF4D1C; }
+    .green   { color: #C5F74F; }
+    .teal    { color: #4FC5F7; }
+    .dim     { color: #555; }
+
+    .col-left  { float: left; width: 48%; }
+    .col-right { float: right; width: 48%; }
+    .col-60    { float: left; width: 60%; }
+    .col-40    { float: right; width: 38%; }
+    .clearfix::after { content: ''; display: table; clear: both; }
+
+    .remark-slide-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65em;
+      color: #333;
+      bottom: 1.2em;
+      right: 2em;
+    }
+
+    .box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-left: 3px solid #FF4D1C;
+      padding: 0.8em 1.2em;
+      border-radius: 4px;
+      margin: 0.6em 0;
+      font-size: 0.9em;
+    }
+    .box.green { border-left-color: #C5F74F; }
+    .box.teal  { border-left-color: #4FC5F7; }
+
+    .label {
+      display: inline-block;
+      background: #FF4D1C;
+      color: #0f0f0f;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65em;
+      padding: 0.15em 0.6em;
+      border-radius: 2px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+    .label.green { background: #C5F74F; }
+    .label.teal  { background: #4FC5F7; }
+
+    hr { border: none; border-top: 1px solid #333; margin: 1em 0; }
+
+    /* Timeline diagram */
+    .timeline {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75em;
+      color: #f0ece4;
+      background: #1a1a1a;
+      padding: 1em 1.2em;
+      border-radius: 4px;
+      line-height: 2;
+    }
+    .timeline .t-label { color: #FF4D1C; }
+    .timeline .t-val   { color: #C5F74F; }
+  </style>
+</head>
+<body>
+<textarea id="source">
+
+class: title-slide
+
+# Time &<br>Motion
+
+## Week 02 — Animation, the Draw Loop & User Input
+
+.kicker[Designing Generative Experiences — SHIFTA 2025-06]
+
+???
+This session builds directly on Week 1.
+Students should have p5.js accounts and have played with the random circles sketch.
+Open the editor and have the basic sketch from last week ready to evolve.
+
+---
+
+# Today
+
+.col-left[
+**Theory**
+- How draw() actually works
+- Frames, ticks, time
+- The physics of the screen
+- Clearing vs accumulating
+
+**Motion**
+- Moving things over time
+- Oscillation with `sin()`
+- Easing — smooth following
+]
+.col-right[
+**User Input**
+- Mouse position: `mouseX`, `mouseY`
+- Mouse events: `mousePressed()`
+- Keyboard: `keyIsDown()`, `keyPressed()`
+
+**Exercises**
+- No conditionals, no loops, no randomness
+- Pure motion, pure input
+
+.box.green[Assignment 02 preview: .accent[TIME]]
+]
+.clearfix[]
+
+???
+The constraint of "no conditionals, loops, functions, or randomness" in the exercises is intentional.
+It forces students to understand the draw loop itself as the source of change, not branching logic.
+
+---
+
+class: section-slide
+
+# The Draw Loop
+
+## What is p5.js really doing?
+
+---
+
+# Reviewing setup() and draw()
+
+```javascript
+function setup() {
+  createCanvas(400, 400);   // runs ONCE
+  background(30);           // set the stage
+}
+
+function draw() {
+  // this runs ~60 times per second, forever
+  // every time it runs = one FRAME
+}
+```
+
+--
+
+`setup()` → once at the start.
+
+`draw()` → loops endlessly. This is your animation engine.
+
+.box[
+Every time `draw()` runs, it's a new frame. By default: **60 frames per second**.
+That means `draw()` runs **3,600 times per minute**.
+]
+
+???
+Ask: what does it mean to "animate" something? It means changing it slightly between frames.
+Like film: 24 still images per second → perceived as motion.
+
+---
+
+# Frames and Ticks
+
+p5.js gives you several built-in time variables:
+
+| Variable / Function | What it gives you |
+|---|---|
+| `frameCount` | How many frames have run since start (0, 1, 2, 3…) |
+| `frameRate()` | Current frames per second (read-only call) |
+| `frameRate(n)` | Set target FPS in `setup()` |
+| `millis()` | Milliseconds since the sketch started |
+
+--
+
+```javascript
+function draw() {
+  console.log("Frame:", frameCount);
+  console.log("FPS:", frameRate());
+  console.log("Time:", millis(), "ms");
+}
+```
+
+.box[
+`millis()` is a real clock — it doesn't depend on frame rate.
+`frameCount` depends on performance. Prefer `millis()` for time-sensitive things.
+]
+
+---
+
+# Real-World Time
+
+p5.js can read the actual clock:
+
+```javascript
+second()  // 0 – 59
+minute()  // 0 – 59
+hour()    // 0 – 23
+day()     // 1 – 31
+month()   // 1 – 12
+year()    // e.g. 2025
+```
+
+--
+
+These return the **current system time**, right now.
+
+```javascript
+function draw() {
+  background(30);
+  let s = second();
+  let message = "It is now " + hour() + ":" + minute() + ":" + s;
+  fill(255);
+  text(message, 20, 200);
+}
+```
+
+.box.green[
+This is the foundation of Assignment 02 — you now have access to real time.
+]
+
+???
+Show this live. It's a simple but powerful moment: the code is connected to the world.
+
+---
+
+class: section-slide
+
+# Clearing vs. Accumulating
+
+## One decision, two aesthetics
+
+---
+
+class: code-slide
+
+# background() in draw(): The Switch
+
+```javascript
+function draw() {
+  background(30);  // ← CLEAR every frame
+
+  // anything drawn here appears freshly each frame
+  // → smooth animation, nothing accumulates
+}
+```
+
+vs.
+
+```javascript
+function draw() {
+  // NO background() → everything accumulates
+
+  // each frame adds to the last
+  // → trails, layering, buildup
+  // → the canvas becomes a record of time
+}
+```
+
+.box[
+This single decision defines whether your piece is **animated** (clear) or **generative/accumulative** (no clear).
+Both are valid — it depends on what you want to express.
+]
+
+---
+
+class: code-slide
+
+# The Ghost: Semi-transparent background
+
+A third option — slow fade:
+
+```javascript
+function draw() {
+  // Instead of full clear, draw a semi-transparent layer
+  fill(30, 30, 30, 25);   // dark color, alpha = 25
+  noStroke();
+  rect(0, 0, width, height);
+
+  // now draw your shapes...
+}
+```
+
+--
+
+Old marks don't instantly disappear — they fade over time.
+
+.box[
+This creates **motion trails**. The alpha value controls the trail length:
+- Low alpha (5–15) → very long trails, slow fade
+- High alpha (80–100) → short trails, fast fade
+- Full background() → no trail at all
+]
+
+???
+This technique is used everywhere in creative coding.
+It gives the feeling of time passing — "the ghost of where you were."
+
+---
+
+class: section-slide
+
+# Motion
+
+## Making things move
+
+---
+
+class: code-slide
+
+# The Simplest Motion
+
+Change a variable each frame:
+
+```javascript
+let x = 0;
+
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(30);
+
+  x = x + 2;   // move 2 pixels to the right every frame
+
+  noStroke();
+  fill(255, 80, 50);
+  circle(x, 200, 40);
+}
+```
+
+--
+
+At 60fps: moves **120 pixels per second**.
+
+What happens when `x` goes past the canvas? It just keeps going — off screen.
+
+???
+Ask: how would you make it move left? Up? Diagonally?
+How would you make it move faster? Slower?
+
+---
+
+class: code-slide
+
+# += Shorthand
+
+`x = x + 2` is equivalent to `x += 2`
+
+```javascript
+let x = 0;
+let y = 0;
+
+function draw() {
+  background(30);
+
+  x += 1.5;    // move right
+  y += 0.8;    // move down (slower)
+
+  noStroke();
+  fill(255, 80, 50);
+  circle(x, y, 40);
+}
+```
+
+Common shorthands:
+
+| Long form | Shorthand |
+|---|---|
+| `x = x + 2` | `x += 2` |
+| `x = x - 1` | `x -= 1` |
+| `x = x * 1.1` | `x *= 1.1` |
+
+---
+
+class: code-slide
+
+# Oscillation with sin()
+
+`sin()` returns a value that smoothly cycles between **-1 and +1**.
+
+```javascript
+let angle = 0;
+
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(30);
+
+  angle += 0.05;              // increment the angle each frame
+
+  let offset = sin(angle);    // -1 to 1
+  let x = 200 + offset * 150; // map to -150 to +150 around center
+
+  noStroke();
+  fill(255, 80, 50);
+  circle(x, 200, 40);
+}
+```
+
+The circle oscillates back and forth — .accent[forever] — without any conditional logic.
+
+---
+
+# sin() — The Oscillator
+
+.box[
+`sin(angle)` → smooth wave, range **–1 to +1**
+
+To use it for position, size, or color:
+```
+value = center + sin(angle) * amplitude
+```
+- `center` = the middle point (e.g. `200` for center of canvas)
+- `amplitude` = how far it swings (e.g. `150`)
+- `angle` grows over time (add a small amount each frame)
+]
+
+--
+
+Control the oscillation:
+
+| Parameter | Effect |
+|---|---|
+| `angle += 0.05` | slow oscillation |
+| `angle += 0.2`  | fast oscillation |
+| `amplitude = 10` | small swing |
+| `amplitude = 190` | nearly full canvas width |
+
+---
+
+class: code-slide
+
+# Using sin() for Size and Color
+
+```javascript
+let angle = 0;
+
+function setup() {
+  createCanvas(400, 400);
+  colorMode(HSB, 360, 100, 100);
+}
+
+function draw() {
+  background(0, 0, 15);
+
+  angle += 0.03;
+
+  // Size pulses between 20 and 120
+  let diameter = 70 + sin(angle) * 50;
+
+  // Hue slowly shifts
+  let hue = (frameCount * 0.5) % 360;
+
+  noStroke();
+  fill(hue, 80, 90);
+  circle(width / 2, height / 2, diameter);
+}
+```
+
+.box.teal[
+`colorMode(HSB, 360, 100, 100)` — a different color model.
+**H**ue (0–360), **S**aturation (0–100), **B**rightness (0–100).
+Easier to cycle through colors: just increment Hue.
+]
+
+---
+
+class: section-slide
+
+# User Input
+
+## The machine listens.
+
+---
+
+# Mouse Position
+
+Two built-in variables, available anywhere:
+
+```javascript
+mouseX   // current x position of the mouse
+mouseY   // current y position of the mouse
+
+pmouseX  // previous x position (last frame)
+pmouseY  // previous y position (last frame)
+```
+
+--
+
+```javascript
+function draw() {
+  background(30);
+  noStroke();
+  fill(255, 80, 50);
+  circle(mouseX, mouseY, 40);  // circle follows mouse
+}
+```
+
+--
+
+`pmouseX` / `pmouseY` let you calculate **mouse speed**:
+
+```javascript
+let speed = dist(mouseX, mouseY, pmouseX, pmouseY);
+// dist() = distance between two points
+// if the mouse moves fast → speed is large
+```
+
+---
+
+class: code-slide
+
+# Mouse Events
+
+Functions that p5.js calls automatically when the mouse does something:
+
+```javascript
+function mousePressed() {
+  // called once when a button is clicked
+  background(30);  // e.g. clear the canvas
+}
+
+function mouseReleased() {
+  // called once when the button is released
+}
+
+function mouseDragged() {
+  // called every frame while mouse button is held and mouse moves
+  circle(mouseX, mouseY, 20);  // draw while dragging
+}
+```
+
+.box[
+These are **event functions** — you define them and p5 calls them for you.
+Just like `setup()` and `draw()`, you never call them yourself.
+]
+
+---
+
+class: code-slide
+
+# Keyboard Input
+
+```javascript
+// Event: fires once when a key is pressed
+function keyPressed() {
+  if (key === ' ') {
+    background(30);      // space bar → clear canvas
+  }
+}
+
+// Continuous check inside draw() — is this key held right now?
+function draw() {
+  if (keyIsDown(LEFT_ARROW)) {
+    x -= 3;
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    x += 3;
+  }
+}
+```
+
+--
+
+Common key constants: `LEFT_ARROW`, `RIGHT_ARROW`, `UP_ARROW`, `DOWN_ARROW`, `ENTER`, `BACKSPACE`
+
+For letter keys, check the `key` variable: `key === 'a'`, `key === 'r'`, etc.
+
+???
+keyIsDown is for held keys (movement). keyPressed is for one-shot actions (clear, toggle).
+
+---
+
+class: code-slide
+
+# Easing — Smooth Following
+
+Instead of jumping directly to the mouse, move *towards* it gradually:
+
+```javascript
+let x = 200;
+let y = 200;
+
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(30);
+
+  // Move x 10% of the way towards mouseX each frame
+  x = x + (mouseX - x) * 0.1;
+  y = y + (mouseY - y) * 0.1;
+
+  noStroke();
+  fill(255, 80, 50);
+  circle(x, y, 40);
+}
+```
+
+.box.green[
+This is called **linear interpolation (lerp)** — or just "easing."
+p5.js has a built-in: `lerp(start, stop, amount)`
+Same as: `x = x + (mouseX - x) * 0.1`
+]
+
+---
+
+class: section-slide
+
+# Exercises
+
+## No conditions. No loops. No functions. No randomness.
+
+---
+
+class: code-slide
+
+# Exercise 1 — Moving Shape
+
+Make something move across the canvas.
+When it exits one side, .accent[don't worry about it coming back yet].
+
+```javascript
+// Starter code — modify and extend this
+let x = 0;
+
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(30);
+
+  x += 2;   // try changing the speed
+
+  noStroke();
+  fill(255, 80, 50);
+  circle(x, height / 2, 60);
+}
+```
+
+**Explore:**
+- Can you make it move diagonally?
+- What if the size also changes using `frameCount`?
+- What if the color shifts using `frameCount`?
+
+---
+
+class: code-slide
+
+# Exercise 2 — Oscillating Composition
+
+Use `sin()` to create a composition that breathes or pulses.
+No interaction needed yet — just a living, autonomous shape.
+
+```javascript
+let angle = 0;
+
+function setup() {
+  createCanvas(400, 400);
+  colorMode(HSB, 360, 100, 100);
+}
+
+function draw() {
+  background(0, 0, 12);
+  angle += 0.02;
+
+  // Use sin() to control anything: x, y, size, hue...
+  let size  = 80  + sin(angle) * 60;
+  let hue   = (frameCount * 0.3) % 360;
+  let x     = width / 2 + sin(angle * 1.3) * 100;
+  let y     = height / 2 + sin(angle * 0.7) * 80;
+
+  noStroke();
+  fill(hue, 70, 90);
+  circle(x, y, size);
+}
+```
+
+---
+
+class: code-slide
+
+# Exercise 3 — A Simple Clock
+
+Use `second()`, `minute()`, `hour()` to make something time-based.
+It doesn't have to look like a clock.
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(30);
+
+  let s = second();   // 0 – 59
+  let m = minute();   // 0 – 59
+  let h = hour();     // 0 – 23
+
+  // Map seconds to a position, size, or color...
+  // map(value, fromLow, fromHigh, toLow, toHigh)
+  let x = map(s, 0, 59, 20, width - 20);
+
+  noStroke();
+  fill(255, 80, 50);
+  circle(x, height / 2, 40);
+
+  // Minute changes the y position
+  let y = map(m, 0, 59, 20, height - 20);
+  fill(80, 200, 255);
+  circle(width / 2, y, 30);
+}
+```
+
+---
+
+class: code-slide
+
+# Exercise 4 — Mouse Drawing Tool
+
+Make a simple drawing tool. Mouse draws. Space bar clears.
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+  background(30);
+}
+
+function draw() {
+  // No background() → marks accumulate
+
+  // Calculate mouse speed
+  let speed = dist(mouseX, mouseY, pmouseX, pmouseY);
+
+  if (mouseIsPressed) {
+    noStroke();
+    // Size grows with mouse speed
+    let dotSize = speed * 1.5 + 4;
+    fill(255, 80, 50, 180);
+    circle(mouseX, mouseY, dotSize);
+  }
+}
+
+function keyPressed() {
+  if (key === ' ') {
+    background(30);
+  }
+}
+```
+
+---
+
+# What We Covered Today
+
+.col-left[
+**The Draw Loop**
+- `frameCount`, `frameRate()`, `millis()`
+- Real-world time: `second()`, `minute()`, `hour()`
+- Clearing vs. accumulating
+- Semi-transparent fade trick
+
+**Motion**
+- Moving with `+=`
+- Oscillating with `sin()`
+- HSB color mode
+]
+.col-right[
+**User Input**
+- `mouseX`, `mouseY`, `pmouseX`, `pmouseY`
+- `mouseIsPressed`, `mousePressed()`
+- `keyIsDown()`, `keyPressed()`, `key`
+- Easing / `lerp()`
+
+**Built-in functions used**
+- `map(v, low1, high1, low2, high2)`
+- `dist(x1, y1, x2, y2)`
+- `lerp(start, stop, t)`
+]
+.clearfix[]
+
+---
+
+# For Next Session
+
+.box.green[
+**Session 2** — We'll code one complete example of Assignment 02 together.
+The theme is .accent[TIME]. How do you express time visually?
+]
+
+.box[
+**Before Session 2:**
+- Try making your own "time sketch" using any of today's techniques
+- Think: what does time *feel* like? How can motion express it?
+- Look at: [Maeda's 12 o'clocks](https://maedastudio.com), [Moment](http://moment.indigofish.co.uk/), [xkcd: Time](https://xkcd.com/1190/)
+]
+
+---
+
+class: title-slide
+
+# Assignment 02
+
+## Time Piece
+
+.kicker[Open-ended — at least one user input — animation required]
+
+---
+
+class: title-slide
+
+# See you<br>next time.
+
+## Questions?
+
+.kicker[editor.p5js.org — keep experimenting]
+
+</textarea>
+
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>
+  var slideshow = remark.create({
+    ratio: '16:9',
+    navigation: { scroll: false, touch: true, click: false },
+    slideNumberFormat: '%current% / %total%',
+    highlightStyle: 'atom-one-dark',
+    highlightLines: true,
+    countIncrementalSlides: false
+  });
+</script>
+</body>
+</html>

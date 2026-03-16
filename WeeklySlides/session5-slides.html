@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GenXP — Week 05 / Session 1 — Trigonometry, Recursion, Modulo & Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; }
+    .remark-slide-content {
+      background-color: #0f0f0f; color: #f0ece4;
+      font-family: 'Inter', sans-serif; font-size: 22px;
+      line-height: 1.6; padding: 2.5em 3.5em 3em;
+    }
+    .remark-slide-content.title-slide {
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 3em 3.5em;
+    }
+    .remark-slide-content.title-slide h1 {
+      font-family: 'Space Mono', monospace; font-size: 2.4em; font-weight: 700;
+      color: #f0ece4; border: none; padding-bottom: 0; letter-spacing: -2px; line-height: 1.1;
+    }
+    .remark-slide-content.title-slide h2 {
+      font-family: 'Space Mono', monospace; font-size: 1.1em; color: #FF4D1C; font-weight: 400; margin-top: 0.5em;
+    }
+    .remark-slide-content.title-slide .kicker {
+      font-family: 'Space Mono', monospace; font-size: 0.72em; color: #555; margin-top: 2em; letter-spacing: 2px; text-transform: uppercase;
+    }
+    .remark-slide-content.section-slide {
+      background-color: #FF4D1C; display: flex; flex-direction: column; justify-content: center;
+    }
+    .remark-slide-content.section-slide h1 {
+      font-family: 'Space Mono', monospace; font-size: 2.6em; color: #0f0f0f;
+      border: none; padding: 0; letter-spacing: -2px; line-height: 1.1;
+    }
+    .remark-slide-content.section-slide h2 { color: rgba(0,0,0,0.5); font-size: 1em; margin-top: 0.5em; }
+    .remark-slide-content.dark-slide  { background-color: #1a1a1a; }
+    .remark-slide-content.code-slide  { background-color: #0d0d0d; font-size: 19px; }
+    h1 {
+      font-family: 'Space Mono', monospace; font-size: 1.6em; font-weight: 700;
+      color: #FF4D1C; border-bottom: 2px solid #FF4D1C; padding-bottom: 0.3em; margin-bottom: 0.8em; letter-spacing: -0.5px;
+    }
+    h2 { font-family: 'Space Mono', monospace; font-size: 1.1em; color: #C5F74F; font-weight: 400; margin-bottom: 0.6em; margin-top: 1em; }
+    h3 { font-family: 'Inter', sans-serif; font-size: 1em; color: #f0ece4; font-weight: 600; margin-bottom: 0.4em; margin-top: 0.8em; }
+    ul, ol { padding-left: 1.4em; }
+    li { margin: 0.45em 0; line-height: 1.5; }
+    a { color: #FF4D1C; text-decoration: none; border-bottom: 1px solid #FF4D1C; }
+    .remark-inline-code { font-family: 'Space Mono', monospace; font-size: 0.82em; background: #1e1e1e; color: #C5F74F; padding: 0.1em 0.4em; border-radius: 3px; }
+    .remark-code { font-family: 'Space Mono', monospace; font-size: 0.78em; line-height: 1.5; }
+    pre { border-radius: 6px; overflow: hidden; }
+    blockquote { border-left: 3px solid #FF4D1C; padding-left: 1.2em; color: #aaa; font-style: italic; margin: 0.8em 0; font-size: 0.95em; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88em; margin: 0.8em 0; }
+    th { font-family: 'Space Mono', monospace; font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #333; padding: 0.4em 0.6em; text-align: left; color: #888; }
+    td { padding: 0.5em 0.6em; border-bottom: 1px solid #222; vertical-align: top; }
+    .huge  { font-size: 3.5em; font-family: 'Space Mono', monospace; line-height: 1; }
+    .big   { font-size: 1.6em; font-family: 'Space Mono', monospace; }
+    .small { font-size: 0.82em; color: #888; }
+    .mono  { font-family: 'Space Mono', monospace; }
+    .accent { color: #FF4D1C; }
+    .green  { color: #C5F74F; }
+    .teal   { color: #4FC5F7; }
+    .dim    { color: #555; }
+    .col-left  { float: left; width: 48%; }
+    .col-right { float: right; width: 48%; }
+    .clearfix::after { content: ''; display: table; clear: both; }
+    .remark-slide-number { font-family: 'Space Mono', monospace; font-size: 0.65em; color: #333; bottom: 1.2em; right: 2em; }
+    .box { background: #1a1a1a; border: 1px solid #333; border-left: 3px solid #FF4D1C; padding: 0.8em 1.2em; border-radius: 4px; margin: 0.6em 0; font-size: 0.9em; }
+    .box.green { border-left-color: #C5F74F; }
+    .box.teal  { border-left-color: #4FC5F7; }
+    hr { border: none; border-top: 1px solid #333; margin: 1em 0; }
+
+    /* unit circle diagram */
+    .circle-diagram { font-family: 'Space Mono', monospace; font-size: 0.72em; color: #f0ece4; background: #1a1a1a; padding: 1em 1.5em; border-radius: 4px; line-height: 2.2; }
+  </style>
+</head>
+<body>
+<textarea id="source">
+
+class: title-slide
+
+# Trigonometry,<br>Recursion,<br>Modulo<br>& Map
+
+## Week 05 — Mathematics as Aesthetics
+
+.kicker[Designing Generative Experiences — SHIFTA 2025-06]
+
+???
+This is the most math-heavy session. Reassure students that we're using intuition, not proofs.
+The goal is not to understand why sin() works — it's to know what it produces visually.
+Keep every concept anchored to a visual result on screen.
+
+---
+
+# Today
+
+.col-left[
+**Trigonometry**
+- Radians vs degrees
+- The unit circle — `sin()` and `cos()` revisited deeply
+- Polar → Cartesian coordinates
+- Spirals, roses, Lissajous figures
+- Phyllotaxis — nature's maths
+
+**Recursion**
+- What is a recursive function?
+- The base case — why it's essential
+- Nested shapes
+- Branching trees and fractals
+]
+.col-right[
+**Modulo & Map**
+- The `%` operator — cycling and wrapping
+- `map()` — deep dive
+- `constrain()` — safe ranges
+- Combining them for patterns
+
+.box.green[Session 2: .accent[Recursive tree drawings] — modified with mouse/keyboard input]
+]
+.clearfix[]
+
+---
+
+class: section-slide
+
+# Trigonometry
+
+## The geometry of circles. The language of waves.
+
+---
+
+# Angles: Degrees vs Radians
+
+You know degrees. p5.js uses **radians** by default.
+
+.col-left[
+**Degrees** (familiar)
+- Full circle = 360°
+- Half circle = 180°
+- Right angle = 90°
+
+Switch p5 to degrees:
+```javascript
+angleMode(DEGREES);
+rotate(45);
+```
+]
+.col-right[
+**Radians** (default in p5)
+- Full circle = `TWO_PI` ≈ 6.28
+- Half circle = `PI` ≈ 3.14
+- Right angle = `HALF_PI` ≈ 1.57
+- Quarter = `QUARTER_PI` ≈ 0.78
+
+Convert: `radians(180)` → `PI`
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`degrees(PI)` → `180`
+]
+.clearfix[]
+
+.box[
+**Why radians?** Because maths. `sin(PI)` = 0 exactly. Radians map naturally to the unit circle.
+You don't need to understand why — just know that `TWO_PI` = one full revolution.
+]
+
+---
+
+# The Unit Circle
+
+The most useful picture in creative coding:
+
+.circle-diagram[
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(0, -1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← top
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑
+(-1, 0) ←──── ● ────→ (1, 0)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(0, +1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← bottom (y flips in p5!)
+]
+
+At angle `θ`, the point on a **circle of radius `r`** centred at `(cx, cy)` is:
+
+```javascript
+x = cx + cos(θ) * r
+y = cy + sin(θ) * r
+```
+
+This is **polar → Cartesian** conversion. It is the most useful formula in creative coding.
+
+???
+Draw this on the whiteboard. Show how as θ goes from 0 to TWO_PI, the point traces the full circle.
+Emphasise: this is NOT about triangles. It's about points on a circle.
+
+---
+
+class: code-slide
+
+# Drawing a Circle with Trig
+
+Without using `circle()` — doing it manually reveals the formula:
+
+```javascript
+let angle = 0;
+
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(20);
+
+  let cx = 200, cy = 200, r = 150;
+
+  angle += 0.03;   // increment angle each frame
+
+  // The magic formula: polar → Cartesian
+  let x = cx + cos(angle) * r;
+  let y = cy + sin(angle) * r;
+
+  noStroke();
+  fill(255, 80, 50);
+  circle(x, y, 20);
+
+  // Draw the orbit ring as reference
+  noFill(); stroke(60); strokeWeight(1);
+  circle(cx, cy, r * 2);
+}
+```
+
+---
+
+class: code-slide
+
+# Spirals — Grow the Radius
+
+Increment both the angle AND the radius to trace a spiral:
+
+```javascript
+let angle  = 0;
+let radius = 0;
+
+function setup() {
+  createCanvas(400, 400);
+  background(20);
+}
+
+function draw() {
+  angle  += 0.08;
+  radius += 0.3;
+
+  let x = 200 + cos(angle) * radius;
+  let y = 200 + sin(angle) * radius;
+
+  noStroke();
+  fill(map(radius, 0, 200, 0, 255), 80, 50, 200);
+  circle(x, y, 4);
+
+  if (radius > 200) {
+    radius = 0;    // reset spiral
+    background(20);
+  }
+}
+```
+
+---
+
+class: code-slide
+
+# Parametric Curves — Rose
+
+A **rose curve** `r = cos(k * θ)` produces petal shapes.
+`k` controls the number of petals.
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+  colorMode(HSB, 360, 100, 100);
+  background(0, 0, 8);
+  noLoop();
+}
+
+function draw() {
+  let cx = width / 2, cy = height / 2;
+  let k  = 5;       // try: 2, 3, 4, 5, 7 — odd k = k petals, even k = 2k petals
+  let steps = 800;
+
+  noFill();
+  beginShape();
+  for (let i = 0; i < steps; i++) {
+    let t  = map(i, 0, steps, 0, TWO_PI * 2);
+    let r  = 160 * cos(k * t);
+    let x  = cx + cos(t) * r;
+    let y  = cy + sin(t) * r;
+    stroke(map(i, 0, steps, 0, 300), 70, 90);
+    point(x, y);
+  }
+  endShape();
+}
+
+function keyPressed() { redraw(); }
+```
+
+---
+
+class: code-slide
+
+# Phyllotaxis — Nature's Algorithm
+
+The arrangement of seeds in a sunflower follows the **golden angle** (≈ 137.5°).
+This produces the most efficient packing — no two seeds overlap.
+
+```javascript
+let goldenAngle = 137.508 * (PI / 180);  // in radians
+
+function setup() {
+  createCanvas(500, 500);
+  colorMode(HSB, 360, 100, 100);
+  background(0, 0, 8);
+  noLoop();
+}
+
+function draw() {
+  let n = 800;   // number of seeds
+
+  for (let i = 0; i < n; i++) {
+    let angle  = i * goldenAngle;
+    let radius = sqrt(i) * 11;   // sqrt for uniform density
+
+    let x = width / 2  + cos(angle) * radius;
+    let y = height / 2 + sin(angle) * radius;
+
+    noStroke();
+    fill(map(i, 0, n, 30, 100), 80, 90);
+    circle(x, y, map(i, 0, n, 2, 8));
+  }
+}
+
+function keyPressed() { redraw(); }
+```
+
+???
+This is a jaw-dropper slide. Run it. The golden angle is (360 / phi^2) where phi is the golden ratio.
+The fact that this simple formula produces the sunflower is genuinely beautiful.
+
+---
+
+# Trig Summary
+
+.box[
+**The one formula to remember:**
+```javascript
+x = cx + cos(angle) * radius
+y = cy + sin(angle) * radius
+```
+Draws a point on a circle. Everything else — spirals, roses, clocks, particles, branches — is a variation of this.
+]
+
+| Technique | What you vary |
+|---|---|
+| Circular orbit | `angle` grows over time |
+| Spiral | both `angle` and `radius` grow |
+| Rose curve | `r = A * cos(k * θ)` — use as radius |
+| Lissajous | different frequencies on x and y |
+| Phyllotaxis | `angle = i * goldenAngle`, `radius = sqrt(i) * c` |
+
+---
+
+class: section-slide
+
+# Recursion
+
+## A function that calls itself.
+
+---
+
+# What Is Recursion?
+
+A function that **calls itself** inside its own body.
+
+```javascript
+function countDown(n) {
+  console.log(n);       // do something
+
+  if (n > 0) {
+    countDown(n - 1);   // call itself with a smaller value
+  }
+  // when n === 0, it stops
+}
+
+countDown(5);  // prints: 5, 4, 3, 2, 1, 0
+```
+
+--
+
+**Two essential parts:**
+1. **The recursive call** — the function calls itself with a modified argument
+2. **The base case** — the condition that stops the recursion
+
+.box[
+**Without a base case:** infinite recursion → crash.
+The base case is not optional. It is the exit door.
+]
+
+---
+
+class: code-slide
+
+# Visual Recursion — Nested Squares
+
+```javascript
+function nestedSquare(x, y, size) {
+  if (size < 4) return;   // ← base case: stop when too small
+
+  noFill();
+  stroke(255, 80, 50, map(size, 4, 200, 20, 200));
+  strokeWeight(1);
+  rectMode(CENTER);
+  rect(x, y, size, size);
+
+  // Recursive call: same function, smaller size
+  nestedSquare(x, y, size * 0.75);
+}
+
+function setup() {
+  createCanvas(400, 400);
+  background(20);
+  noLoop();
+}
+
+function draw() {
+  nestedSquare(200, 200, 380);
+}
+```
+
+.box[
+Each call draws a square, then calls itself at 75% size.
+The call stack: `nestedSquare(380)` → `nestedSquare(285)` → `nestedSquare(213)` → ... → stops.
+]
+
+---
+
+# Recursion Depth — Call Stack
+
+Every recursive call adds a frame to the **call stack**.
+
+```
+nestedSquare(380)
+  └─ nestedSquare(285)
+       └─ nestedSquare(213)
+            └─ nestedSquare(160)
+                 └─ nestedSquare(120)
+                      └─ ... → base case reached → unwinds
+```
+
+--
+
+.box[
+**How deep can you go?** p5.js / JavaScript allows several hundred levels.
+For visual purposes, you rarely need more than 10–15 levels.
+
+Your base case controls the depth. Common choices:
+- `if (size < minimumSize) return;`
+- `if (depth <= 0) return;` — pass depth as a decreasing parameter
+]
+
+---
+
+class: code-slide
+
+# Branching — The Recursive Tree
+
+The tree is the canonical recursive structure.
+Use `push()`/`pop()` + `translate()`/`rotate()` to branch:
+
+```javascript
+function branch(len, depth) {
+  if (depth === 0 || len < 4) return;  // base case
+
+  // Draw this branch
+  stroke(map(depth, 0, 8, 200, 80), 60, map(depth, 0, 8, 255, 80));
+  strokeWeight(map(depth, 0, 8, 0.5, 3));
+  line(0, 0, 0, -len);   // line goes upward (negative y)
+
+  translate(0, -len);     // move to tip of this branch
+
+  // Left branch
+  push();
+  rotate(-PI / 5);        // tilt left
+  branch(len * 0.7, depth - 1);
+  pop();
+
+  // Right branch
+  push();
+  rotate(PI / 5);         // tilt right
+  branch(len * 0.7, depth - 1);
+  pop();
+}
+```
+
+---
+
+class: code-slide
+
+# Tree in Context
+
+```javascript
+function setup() {
+  createCanvas(500, 500);
+  colorMode(HSB, 360, 100, 100);
+  background(0, 0, 8);
+  noLoop();
+}
+
+function draw() {
+  background(0, 0, 8);
+  translate(width / 2, height);  // start at the bottom centre
+
+  branch(90, 8);   // 90px trunk, 8 levels deep
+}
+
+function keyPressed() { redraw(); }
+```
+
+.box.green[
+Next session we'll make this interactive:
+`mouseX` controls the branch angle, `mouseY` controls the length ratio.
+The tree will respond in real time — recursion becomes a live instrument.
+]
+
+---
+
+# Fractals and Self-Similarity
+
+A **fractal** is a structure where every part looks like the whole — at any scale.
+
+The tree is a fractal. So is the branching of lungs, rivers, lightning, coastlines.
+
+> *"Clouds are not spheres, mountains are not cones, coastlines are not circles, and bark is not smooth, nor does lightning travel in a straight line."*
+> — Benoît Mandelbrot, *The Fractal Geometry of Nature*, 1982
+
+--
+
+Other classic visual fractals in p5.js:
+- **Koch snowflake** — recursive line subdivision
+- **Sierpiński triangle** — recursive triangle removal
+- **Dragon curve** — fold a piece of paper in half repeatedly
+- **Mandelbrot set** — recursion in complex number space .dim[(advanced)]
+
+All share the same property: a simple rule applied to its own output.
+
+---
+
+class: section-slide
+
+# Modulo & Map
+
+## The two operators you'll use every day.
+
+---
+
+# Modulo `%` — The Remainder
+
+`a % b` returns the **remainder** after dividing `a` by `b`.
+
+```javascript
+7 % 3   // → 1  (7 = 2×3 + 1)
+10 % 4  // → 2  (10 = 2×4 + 2)
+6 % 3   // → 0  (6 = 2×3 + 0, exactly divisible)
+5 % 5   // → 0
+```
+
+--
+
+**The key property:** the result always cycles between `0` and `b-1`.
+
+```javascript
+// i % 3 produces: 0, 1, 2, 0, 1, 2, 0, 1, 2, ...
+for (let i = 0; i < 12; i++) {
+  console.log(i % 3);   // cycles endlessly
+}
+```
+
+.box[
+Think of it as a **cycle counter** or **position within a repeating pattern**.
+]
+
+---
+
+class: code-slide
+
+# Modulo Use Cases
+
+**1. Wrapping a value to stay in range:**
+```javascript
+x = (x + 1) % width;   // x reaches width → wraps back to 0
+```
+
+**2. Cycling through a colour palette:**
+```javascript
+let palette = ["#FF4D1C", "#C5F74F", "#4FC5F7", "#f0ece4"];
+let c = palette[i % palette.length];   // cycles through palette forever
+```
+
+**3. Converting a 1D index to 2D grid coordinates:**
+```javascript
+let cols = 10;
+let col  = i % cols;            // 0-9, 0-9, 0-9 ...
+let row  = floor(i / cols);     // 0, 0, 0 ... 1, 1, 1 ... 2, 2, 2 ...
+```
+
+**4. Alternating between two states:**
+```javascript
+if (i % 2 === 0) { /* even */ } else { /* odd */ }
+// produces: even, odd, even, odd, even, odd, ...
+```
+
+---
+
+class: code-slide
+
+# map() — Deep Dive
+
+`map(value, fromLow, fromHigh, toLow, toHigh)` translates a value from one range to another:
+
+```javascript
+// Basic usage
+let x = map(mouseX, 0, width, 0, 360);   // mouse pos → hue
+
+// Inverted: large input → small output
+let size = map(mouseX, 0, width, 100, 5);  // right → smaller
+
+// Beyond the input range — extrapolation (can be surprising)
+let y = map(200, 0, 100, 0, 400);  // input 200 is outside 0-100 → output 800!
+
+// Add 5th/6th args to clamp to the output range:
+let clamped = map(200, 0, 100, 0, 400, true);  // → stays at 400
+```
+
+---
+
+# map() Mental Model
+
+.box[
+`map()` is a **linear translation**. Mentally read it as:
+
+*"Take `value`, which lives in the range `[fromLow, fromHigh]`, and produce the equivalent position in the range `[toLow, toHigh]`."*
+]
+
+--
+
+Common patterns:
+
+| Input | Output range | Code |
+|---|---|---|
+| `mouseX` (0–width) | hue (0–360) | `map(mouseX, 0, width, 0, 360)` |
+| loop index `i` (0–n) | x position | `map(i, 0, n-1, margin, width-margin)` |
+| data value | bar height | `map(value, 0, maxValue, 0, height)` |
+| `frameCount` | cycling angle | `(frameCount * 0.02) % TWO_PI` |
+| `noise()` output (0–1) | color/position | `map(noise(t), 0, 1, low, high)` |
+
+---
+
+class: code-slide
+
+# constrain() — Safe Ranges
+
+Clamp a value to stay within bounds — no matter what:
+
+```javascript
+constrain(value, min, max)
+// Returns value, but no lower than min and no higher than max
+
+let safe = constrain(mouseX, 50, 350);
+// even if mouseX = 0 or mouseX = 600, safe stays between 50 and 350
+```
+
+Often used together with map():
+
+```javascript
+function draw() {
+  let rawValue   = mouseX + sin(frameCount * 0.05) * 50;  // can overshoot
+  let safeValue  = constrain(rawValue, 0, width);          // never leaves canvas
+  let mappedSize = map(safeValue, 0, width, 10, 100);      // to circle size
+  circle(width / 2, height / 2, mappedSize);
+}
+```
+
+---
+
+class: code-slide
+
+# Combining Everything — Sunburst Grid
+
+Trig + modulo + map working together:
+
+```javascript
+function setup() {
+  createCanvas(500, 500);
+  colorMode(HSB, 360, 100, 100);
+  background(0, 0, 8);
+  noLoop();
+}
+
+function draw() {
+  background(0, 0, 8);
+  let cx = width / 2, cy = height / 2;
+  let n  = 120;
+
+  for (let i = 0; i < n; i++) {
+    let angle  = map(i, 0, n, 0, TWO_PI);
+    let r1     = 40 + (i % 8) * 12;          // modulo creates rings
+    let r2     = r1 + 30;
+    let hue    = map(i, 0, n, 0, 360);
+
+    stroke(hue, 70, 90, 80);
+    strokeWeight(1);
+    let x1 = cx + cos(angle) * r1;
+    let y1 = cy + sin(angle) * r1;
+    let x2 = cx + cos(angle) * r2;
+    let y2 = cy + sin(angle) * r2;
+    line(x1, y1, x2, y2);
+  }
+}
+
+function keyPressed() { redraw(); }
+```
+
+---
+
+# What We Covered Today
+
+.col-left[
+**Trigonometry**
+- Radians, `TWO_PI`, `HALF_PI`
+- `x = cx + cos(θ) * r` — the formula
+- Circular orbit, spirals, rose curves
+- Phyllotaxis (golden angle)
+
+**Recursion**
+- Self-calling functions
+- Base case — mandatory
+- Call stack depth
+- Nested shapes, branching trees, fractals
+]
+.col-right[
+**Modulo & Map**
+- `%` — remainder, cycling, wrapping
+- 1D index → 2D grid: `i % cols`
+- Palette cycling: `i % palette.length`
+- `map(value, from, to)` — linear translation
+- `constrain(v, min, max)` — safety clamp
+
+**Built-in constants**
+- `TWO_PI`, `PI`, `HALF_PI`, `QUARTER_PI`
+- `TAU` (= `TWO_PI`)
+]
+.clearfix[]
+
+---
+
+# For Next Session
+
+.box.green[
+**Session 2** — We'll build an interactive recursive tree.
+Mouse controls the branch angle and length ratio in real time.
+Keyboard changes depth and colour palette. The tree becomes an instrument.
+]
+
+.box[
+**Before Session 2:**
+- Play with the phyllotaxis sketch — try different values of `n`, different golden angles
+- Try changing the rose curve's `k` value — what does `k = 2.5` produce?
+- Look up **M.C. Escher** — his tesselations are mathematical art at its most refined
+- Look up **Manolo Gamboa Naon** (Instagram: @manoloidee) — contemporary generative math art
+]
+
+---
+
+class: title-slide
+
+# Assignment 05
+
+## Mathematical Portrait
+
+.kicker[Trig + recursion + modulo — make maths beautiful]
+
+---
+
+class: title-slide
+
+# See you<br>next time.
+
+## Questions?
+
+.kicker[editor.p5js.org — try the phyllotaxis sketch]
+
+</textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>
+  var slideshow = remark.create({
+    ratio: '16:9',
+    navigation: { scroll: false, touch: true, click: false },
+    slideNumberFormat: '%current% / %total%',
+    highlightStyle: 'atom-one-dark',
+    highlightLines: true,
+    countIncrementalSlides: false
+  });
+</script>
+</body>
+</html>

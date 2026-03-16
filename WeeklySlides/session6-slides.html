@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GenXP — Week 06 — Sound as Material</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  body { margin: 0; background: #0f0f0f; }
+
+  .remark-slide-content {
+    background: #0f0f0f;
+    color: #f0ece4;
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    padding: 48px 64px;
+    line-height: 1.55;
+  }
+
+  /* ── slide types ── */
+  .title-slide {
+    background: #0f0f0f;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .section-slide {
+    background: #141414;
+    border-left: 5px solid #FF4D1C;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .code-slide { background: #0a0a0a; }
+  .dark-slide  { background: #111; }
+
+  /* ── typography ── */
+  h1 { font-family: 'Space Mono', monospace; font-size: 52px; font-weight: 700;
+       color: #f0ece4; margin: 0 0 16px; line-height: 1.1; }
+  h2 { font-family: 'Space Mono', monospace; font-size: 34px; font-weight: 700;
+       color: #f0ece4; margin: 0 0 28px; line-height: 1.2; }
+  h3 { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700;
+       color: #C5F74F; margin: 0 0 16px; }
+  p  { margin: 0 0 18px; font-weight: 300; }
+  strong { color: #FF4D1C; font-weight: 600; }
+  em { color: #4FC5F7; font-style: normal; font-weight: 500; }
+
+  /* ── accent colours ── */
+  .orange { color: #FF4D1C; }
+  .green  { color: #C5F74F; }
+  .teal   { color: #4FC5F7; }
+  .dim    { color: #888; font-size: 0.85em; }
+
+  /* ── code ── */
+  code {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78em;
+    background: #1e1e1e;
+    color: #C5F74F;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .remark-code {
+    font-family: 'Space Mono', monospace !important;
+    font-size: 0.72em !important;
+    line-height: 1.55 !important;
+    background: #161616 !important;
+    border-radius: 6px;
+  }
+  .remark-code-line-highlighted { background: rgba(197,247,79,0.08); }
+
+  /* ── layout helpers ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; }
+
+  .box {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+  .box-orange { border-left: 4px solid #FF4D1C; background: #1a1208; }
+  .box-green  { border-left: 4px solid #C5F74F; background: #111a08; }
+  .box-teal   { border-left: 4px solid #4FC5F7; background: #081318; }
+
+  .quote {
+    border-left: 3px solid #FF4D1C;
+    padding: 12px 24px;
+    margin: 24px 0;
+    color: #ccc;
+    font-style: italic;
+    font-size: 0.9em;
+  }
+
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 10px; }
+  li::marker { color: #FF4D1C; }
+
+  /* ── title slide specifics ── */
+  .week-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: #FF4D1C;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .subtitle {
+    font-size: 24px;
+    color: #888;
+    font-weight: 300;
+    margin-top: 12px;
+  }
+  .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 3px;
+    margin: 4px 4px 4px 0;
+  }
+  .tag-orange { background: rgba(255,77,28,0.15); color: #FF4D1C; border: 1px solid rgba(255,77,28,0.3); }
+  .tag-green  { background: rgba(197,247,79,0.12); color: #C5F74F; border: 1px solid rgba(197,247,79,0.25); }
+  .tag-teal   { background: rgba(79,197,247,0.12); color: #4FC5F7; border: 1px solid rgba(79,197,247,0.25); }
+
+  .remark-slide-number { color: #444; font-family: 'Space Mono', monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+<textarea id="source">
+class: title-slide
+
+.week-label[Designing Generative Experiences — Week 06]
+
+# Sound as Material
+
+.subtitle[Listening, generating, and responding to audio in p5.js]
+
+---
+class: dark-slide
+
+## Where we've been
+
+.two-col[
+.box[
+### Weeks 1–3
+Drawing, animation, time, user input.
+Conditionals, loops, functions.
+Randomness and Perlin noise.
+]
+.box[
+### Weeks 4–5
+Data as creative material.
+Arrays, objects, classes.
+Trig, recursion, modulo, map().
+]
+]
+
+.box-orange[
+### Week 6 — Sound
+**Sound is data.** Amplitude is a number. Frequency is a number. A waveform is an array. Everything you already know applies — the input is just your ears now.
+]
+
+---
+class: section-slide
+
+# p5.sound
+## The sound library
+
+---
+
+## Adding p5.sound
+
+p5.sound is a **separate library** — not included by default.
+
+In the **p5.js web editor**, open `index.html` and add:
+
+```html
+<!-- after the p5.js script tag -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/addons/p5.sound.min.js"></script>
+```
+
+Or use **Sketch › Add Library** and search "p5.sound" in the editor sidebar.
+
+.box-teal[
+**Important:** browsers block audio until the user interacts with the page. Always start sound playback inside `mousePressed()` or `keyPressed()` — never in `setup()` or `draw()` directly.
+]
+
+---
+
+## Loading sound files
+
+.two-col[
+```javascript
+let song;
+
+function preload() {
+  // load before setup() runs
+  song = loadSound('audio.mp3');
+}
+
+function setup() {
+  createCanvas(400, 400);
+}
+
+function mousePressed() {
+  if (song.isPlaying()) {
+    song.pause();
+  } else {
+    song.play();
+  }
+}
+```
+
+.box[
+**`preload()`** runs before `setup()`. p5.js waits for all `loadSound()` calls to finish before continuing.
+
+Supported formats: `.mp3`, `.wav`, `.ogg`
+
+Use free sound libraries:
+- freesound.org
+- samplefocus.com
+- splice.com (free tier)
+]
+]
+
+---
+
+## Sound properties
+
+```javascript
+// Volume: 0.0 (silent) to 1.0 (full)
+song.setVolume(0.5);
+song.setVolume(0.5, 0.5);  // fade to 0.5 over 0.5 seconds
+
+// Playback rate: 1.0 = normal, 2.0 = double speed, 0.5 = half
+song.rate(0.8);
+
+// Pan: -1.0 (left) to 1.0 (right), 0 = center
+song.pan(-0.5);
+
+// Loop
+song.loop();
+
+// Duration and position
+let dur = song.duration();  // total length in seconds
+let pos = song.currentTime();  // current position in seconds
+```
+
+.box-green[
+`song.rate()` changes both speed and pitch. Slowing a voice sounds eerie. Speeding a drum loop creates a completely different feel. **Rate is a creative parameter, not just a utility.**
+]
+
+---
+class: section-slide
+
+# Listening to sound
+## Amplitude and frequency analysis
+
+---
+
+## p5.Amplitude — measuring loudness
+
+`p5.Amplitude` measures the current volume level as a number from **0** (silence) to **1** (maximum).
+
+.two-col[
+```javascript
+let song, amp;
+
+function preload() {
+  song = loadSound('audio.mp3');
+}
+
+function setup() {
+  createCanvas(400, 400);
+  amp = new p5.Amplitude();
+  song.loop();
+}
+
+function draw() {
+  background(15);
+
+  let level = amp.getLevel();
+  // level is 0.0 → 1.0
+
+  let d = map(level, 0, 1, 20, 300);
+  noStroke();
+  fill(255, 77, 28);
+  circle(width/2, height/2, d);
+}
+```
+
+.box[
+**`amp.getLevel()`** returns the current RMS amplitude — a smoothed measure of loudness.
+
+You can connect it to any sound source:
+```javascript
+amp.setInput(song);  // default: master
+amp.setInput(mic);   // microphone
+amp.setInput(osc);   // oscillator
+```
+]
+]
+
+---
+
+## p5.FFT — frequency analysis
+
+**FFT** (Fast Fourier Transform) breaks sound into its frequency components.
+
+```javascript
+let fft;
+
+function setup() {
+  fft = new p5.FFT();
+  song.loop();
+}
+
+function draw() {
+  // Waveform: array of 1024 values (-1 to 1)
+  // Shows the shape of the sound wave over time
+  let waveform = fft.waveform();
+
+  // Spectrum: array of 1024 values (0 to 255)
+  // Shows how much energy is in each frequency band
+  let spectrum = fft.analyze();
+}
+```
+
+.box-teal[
+`waveform()` answers: **what does the sound look like right now?**
+
+`analyze()` answers: **what frequencies make it up?** (bass on the left, treble on the right)
+]
+
+---
+
+## Drawing a waveform
+
+```javascript
+function draw() {
+  background(10);
+
+  let wave = fft.waveform();
+
+  noFill();
+  stroke(79, 197, 247);
+  strokeWeight(1.5);
+  beginShape();
+  for (let i = 0; i < wave.length; i++) {
+    let x = map(i, 0, wave.length, 0, width);
+    let y = map(wave[i], -1, 1, 0, height);
+    vertex(x, y);
+  }
+  endShape();
+}
+```
+
+.box-orange[
+**`beginShape()` / `endShape()`** — draws a connected polygon or line through a series of `vertex()` points. The first shape you've drawn with a loop rather than a single call.
+]
+
+---
+
+## Drawing a frequency spectrum
+
+```javascript
+function draw() {
+  background(10);
+
+  let spectrum = fft.analyze();  // 1024 values, 0–255
+
+  noStroke();
+  for (let i = 0; i < spectrum.length; i++) {
+    let x = map(i, 0, spectrum.length, 0, width);
+    let h = map(spectrum[i], 0, 255, 0, height);
+
+    // Low freq (bass) = warm, high freq (treble) = cool
+    let hue = map(i, 0, spectrum.length, 0, 260);
+    fill(hue, 80, 80);
+
+    rect(x, height - h, width / spectrum.length, h);
+  }
+}
+```
+
+.dim[Note: `colorMode(HSB, 360, 100, 100)` needed for hue mapping]
+
+---
+class: section-slide
+
+# Generating sound
+## Oscillators, envelopes, and noise
+
+---
+
+## p5.Oscillator — making tones
+
+An **oscillator** generates a continuous waveform — the fundamental unit of synthesis.
+
+```javascript
+let osc;
+
+function setup() {
+  createCanvas(400, 400);
+  osc = new p5.Oscillator('sine');  // 'sine' 'triangle' 'sawtooth' 'square'
+  osc.amp(0);    // start silent
+  osc.freq(440); // 440 Hz = concert A
+}
+
+function mousePressed() {
+  osc.start();
+  osc.amp(0.5, 0.1);  // fade to 0.5 over 0.1 seconds
+}
+
+function mouseReleased() {
+  osc.amp(0, 0.3);  // fade out over 0.3 seconds
+}
+```
+
+.box-green[
+**Always fade in and out** — instantaneous amplitude changes cause audible clicks (DC discontinuity). Use the second argument: `osc.amp(value, rampTime)`.
+]
+
+---
+
+## Waveform shapes
+
+.three-col[
+.box[
+**Sine**
+Pure, smooth, warm.
+Only one frequency.
+Flute-like.
+`'sine'`
+]
+.box[
+**Triangle**
+Odd harmonics, softer than square.
+Hollow, woody.
+`'triangle'`
+]
+.box[
+**Sawtooth**
+All harmonics.
+Bright, buzzy, rich.
+Synthesizer strings.
+`'sawtooth'`
+]
+]
+
+.box[
+**Square** — odd harmonics, hollow and reedy, like a clarinet. `'square'`
+
+The waveform type is a **timbre** decision — the same note on a sine and a sawtooth have the same pitch but sound completely different.
+]
+
+---
+
+## p5.Envelope — shaping sound over time
+
+An envelope controls **how amplitude changes** when a note is triggered and released.
+
+```javascript
+let env, osc;
+
+function setup() {
+  osc = new p5.Oscillator('triangle');
+  osc.amp(0);
+  osc.start();
+
+  env = new p5.Envelope();
+  // setADSR(attackTime, decayTime, sustainLevel, releaseTime)
+  env.setADSR(0.05, 0.1, 0.6, 0.4);
+  env.setRange(0.8, 0);  // peak amplitude, end amplitude
+}
+
+function mousePressed() {
+  osc.freq(random(200, 800));
+  env.play(osc);  // triggers attack → decay → sustain
+}
+```
+
+.box-teal[
+**ADSR** is the universal language of synthesis. Every synthesizer since the 1960s uses it. Attack: fade in. Decay: drop to sustain. Sustain: hold while key is down. Release: fade out when key is released.
+]
+
+---
+
+## p5.Noise — all frequencies at once
+
+Noise generators produce sound with **no pitch** — useful for percussion, texture, and ambience.
+
+```javascript
+let noise;
+
+function setup() {
+  noise = new p5.Noise('white');  // 'white' 'pink' 'brown'
+  noise.amp(0);
+  noise.start();
+}
+```
+
+.three-col[
+.box[
+**White noise**
+Equal energy at all frequencies.
+Hiss, static, rain on a tin roof.
+]
+.box[
+**Pink noise**
+Energy decreases at higher frequencies.
+More natural. Waterfalls, wind.
+]
+.box[
+**Brown noise**
+Even more bass-heavy.
+Rumble, thunder, distant ocean.
+]
+]
+
+---
+class: section-slide
+
+# Sound as data
+## The microphone and the creative loop
+
+---
+
+## p5.AudioIn — listening to the world
+
+```javascript
+let mic, amp;
+
+function setup() {
+  createCanvas(400, 400);
+  mic = new p5.AudioIn();
+  mic.start();  // request microphone permission
+
+  amp = new p5.Amplitude();
+  amp.setInput(mic);
+}
+
+function draw() {
+  background(10);
+
+  let level = amp.getLevel();  // 0.0 → 1.0
+
+  // Your voice becomes a visual parameter
+  let d = map(level, 0, 0.5, 10, width * 0.9);
+  noStroke();
+  fill(197, 247, 79, 180);
+  circle(width/2, height/2, d);
+}
+```
+
+.box-orange[
+Browsers will ask for microphone permission — this only works over `https://` or `localhost`. The p5.js web editor runs on HTTPS, so it works.
+]
+
+---
+
+## The creative loop
+
+```
+sound → analyze → map → draw
+```
+
+This is the same pattern you've been using all course.
+
+.two-col[
+.box-green[
+**Sound as data (like Week 4)**
+The amplitude of a kick drum is a number.
+The frequency of a voice is a number.
+Map those numbers to position, size, color, rotation — anything.
+]
+.box-teal[
+**Sound as time (like Week 2)**
+A waveform is a signal that changes every frame.
+`fft.waveform()` gives you an array 60 times per second.
+The draw loop is your sampler.
+]
+]
+
+.box[
+**The difference:** in Week 4 the data was *static* (a CSV loaded once). Sound data is *live* — it changes every frame. The same tools work; the rate of change is different.
+]
+
+---
+
+## Mapping examples
+
+```javascript
+// Amplitude → circle radius
+let level = amp.getLevel();
+let r = map(level, 0, 0.5, 20, 300);
+
+// Amplitude → hue (quiet = cool, loud = warm)
+let hue = map(level, 0, 0.8, 200, 30);
+
+// Specific frequency bands
+let bass   = fft.getEnergy('bass');        // 20–140 Hz
+let mid    = fft.getEnergy('mid');         // 400–2600 Hz
+let treble = fft.getEnergy('treble');      // 5200–14000 Hz
+// Returns 0–255
+
+// Bass → background brightness
+let bg = map(bass, 0, 255, 5, 30);
+background(0, 0, bg);  // in HSB mode
+
+// Treble → particle count
+let count = floor(map(treble, 0, 255, 5, 80));
+```
+
+---
+
+## `fft.getEnergy()` — named frequency bands
+
+Rather than reading all 1024 spectrum values, you can query specific bands directly:
+
+```javascript
+let energy = fft.getEnergy(lowFreq, highFreq);
+// OR use named bands:
+fft.getEnergy('bass')        // 20–140 Hz
+fft.getEnergy('lowMid')      // 140–400 Hz
+fft.getEnergy('mid')         // 400–2600 Hz
+fft.getEnergy('highMid')     // 2600–5200 Hz
+fft.getEnergy('treble')      // 5200–14000 Hz
+```
+
+.box-green[
+Named bands map to *musical* frequency ranges. A kick drum lives in **bass**. A snare in **mid**. A hi-hat in **treble**. This lets you respond differently to different instruments in a mix.
+]
+
+---
+class: dark-slide
+
+## Live coding — Session 2 preview
+
+Today's two sketches:
+
+.two-col[
+.box-orange[
+### "Resonance"
+A loaded sound file drives a generative visual.
+
+Amplitude → circle size.
+FFT waveform → continuous line.
+FFT spectrum → color field.
+
+The sound *paints* the canvas.
+]
+.box-teal[
+### "Theremin"
+A mouse-controlled oscillator synthesizer.
+
+MouseX → pitch.
+MouseY → amplitude.
+Envelope shapes every note.
+Multiple oscillators add texture.
+
+The movement *makes* the sound.
+]
+]
+
+---
+class: dark-slide
+
+## Artists working with sound
+
+.two-col[
+.box[
+**Alvin Lucier** — *I Am Sitting in a Room* (1969): a recording of a voice re-recorded in the same room until the room's resonances replace all intelligible speech. The room is the instrument.
+
+**Ryoji Ikeda** — ultra-precise data-to-sound-to-image. Test tones, scanning frequencies, and pixel-level visualizations that treat audio as information architecture.
+]
+.box[
+**Brian Eno** — *Discreet Music* (1975), *Music for Airports* (1978): generative, ambient music built on feedback loops and time-shifted tape delays. Sound as environment.
+
+**Camille Norment** — *Triplight* and *Siren*: immersive sound installations that use resonance, interference, and psychoacoustics as sculptural material.
+]
+]
+
+---
+class: dark-slide
+
+## Exercise — 20 minutes
+
+Connect a sound source to a visual parameter of your choice.
+
+1. Start from Snippet 03 (amplitude → circle) or Snippet 05 (FFT spectrum)
+2. Change **what the sound controls** — not just size. Try: rotation, number of shapes, color, spacing
+3. Add **one keyboard or mouse control** that changes something about the visual system (not the sound)
+
+.box-green[
+**Constraint:** the visual should look meaningfully different between silence and a loud sound. If you played it with the volume off, something should feel missing.
+]
+
+---
+class: title-slide
+
+.week-label[Week 06 — Sound as Material]
+
+# Session 2 is live coding.
+
+.subtitle[Open editor.p5js.org → add p5.sound library → we build together]
+
+.dim[Session 2 · Resonance + Theremin]
+
+</textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>
+  var slideshow = remark.create({
+    ratio: '16:9',
+    highlightStyle: 'atom-one-dark',
+    highlightLines: true,
+    countIncrementalSlides: false,
+    navigation: { scroll: false }
+  });
+</script>
+</body>
+</html>

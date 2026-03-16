@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GenXP — Week 01 / Session 1 — Hello, World.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ─────────────────────────────────────────
+       SHIFTA GenXP — Slide Theme
+       ───────────────────────────────────────── */
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* BASE SLIDE */
+    .remark-slide-content {
+      background-color: #0f0f0f;
+      color: #f0ece4;
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      line-height: 1.6;
+      padding: 2.5em 3.5em 3em;
+    }
+
+    /* TITLE SLIDE */
+    .remark-slide-content.title-slide {
+      background-color: #0f0f0f;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 3em 3.5em;
+    }
+
+    .remark-slide-content.title-slide h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: 2.4em;
+      font-weight: 700;
+      color: #f0ece4;
+      border: none;
+      padding-bottom: 0;
+      letter-spacing: -2px;
+      line-height: 1.1;
+    }
+
+    .remark-slide-content.title-slide h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.1em;
+      color: #FF4D1C;
+      font-weight: 400;
+      margin-top: 0.5em;
+    }
+
+    .remark-slide-content.title-slide .kicker {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72em;
+      color: #555;
+      margin-top: 2em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* SECTION SLIDE */
+    .remark-slide-content.section-slide {
+      background-color: #FF4D1C;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .remark-slide-content.section-slide h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: 2.6em;
+      color: #0f0f0f;
+      border: none;
+      padding: 0;
+      letter-spacing: -2px;
+      line-height: 1.1;
+    }
+
+    .remark-slide-content.section-slide h2 {
+      color: rgba(0,0,0,0.5);
+      font-size: 1em;
+      margin-top: 0.5em;
+    }
+
+    /* DARK ALT SLIDE */
+    .remark-slide-content.dark-slide {
+      background-color: #1a1a1a;
+    }
+
+    /* CODE SLIDE */
+    .remark-slide-content.code-slide {
+      background-color: #0d0d0d;
+      font-size: 19px;
+    }
+
+    /* HEADINGS */
+    h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.6em;
+      font-weight: 700;
+      color: #FF4D1C;
+      border-bottom: 2px solid #FF4D1C;
+      padding-bottom: 0.3em;
+      margin-bottom: 0.8em;
+      letter-spacing: -0.5px;
+    }
+
+    h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.1em;
+      color: #C5F74F;
+      font-weight: 400;
+      margin-bottom: 0.6em;
+      margin-top: 1em;
+    }
+
+    h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1em;
+      color: #f0ece4;
+      font-weight: 600;
+      margin-bottom: 0.4em;
+      margin-top: 0.8em;
+    }
+
+    /* LISTS */
+    ul, ol {
+      padding-left: 1.4em;
+    }
+
+    li {
+      margin: 0.45em 0;
+      line-height: 1.5;
+    }
+
+    /* LINKS */
+    a {
+      color: #FF4D1C;
+      text-decoration: none;
+      border-bottom: 1px solid #FF4D1C;
+    }
+
+    /* INLINE CODE */
+    .remark-inline-code {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82em;
+      background: #1e1e1e;
+      color: #C5F74F;
+      padding: 0.1em 0.4em;
+      border-radius: 3px;
+    }
+
+    /* CODE BLOCKS */
+    .remark-code {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78em;
+      line-height: 1.5;
+    }
+
+    pre {
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    /* BLOCKQUOTE */
+    blockquote {
+      border-left: 3px solid #FF4D1C;
+      padding-left: 1.2em;
+      color: #aaa;
+      font-style: italic;
+      margin: 0.8em 0;
+      font-size: 0.95em;
+    }
+
+    /* UTILITY CLASSES */
+    .huge      { font-size: 3.5em; font-family: 'Space Mono', monospace; line-height: 1; }
+    .big       { font-size: 1.6em; font-family: 'Space Mono', monospace; }
+    .small     { font-size: 0.82em; color: #888; }
+    .mono      { font-family: 'Space Mono', monospace; }
+    .accent    { color: #FF4D1C; }
+    .green     { color: #C5F74F; }
+    .teal      { color: #4FC5F7; }
+    .dim       { color: #555; }
+    .bold      { font-weight: 700; }
+    .center    { text-align: center; }
+    .right     { text-align: right; }
+
+    /* TWO COLUMNS */
+    .col-left  { float: left; width: 48%; }
+    .col-right { float: right; width: 48%; }
+    .col-60    { float: left; width: 60%; }
+    .col-40    { float: right; width: 38%; }
+    .clearfix::after { content: ''; display: table; clear: both; }
+
+    /* SLIDE NUMBER */
+    .remark-slide-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65em;
+      color: #333;
+      bottom: 1.2em;
+      right: 2em;
+    }
+
+    /* LABEL / BADGE */
+    .label {
+      display: inline-block;
+      background: #FF4D1C;
+      color: #0f0f0f;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65em;
+      padding: 0.15em 0.6em;
+      border-radius: 2px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+
+    .label.green { background: #C5F74F; }
+    .label.teal  { background: #4FC5F7; }
+
+    /* HIGHLIGHT BOX */
+    .box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-left: 3px solid #FF4D1C;
+      padding: 0.8em 1.2em;
+      border-radius: 4px;
+      margin: 0.6em 0;
+      font-size: 0.9em;
+    }
+
+    .box.green  { border-left-color: #C5F74F; }
+    .box.teal   { border-left-color: #4FC5F7; }
+
+    /* GRID VISUAL */
+    .coord-demo {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72em;
+      color: #4FC5F7;
+      background: #1a1a1a;
+      padding: 1em;
+      border-radius: 4px;
+      line-height: 1.8;
+    }
+
+    /* SEPARATOR LINE */
+    hr {
+      border: none;
+      border-top: 1px solid #333;
+      margin: 1em 0;
+    }
+
+    /* IMAGE SIZING */
+    img {
+      max-width: 100%;
+      max-height: 60vh;
+    }
+
+    /* MIDDLE CENTERING */
+    .middle-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+<textarea id="source">
+
+class: title-slide
+
+# Designing<br>Generative<br>Experiences
+
+## Week 01 — Hello, World.
+
+.kicker[Creative Computing 2025-06 — SHIFTA]
+
+???
+Welcome everyone. This is the first session of Designing Generative Experiences.
+Start by introducing yourself briefly — name, background, what excites you about this course.
+Take 5 min for students to introduce themselves if the group is small.
+
+---
+
+# Today
+
+.col-left[
+**Part 1 — Theory**
+
+- What is this course?
+- Creative coding & generative art
+- A brief history of computational art
+- Artists to know
+]
+
+.col-right[
+**Part 2 — Practice**
+
+- Setting up p5.js
+- The canvas coordinate system
+- Colors — RGB, RGBA
+- Drawing shapes
+- `setup()` and `draw()`
+- Variables + `random()`
+- .accent[Live: build an art piece together]
+]
+
+.clearfix[]
+
+???
+Spend about 30 min on theory, 60 min on practice and live coding.
+The goal is that by the end they have a running p5.js sketch that does something interesting.
+
+---
+
+class: section-slide
+
+# Part 1
+
+## What are we doing here?
+
+---
+
+# This Course
+
+.col-left[
+**Designing Generative Experiences** is a course about using **code as a creative tool.**
+
+Over 6 weeks we'll explore:
+- Drawing systems
+- Animation & time
+- Interactivity
+- Data as material
+- Mathematics as aesthetics
+- Sound
+]
+
+.col-right[
+.box[
+**What you'll make:**
+- Animated generative artworks
+- Interactive sketches
+- Data visualisations
+- Sound-reactive pieces
+]
+
+.box.green[
+**What you'll learn:**
+- p5.js / JavaScript
+- Creative programming patterns
+- Thinking algorithmically
+]
+]
+
+.clearfix[]
+
+???
+Emphasize that this is NOT a traditional programming course. The goal is expression, not just computation.
+
+---
+
+# What is Creative Coding?
+
+.big[Code as .accent[medium],<br>not just tool.]
+
+--
+
+Traditional programming: solve a defined problem → one correct answer.
+
+Creative coding: explore a space of possibilities → many interesting answers.
+
+--
+
+> *"The computer is not a device for making things, but for thinking about making things."*
+> — John Maeda, *The Laws of Simplicity*
+
+???
+Ask students: have they used code creatively before?
+What made them sign up for this course?
+
+---
+
+# What is Generative Art?
+
+Artwork where the artist **defines a system** — an algorithm, a set of rules — and the system **produces the work.**
+
+--
+
+The artist:
+- Sets the rules
+- Defines the parameters
+- Accepts some degree of **unpredictability**
+
+--
+
+.box[
+**The interesting part:** the output can surprise even the author.
+The system takes on a life of its own.
+]
+
+???
+Good analogy: a composer writes music, but the orchestra plays it differently each time. The score is the algorithm.
+
+---
+
+# A Brief History
+
+.col-left[
+**1960s — The Pioneers**
+
+Vera Molnár, Frieder Nake, Harold Cohen — programming plotters to draw.
+
+No GUIs. Just punched cards and plotters.
+
+**1970–80s — Algorithmic Art**
+
+Mathematical functions, fractals, L-systems.
+
+**1990s — Net Art & Interactivity**
+
+The web as canvas. Real-time, participatory.
+]
+
+.col-right[
+**2000s — Processing**
+
+Casey Reas + Ben Fry create Processing.
+Code as sketchbook. Art school meets CS.
+
+**2013 — p5.js**
+
+Lauren McCarthy creates p5.js — Processing for the browser.
+
+**Now**
+
+Generative AI, machine learning aesthetics, real-time everything.
+]
+
+.clearfix[]
+
+???
+Show this timeline to situate what we're doing historically.
+You can mention that the algorithms Molnár wrote in FORTRAN in 1968 would work perfectly in p5.js today.
+
+---
+
+# Artists to Know
+
+.col-left[
+**Early Computer Art**
+- .accent[Vera Molnár] — grids, rules, deviations
+- .accent[Frieder Nake] — mathematical drawings
+- .accent[Harold Cohen] — AARON, the painting robot
+
+**Conceptual / Pattern**
+- .accent[Sol LeWitt] — wall drawings, written instructions
+- .accent[Hélio Oiticica] — Metaesquemas
+- .accent[Lygia Clark] — modular surfaces
+]
+
+.col-right[
+**Contemporary**
+- .accent[Casey Reas] — co-creator of Processing
+- .accent[Manolo Gamboa] — parametric sculpture
+- .accent[Kim Asendorf] — pixel sorting, glitch
+
+**Reference Sites**
+- [openprocessing.org](https://openprocessing.org)
+- [artnome.com](https://artnome.com)
+- [typatone.com](https://typatone.com) ← just fun
+]
+
+.clearfix[]
+
+???
+Show a few images if you have them. Vera Molnár's work is especially relevant for Assignment 01.
+
+---
+
+# Vera Molnár — (Des)ordres, 1974
+
+.box[
+A grid of concentric squares. The rule is simple: each square is drawn slightly different from the previous. Sometimes a square is missing entirely — an "interruption."
+]
+
+The **algorithm** is the artwork. The specific output is secondary.
+
+--
+
+> *"To make up for her lack of a computer in her early years, she invented what she called 'machine imaginaire' — an imaginary computer."*
+
+--
+
+.small[This will be relevant for your first assignment.]
+
+???
+This is a perfect segue into Assignment 01 — replicating a rule-based pattern.
+Students should understand that the art is in the RULE, not just the image.
+
+---
+
+class: section-slide
+
+# Part 2
+
+## Let's make something.
+
+---
+
+# Our Tool: p5.js
+
+.col-left[
+**p5.js** is a JavaScript library for creative coding.
+
+Based on **Processing** (Java), but runs in the browser. No installation needed.
+
+Created by **Lauren McCarthy** in 2013.
+
+The community is huge — thousands of examples, tutorials, forums.
+]
+
+.col-right[
+.box.teal[
+**p5.js online editor:**
+editor.p5js.org
+
+✓ No installation
+✓ Share sketches with a link
+✓ Works on any device
+]
+]
+
+.clearfix[]
+
+---
+
+# Setting Up — Create an Account
+
+Go to **[editor.p5js.org](https://editor.p5js.org)**
+
+1. Click **Sign Up** (top right)
+2. Create an account — you'll use this all semester
+3. Your sketches are saved to the cloud
+4. You can share sketches via a URL
+
+.box.green[
+**Important:** Save your sketches! Use `File → Save` or `Ctrl+S`.
+Give each sketch a meaningful name.
+]
+
+---
+
+class: code-slide
+
+# Your First Sketch
+
+Every new p5.js sketch starts like this:
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(220);
+}
+```
+
+Two functions that p5 calls automatically:
+
+- `setup()` — runs **once** when the sketch starts
+- `draw()` — runs **over and over**, up to 60 times per second
+
+???
+Show this live in the editor. Let students create the sketch.
+Ask: what do you think `createCanvas` does? What is 220?
+
+---
+
+class: code-slide
+
+# Hello, World — Console
+
+Before drawing, let's talk to the browser:
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+  console.log("Hello, World!");
+  console.log("My canvas is 400 x 400 pixels");
+}
+
+function draw() {
+  background(220);
+}
+```
+
+Open the **Console** tab in the p5.js editor to see the output.
+
+.box[
+`console.log()` is your debugging friend. When something doesn't work, print values to the console and investigate.
+]
+
+???
+Show this live. Open the browser console too (F12 in Chrome).
+The console.log is foundational — they'll use it constantly.
+
+---
+
+# The Canvas — Our World
+
+The p5.js canvas is a **grid of pixels**.
+
+.coord-demo[
+    (0,0) ──────────────────────► x
+      │   ·    ·    ·    ·    ·
+      │   ·    ·    ·    ·    ·
+      │   ·    ·    ·    ·    ·
+      ▼   ·    ·    ·    ·  (400,400)
+     y
+]
+
+**Key difference from math class:**
+- `x` increases to the **right** ✓
+- `y` increases **downward** ✗ (not up!)
+- The origin `(0, 0)` is at the **top-left**
+
+???
+This trips people up! Draw it on a whiteboard if possible.
+Ask: where is the center of a 400x400 canvas? (200, 200)
+
+---
+
+# The Canvas — Our World
+
+.box[
+**Center of a 400×400 canvas:** `(200, 200)`
+
+**Bottom-right corner:** `(400, 400)` — but that pixel is *off the canvas*!
+
+Pixels go from `0` to `399` in each direction.
+
+Think of it like apartments in a building: floor 0 exists!
+]
+
+--
+
+.box.green[
+**Shortcut:** use `width` and `height` built-in variables
+instead of hardcoding numbers.
+
+`(width/2, height/2)` = center, whatever the canvas size.
+]
+
+---
+
+class: code-slide
+
+# Colors — RGB
+
+In p5.js, colors are described with **three numbers**: Red, Green, Blue.
+
+Each value goes from **0** (none) to **255** (full).
+
+```javascript
+background(255, 0, 0);   // pure red
+background(0, 255, 0);   // pure green
+background(0, 0, 255);   // pure blue
+
+background(0);           // black (shorthand for 0, 0, 0)
+background(255);         // white (shorthand for 255, 255, 255)
+background(128);         // mid grey
+
+background(255, 200, 50); // warm yellow
+```
+
+.box[
+Think of RGB like mixing light — not paint. Mixing all three at full = white.
+]
+
+???
+Mixing pigment (paint) and mixing light are different.
+Red + Green light = Yellow. This surprises students from design backgrounds.
+
+---
+
+class: code-slide
+
+# Colors — Alpha (Transparency)
+
+A **4th value** controls transparency: from `0` (invisible) to `255` (opaque).
+
+```javascript
+// fill(red, green, blue, alpha)
+fill(255, 0, 0, 128);   // semi-transparent red
+fill(0, 150, 255, 50);  // very transparent blue
+```
+
+.box.teal[
+**Alpha is powerful** for building up layers, creating depth,
+and simulating motion trails.
+]
+
+--
+
+**One number only?** That's greyscale.
+
+```javascript
+fill(0);        // black
+fill(128);      // mid grey
+fill(128, 80);  // mid grey, semi-transparent
+```
+
+---
+
+class: code-slide
+
+# Drawing — fill() and noStroke()
+
+Before drawing a shape, set its colors:
+
+```javascript
+function draw() {
+  background(220);
+
+  // Set fill color (inside of shape)
+  fill(255, 100, 50);
+
+  // Remove the border/outline
+  noStroke();
+
+  // Or set stroke color and thickness
+  stroke(0);
+  strokeWeight(2);
+}
+```
+
+.box[
+`fill()` sets the inside color.
+`stroke()` sets the outline color.
+`noStroke()` removes the outline entirely.
+`noFill()` makes the inside transparent.
+]
+
+---
+
+class: code-slide
+
+# Drawing — Circles and Ellipses
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(30);
+
+  noStroke();
+  fill(255, 80, 50);
+
+  // circle(x, y, diameter)
+  circle(200, 200, 100);
+
+  // ellipse(x, y, width, height)
+  ellipse(200, 200, 150, 80);
+}
+```
+
+`circle(x, y, diameter)` — center x, center y, diameter
+
+`ellipse(x, y, w, h)` — center x, center y, width, height
+
+???
+Draw this live. Change the values. Ask students: how do I make the circle bigger? Move it to a corner?
+
+---
+
+class: code-slide
+
+# Drawing — Rectangles and Lines
+
+```javascript
+// rect(x, y, width, height)
+// x, y = TOP-LEFT corner
+rect(50, 50, 100, 80);
+
+// rectMode(CENTER) changes behavior:
+// now x, y = CENTER of rectangle
+rectMode(CENTER);
+rect(200, 200, 100, 80);
+
+// line(x1, y1, x2, y2)
+stroke(255);
+strokeWeight(2);
+line(0, 0, 400, 400);  // diagonal
+
+// point(x, y) — a single pixel
+point(200, 200);
+```
+
+---
+
+class: code-slide
+
+# Drawing Order Matters
+
+Shapes drawn **later** appear **on top**.
+
+```javascript
+function draw() {
+  background(30);
+
+  // Drawn first = behind
+  fill(255, 80, 50);
+  noStroke();
+  circle(180, 200, 120);
+
+  // Drawn second = in front
+  fill(50, 200, 255, 180);
+  circle(220, 200, 120);
+}
+```
+
+.box[
+Think of it like layers in Photoshop or Illustrator.
+The last thing drawn is always on top.
+]
+
+---
+
+class: section-slide
+
+# Variables
+
+## Let the code remember things.
+
+---
+
+class: code-slide
+
+# What is a Variable?
+
+A **variable** is a named container that stores a value.
+
+```javascript
+let myName = "Thiago";
+let age = 35;
+let pi = 3.14159;
+let isHappy = true;
+```
+
+--
+
+Why use variables instead of just writing numbers?
+
+1. **Readability** — `circleSize` is clearer than `47`
+2. **Reusability** — change one value, affect everything
+3. **Computation** — do math with them: `let half = circleSize / 2`
+4. **Change over time** — values can update in `draw()`
+
+---
+
+class: code-slide
+
+# Declaring Variables — `let`
+
+```javascript
+// Declare a variable with `let`:
+let worldSize = 400;
+let circleSize = 50;
+
+function setup() {
+  // Use the variable:
+  createCanvas(worldSize, worldSize);
+  background(30);
+}
+
+function draw() {
+  background(30);
+  noStroke();
+  fill(255, 80, 50);
+
+  // Use it again:
+  circle(200, 200, circleSize);
+}
+```
+
+.box.green[
+Try changing `worldSize` to 600. Both the canvas AND the code adapt.
+]
+
+???
+Change circleSize and redraw. Show the power of variables.
+
+---
+
+class: code-slide
+
+# `random()` — Controlled Chaos
+
+`random(min, max)` returns a random decimal number between `min` and `max`.
+
+```javascript
+let x = random(0, 400);   // somewhere on the x axis
+let r = random(0, 255);   // a random red value
+let size = random(10, 80); // a random size
+```
+
+--
+
+Every time `draw()` runs, `random()` gives a different number.
+
+```javascript
+function draw() {
+  // This circle moves to a new random position every frame!
+  let x = random(0, width);
+  let y = random(0, height);
+  circle(x, y, 20);
+}
+```
+
+.box[
+`random()` with no arguments returns a number between 0 and 1.
+]
+
+---
+
+class: section-slide
+
+# Live Coding
+
+## Let's build something.
+
+---
+
+class: code-slide
+
+# Step 1 — The Canvas
+
+Start simple:
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+  background(30);
+  console.log("Hello, World!");
+}
+
+function draw() {
+  // nothing yet
+}
+```
+
+.box[
+`background()` in `setup()` runs **once** — like setting up a canvas.
+`background()` in `draw()` runs **every frame** — clears the previous drawing.
+]
+
+---
+
+class: code-slide
+
+# Step 2 — Add a Circle
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+  background(30);
+}
+
+function draw() {
+  noStroke();
+  fill(255, 80, 50);
+  circle(200, 200, 80);
+}
+```
+
+Notice: no `background()` in `draw()`.
+The circle is drawn on top of itself every frame — but since it doesn't move, we don't see it.
+
+---
+
+class: code-slide
+
+# Step 3 — Bring in Variables
+
+```javascript
+let worldSize = 400;
+let circleSize = 50;
+
+function setup() {
+  createCanvas(worldSize, worldSize);
+  background(30);
+}
+
+function draw() {
+  let x = worldSize / 2;
+  let y = worldSize / 2;
+
+  noStroke();
+  fill(255, 80, 50);
+  circle(x, y, circleSize);
+}
+```
+
+Now play: change `circleSize`, change `worldSize`.
+
+---
+
+class: code-slide
+
+# Step 4 — Add Randomness + Color
+
+```javascript
+let worldSize = 400;
+let circleSize = 50;
+
+function setup() {
+  createCanvas(worldSize, worldSize);
+  background(30);
+}
+
+function draw() {
+  let x = random(0, worldSize);
+  let y = random(0, worldSize);
+
+  let r = random(0, 255);
+  let g = random(0, 255);
+  let b = random(0, 255);
+  let a = random(0, 255);
+
+  circleSize = random(10, 50);
+
+  noStroke();
+  fill(r, g, b, a);
+  circle(x, y, circleSize);
+}
+```
+
+???
+Run this live. Watch it build up! No background() in draw() = all circles accumulate.
+Ask students: what happens if we add background(30) at the start of draw()?
+
+---
+
+# What Just Happened?
+
+```
+background()  →  NOT in draw()  →  circles accumulate
+random()      →  in draw()      →  different each frame
+fill(r,g,b,a) →  with alpha     →  overlapping transparency
+draw()        →  loops forever  →  it never stops
+```
+
+--
+
+.box[
+We wrote ~15 lines of code.
+
+In ~30 seconds of running, it produces an image no human would draw by hand — and it's different every time you run it.
+
+**That's generative art.**
+]
+
+--
+
+.small[Play with the parameters. What happens when you change the color range? The size range? The number of circles per frame?]
+
+---
+
+# What We Covered Today
+
+.col-left[
+**Concepts**
+- Creative coding & generative art
+- Brief history, key artists
+- The canvas coordinate system
+
+**p5.js Basics**
+- `setup()` + `draw()`
+- Colors: `fill()`, `stroke()`, RGB + alpha
+- Shapes: `circle()`, `ellipse()`, `rect()`, `line()`
+]
+
+.col-right[
+**Programming Basics**
+- Variables with `let`
+- `random()` for controlled randomness
+
+**Built-in Variables**
+- `width` and `height`
+- `mouseX` and `mouseY` ← try these!
+]
+
+.clearfix[]
+
+---
+
+# For Next Session
+
+.box.green[
+**Session 2** — We'll look at two complete examples of the assignment brief.
+We'll code them together, starting from scratch.
+]
+
+.box[
+**Before Session 2:**
+- Create your p5.js account if you haven't yet
+- Play with the random circles sketch — modify it, break it, fix it
+- Look up **Vera Molnár** and **Yayoi Kusama** — think about their visual rules
+]
+
+---
+
+class: title-slide
+
+# Assignment 01
+
+## Replicating Patterns
+
+.kicker[Due — check assignment document for deadline]
+
+???
+Hand out or project the Assignment 01 document.
+Walk through it briefly. Emphasize Part 1 (replica) vs Part 2 (3 variations).
+
+---
+
+class: title-slide
+
+# See you<br>next time.
+
+## Questions?
+
+.kicker[editor.p5js.org — start playing]
+
+</textarea>
+
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>
+  var slideshow = remark.create({
+    ratio: '16:9',
+    navigation: {
+      scroll: false,
+      touch: true,
+      click: false
+    },
+    slideNumberFormat: '%current% / %total%',
+    highlightStyle: 'atom-one-dark',
+    highlightLines: true,
+    highlightSpans: false,
+    countIncrementalSlides: false
+  });
+</script>
+</body>
+</html>

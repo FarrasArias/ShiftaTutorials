@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GenXP — Week 04 / Session 1 — Arrays, Objects, Classes & Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; }
+    .remark-slide-content {
+      background-color: #0f0f0f; color: #f0ece4;
+      font-family: 'Inter', sans-serif; font-size: 22px;
+      line-height: 1.6; padding: 2.5em 3.5em 3em;
+    }
+    .remark-slide-content.title-slide {
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 3em 3.5em;
+    }
+    .remark-slide-content.title-slide h1 {
+      font-family: 'Space Mono', monospace; font-size: 2.4em; font-weight: 700;
+      color: #f0ece4; border: none; padding-bottom: 0; letter-spacing: -2px; line-height: 1.1;
+    }
+    .remark-slide-content.title-slide h2 {
+      font-family: 'Space Mono', monospace; font-size: 1.1em;
+      color: #FF4D1C; font-weight: 400; margin-top: 0.5em;
+    }
+    .remark-slide-content.title-slide .kicker {
+      font-family: 'Space Mono', monospace; font-size: 0.72em;
+      color: #555; margin-top: 2em; letter-spacing: 2px; text-transform: uppercase;
+    }
+    .remark-slide-content.section-slide {
+      background-color: #FF4D1C; display: flex; flex-direction: column; justify-content: center;
+    }
+    .remark-slide-content.section-slide h1 {
+      font-family: 'Space Mono', monospace; font-size: 2.6em; color: #0f0f0f;
+      border: none; padding: 0; letter-spacing: -2px; line-height: 1.1;
+    }
+    .remark-slide-content.section-slide h2 { color: rgba(0,0,0,0.5); font-size: 1em; margin-top: 0.5em; }
+    .remark-slide-content.dark-slide  { background-color: #1a1a1a; }
+    .remark-slide-content.code-slide  { background-color: #0d0d0d; font-size: 19px; }
+    h1 {
+      font-family: 'Space Mono', monospace; font-size: 1.6em; font-weight: 700;
+      color: #FF4D1C; border-bottom: 2px solid #FF4D1C;
+      padding-bottom: 0.3em; margin-bottom: 0.8em; letter-spacing: -0.5px;
+    }
+    h2 { font-family: 'Space Mono', monospace; font-size: 1.1em; color: #C5F74F; font-weight: 400; margin-bottom: 0.6em; margin-top: 1em; }
+    h3 { font-family: 'Inter', sans-serif; font-size: 1em; color: #f0ece4; font-weight: 600; margin-bottom: 0.4em; margin-top: 0.8em; }
+    ul, ol { padding-left: 1.4em; }
+    li { margin: 0.45em 0; line-height: 1.5; }
+    a { color: #FF4D1C; text-decoration: none; border-bottom: 1px solid #FF4D1C; }
+    .remark-inline-code {
+      font-family: 'Space Mono', monospace; font-size: 0.82em;
+      background: #1e1e1e; color: #C5F74F; padding: 0.1em 0.4em; border-radius: 3px;
+    }
+    .remark-code { font-family: 'Space Mono', monospace; font-size: 0.78em; line-height: 1.5; }
+    pre { border-radius: 6px; overflow: hidden; }
+    blockquote { border-left: 3px solid #FF4D1C; padding-left: 1.2em; color: #aaa; font-style: italic; margin: 0.8em 0; font-size: 0.95em; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88em; margin: 0.8em 0; }
+    th { font-family: 'Space Mono', monospace; font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #333; padding: 0.4em 0.6em; text-align: left; color: #888; }
+    td { padding: 0.5em 0.6em; border-bottom: 1px solid #222; vertical-align: top; }
+    .huge  { font-size: 3.5em; font-family: 'Space Mono', monospace; line-height: 1; }
+    .big   { font-size: 1.6em; font-family: 'Space Mono', monospace; }
+    .small { font-size: 0.82em; color: #888; }
+    .mono  { font-family: 'Space Mono', monospace; }
+    .accent { color: #FF4D1C; }
+    .green  { color: #C5F74F; }
+    .teal   { color: #4FC5F7; }
+    .dim    { color: #555; }
+    .col-left  { float: left; width: 48%; }
+    .col-right { float: right; width: 48%; }
+    .col-60    { float: left; width: 60%; }
+    .col-40    { float: right; width: 38%; }
+    .clearfix::after { content: ''; display: table; clear: both; }
+    .remark-slide-number { font-family: 'Space Mono', monospace; font-size: 0.65em; color: #333; bottom: 1.2em; right: 2em; }
+    .box { background: #1a1a1a; border: 1px solid #333; border-left: 3px solid #FF4D1C; padding: 0.8em 1.2em; border-radius: 4px; margin: 0.6em 0; font-size: 0.9em; }
+    .box.green { border-left-color: #C5F74F; }
+    .box.teal  { border-left-color: #4FC5F7; }
+    hr { border: none; border-top: 1px solid #333; margin: 1em 0; }
+  </style>
+</head>
+<body>
+<textarea id="source">
+
+class: title-slide
+
+# Arrays,<br>Objects,<br>Classes<br>& Data
+
+## Week 04 — Structures, Collections & the World Outside
+
+.kicker[Designing Generative Experiences — SHIFTA 2025-06]
+
+???
+This is a pivotal session — students learn to think in collections.
+Everything up to now was one-of-a-kind. Today they learn to manage many things at once.
+The shift from "one particle" to "an array of 500 particles" is transformative.
+
+---
+
+# Today
+
+.col-left[
+**Data Structures**
+- Arrays — ordered collections
+- Objects — named properties
+- Arrays of objects — the big pattern
+- Classes — blueprints for objects
+
+**Loading the Outside World**
+- `preload()` — the loading phase
+- `.csv` files with `loadTable()`
+- `.json` files with `loadJSON()`
+- Images with `loadImage()`
+- Sound with `loadSound()` .dim[(preview — Week 6)]
+]
+.col-right[
+**Fun Examples**
+- A snow particle system (class-based)
+- Pixel art from a loaded image
+- Visualising data from a CSV
+
+.box.green[Assignment 04 preview: .accent[Drawing with Data]]
+]
+.clearfix[]
+
+---
+
+class: section-slide
+
+# Arrays
+
+## A list you can talk to.
+
+---
+
+# Why Arrays?
+
+Without arrays:
+```javascript
+let x0 = 50;  let x1 = 120;  let x2 = 200;
+let x3 = 280; let x4 = 350;
+// ...50 more lines
+```
+
+With an array:
+```javascript
+let positions = [50, 120, 200, 280, 350]; // one line
+// Or: generate 500 positions in a loop
+```
+
+--
+
+.box[
+An array is an **ordered list** — items in a specific sequence, accessed by number (index).
+Index starts at **0**, not 1.
+]
+
+---
+
+class: code-slide
+
+# Array Basics
+
+```javascript
+// Declare an array
+let colors = ["red", "green", "blue"];
+
+// Access by index (0-based!)
+console.log(colors[0]);  // "red"
+console.log(colors[2]);  // "blue"
+
+// Change a value
+colors[1] = "yellow";    // ["red", "yellow", "blue"]
+
+// How many items?
+console.log(colors.length);  // 3
+
+// Add to the end
+colors.push("purple");   // ["red", "yellow", "blue", "purple"]
+
+// Remove from the end
+colors.pop();            // ["red", "yellow", "blue"]
+```
+
+---
+
+class: code-slide
+
+# Looping Over an Array
+
+Two ways — both valid:
+
+```javascript
+let sizes = [20, 45, 10, 80, 35, 60];
+
+// Method 1: index-based (useful when you need i)
+for (let i = 0; i < sizes.length; i++) {
+  circle(i * 60 + 30, 200, sizes[i]);
+}
+
+// Method 2: for...of (cleaner when you just need each item)
+for (let s of sizes) {
+  circle(random(width), random(height), s);
+}
+```
+
+.box[
+`for...of` reads as: *"for each item `s` in the array `sizes`, do this."*
+Use it when you need the value but not the index.
+Use the index-based loop when position in the array matters.
+]
+
+---
+
+class: code-slide
+
+# Arrays Enable Scale
+
+```javascript
+// Without array: draw 5 circles by hand
+circle(50,  200, 30);
+circle(120, 200, 30);
+circle(190, 200, 30);
+circle(260, 200, 30);
+circle(330, 200, 30);
+```
+
+```javascript
+// With array + loop: draw 500 circles — same effort
+let positions = [];
+
+function setup() {
+  createCanvas(600, 600);
+  for (let i = 0; i < 500; i++) {
+    positions.push({ x: random(width), y: random(height) });
+  }
+}
+
+function draw() {
+  background(20);
+  for (let p of positions) {
+    circle(p.x, p.y, 8);
+  }
+}
+```
+
+---
+
+class: section-slide
+
+# Objects
+
+## A thing with properties.
+
+---
+
+# What is an Object?
+
+An object groups related values under one name.
+
+```javascript
+// Five separate variables — hard to manage
+let px = 200;
+let py = 300;
+let pr = 20;
+let pvx = 1.5;
+let pvy = -0.8;
+
+// One object — easy to pass around, store, loop over
+let particle = {
+  x:  200,
+  y:  300,
+  r:  20,
+  vx: 1.5,
+  vy: -0.8
+};
+```
+
+--
+
+Access properties with a dot:
+
+```javascript
+particle.x  += particle.vx;
+particle.y  += particle.vy;
+circle(particle.x, particle.y, particle.r);
+```
+
+---
+
+class: code-slide
+
+# Arrays of Objects — The Key Pattern
+
+This is the most important pattern in creative coding:
+
+```javascript
+let particles = [];
+
+function setup() {
+  createCanvas(400, 400);
+  // Create 100 particle objects and store in the array
+  for (let i = 0; i < 100; i++) {
+    particles.push({
+      x:  random(width),
+      y:  random(height),
+      vx: random(-2, 2),
+      vy: random(-2, 2),
+      r:  random(4, 16)
+    });
+  }
+}
+
+function draw() {
+  background(20, 20, 20, 40);  // ghost trail
+
+  for (let p of particles) {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0 || p.x > width)  p.vx *= -1;
+    if (p.y < 0 || p.y > height) p.vy *= -1;
+    circle(p.x, p.y, p.r);
+  }
+}
+```
+
+---
+
+class: section-slide
+
+# Classes
+
+## A blueprint. An instruction for building objects.
+
+---
+
+# Objects vs Classes
+
+An **object literal** (`{ x: 100, y: 200 }`) is one specific thing.
+
+A **class** is a *blueprint* — a recipe you can use to create as many objects as you like, all with the same structure but different values.
+
+```javascript
+// Object literal — one specific particle
+let p = { x: 100, y: 200, vx: 1.5, vy: -0.8 };
+
+// Class — a recipe for making any number of particles
+class Particle {
+  constructor(x, y) {
+    this.x  = x;
+    this.y  = y;
+    this.vx = random(-2, 2);
+    this.vy = random(-2, 2);
+  }
+}
+
+// Create instances from the blueprint
+let p1 = new Particle(100, 200);
+let p2 = new Particle(300, 150);
+```
+
+---
+
+class: code-slide
+
+# Class Anatomy
+
+```javascript
+class Particle {
+
+  // constructor: runs once when you call `new Particle(...)`
+  constructor(x, y) {
+    this.x  = x;
+    this.y  = y;
+    this.vx = random(-2, 2);
+    this.vy = random(-2, 2);
+    this.r  = random(4, 16);
+    this.col = color(random(255), 80, 50);
+  }
+
+  // Methods: functions that belong to the class
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > width)  this.vx *= -1;
+    if (this.y < 0 || this.y > height) this.vy *= -1;
+  }
+
+  draw() {
+    noStroke();
+    fill(this.col);
+    circle(this.x, this.y, this.r * 2);
+  }
+}
+```
+
+---
+
+class: code-slide
+
+# Using the Class
+
+```javascript
+let particles = [];
+
+function setup() {
+  createCanvas(600, 600);
+
+  for (let i = 0; i < 200; i++) {
+    particles.push(new Particle(random(width), random(height)));
+  }
+}
+
+function draw() {
+  background(20, 20, 20, 30);
+
+  for (let p of particles) {
+    p.update();
+    p.draw();
+  }
+}
+```
+
+.box.green[
+Classes make it trivially easy to go from 200 to 2000 particles.
+They also keep the code organised — `p.update()` and `p.draw()` are self-contained.
+]
+
+???
+Ask: what would adding a "colour that changes over time" look like?
+Just add one line to update(): this.col = color(frameCount * 0.5 % 255, 80, 50);
+
+---
+
+# Fun Example — Snow
+
+A Snowflake class demonstrates that classes aren't just for technical demos:
+
+```javascript
+class Snowflake {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.x    = random(width);
+    this.y    = random(-20, 0);
+    this.r    = random(2, 6);
+    this.vy   = random(0.5, 2);
+    this.drift = random(-0.3, 0.3);
+  }
+  update() {
+    this.y += this.vy;
+    this.x += this.drift + noise(this.y * 0.01) * 0.5 - 0.25;
+    if (this.y > height + 10) this.reset();  // recycle
+  }
+  draw() {
+    noStroke(); fill(255, 255, 255, 200);
+    circle(this.x, this.y, this.r * 2);
+  }
+}
+```
+
+---
+
+class: section-slide
+
+# Data
+
+## The world outside the sketch.
+
+---
+
+# preload() — Loading Assets
+
+p5.js has a special function that runs **before** `setup()`:
+
+```javascript
+let myTable;
+let myImage;
+
+function preload() {
+  // Everything here finishes loading before setup() runs
+  myTable = loadTable("data.csv", "csv", "header");
+  myImage = loadImage("photo.jpg");
+}
+
+function setup() {
+  createCanvas(600, 600);
+  // myTable and myImage are guaranteed to be ready here
+}
+```
+
+.box[
+**Never load files inside `setup()` or `draw()`.**
+Use `preload()` — it pauses the sketch until all assets are ready.
+]
+
+---
+
+class: code-slide
+
+# Loading CSV — loadTable()
+
+A `.csv` file is a spreadsheet saved as plain text:
+
+```
+name,distance,size,moons
+Mercury,0.39,0.38,0
+Venus,0.72,0.95,0
+Earth,1.00,1.00,1
+Mars,1.52,0.53,2
+Jupiter,5.20,11.2,95
+```
+
+```javascript
+let table;
+
+function preload() {
+  // "csv" = format, "header" = first row is column names
+  table = loadTable("planets.csv", "csv", "header");
+}
+
+function setup() {
+  createCanvas(600, 600);
+  console.log("Rows:", table.getRowCount());
+  console.log("Cols:", table.getColumnCount());
+
+  // Read a specific cell: row 0, column "name"
+  console.log(table.getString(0, "name"));   // "Mercury"
+  console.log(table.getNum(2, "moons"));     // 1
+}
+```
+
+---
+
+class: code-slide
+
+# Iterating CSV Rows
+
+Convert each row into an object, push to an array:
+
+```javascript
+let planets = [];
+
+function preload() {
+  table = loadTable("planets.csv", "csv", "header");
+}
+
+function setup() {
+  createCanvas(600, 600);
+
+  for (let i = 0; i < table.getRowCount(); i++) {
+    planets.push({
+      name:     table.getString(i, "name"),
+      distance: table.getNum(i, "distance"),
+      size:     table.getNum(i, "size"),
+      moons:    table.getNum(i, "moons")
+    });
+  }
+
+  console.log(planets);
+}
+```
+
+.box.green[
+Now `planets` is a regular array of objects — use it exactly like the particle systems from earlier.
+]
+
+---
+
+class: code-slide
+
+# Loading JSON — loadJSON()
+
+JSON is more flexible than CSV — it handles nested structures:
+
+```json
+{
+  "title": "My Dataset",
+  "items": [
+    { "name": "Alpha", "value": 0.72, "tags": ["a", "b"] },
+    { "name": "Beta",  "value": 0.38, "tags": ["c"] }
+  ]
+}
+```
+
+```javascript
+let data;
+
+function preload() {
+  data = loadJSON("dataset.json");
+}
+
+function setup() {
+  createCanvas(600, 600);
+  console.log(data.title);           // "My Dataset"
+  console.log(data.items[0].name);   // "Alpha"
+  console.log(data.items.length);    // 2
+
+  for (let item of data.items) {
+    console.log(item.name, item.value);
+  }
+}
+```
+
+---
+
+class: code-slide
+
+# Loading Images — loadImage() + pixels
+
+```javascript
+let img;
+
+function preload() {
+  img = loadImage("photo.jpg");
+}
+
+function setup() {
+  createCanvas(img.width, img.height);
+  image(img, 0, 0);  // draw the image at (0,0)
+}
+
+function draw() {
+  background(20);
+
+  // Pixel art: sample the image at a grid of points
+  let step = 8;
+  for (let x = 0; x < width; x += step) {
+    for (let y = 0; y < height; y += step) {
+      let c = img.get(x, y);   // color at pixel (x,y)
+      fill(c);
+      noStroke();
+      circle(x, y, step * 0.8);
+    }
+  }
+}
+```
+
+.small[`img.get(x, y)` returns the color at that pixel — use it as a fill or stroke.]
+
+---
+
+# Data as Creative Material
+
+.box[
+We've loaded data as a technical exercise. But data can be the *subject* of the artwork.
+
+Every dataset has a story. The visualization is your interpretation of it.
+]
+
+--
+
+Ask yourself:
+- What aspect of this data is most surprising or most beautiful?
+- What visual property (position, size, color, opacity, motion) best represents each data variable?
+- Does your visualization *reveal* something, or just *display* something?
+
+--
+
+> *"The purpose of visualization is insight, not pictures."*
+> — Ben Schneiderman
+
+> *"Data is the new oil — and like oil, it needs to be refined before it's useful."*
+> — Clive Humby
+
+---
+
+# What We Covered Today
+
+.col-left[
+**Arrays**
+- Declare, access by index
+- `push()`, `pop()`, `length`
+- `for` loop and `for...of`
+- Arrays of objects
+
+**Objects**
+- Key-value pairs
+- Dot notation access
+- Objects as compound values
+]
+.col-right[
+**Classes**
+- `class`, `constructor`, `this`
+- Methods: `update()`, `draw()`
+- `new ClassName()` to create instances
+- `new` in a loop = many instances
+
+**Loading Data**
+- `preload()` — always for assets
+- `loadTable()` — CSV
+- `loadJSON()` — JSON
+- `loadImage()` — images
+]
+.clearfix[]
+
+---
+
+# For Next Session
+
+.box.green[
+**Session 2** — We'll build a complete "Drawing with Data" example together.
+Loading CSV data → creating objects → making a generative visualization.
+]
+
+.box[
+**Before Session 2:**
+- Think about a dataset that interests you. It can be tiny (8 rows) or large.
+- Try creating a plain-text `.csv` file in the p5.js editor (File → New File)
+- Look at: [Dear Data](https://www.dear-data.com) — handmade data visualisations by Giorgia Lupi and Stefanie Posavec
+- Look at: [The Pudding](https://pudding.cool) — visual essays built on data
+]
+
+---
+
+class: title-slide
+
+# Assignment 04
+
+## Drawing with Data
+
+.kicker[Load it. Map it. Make it beautiful.]
+
+---
+
+class: title-slide
+
+# See you<br>next time.
+
+## Questions?
+
+.kicker[editor.p5js.org — try creating a .csv file in the editor]
+
+</textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>
+  var slideshow = remark.create({
+    ratio: '16:9',
+    navigation: { scroll: false, touch: true, click: false },
+    slideNumberFormat: '%current% / %total%',
+    highlightStyle: 'atom-one-dark',
+    highlightLines: true,
+    countIncrementalSlides: false
+  });
+</script>
+</body>
+</html>
