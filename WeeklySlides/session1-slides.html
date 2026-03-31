@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>GenXP — Week 01 / Session 1 — Hello, World.</title>
+  <title>GenXP: Week 01 / Session 1: Hello, World.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     /* ─────────────────────────────────────────
-       SHIFTA GenXP — Slide Theme
+       SHIFTA GenXP: Slide Theme
        ───────────────────────────────────────── */
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -262,6 +262,23 @@
       max-height: 60vh;
     }
 
+    /* SLIDE OVERFLOW FIX */
+    .remark-slide-scaler {
+      overflow: hidden;
+    }
+
+    .remark-slide {
+      overflow: hidden;
+      display: block;
+      height: 100%;
+    }
+
+    .remark-slide-content {
+      display: block;
+      height: 100%;
+      overflow-y: auto;
+    }
+
     /* MIDDLE CENTERING */
     .middle-center {
       position: absolute;
@@ -274,27 +291,49 @@
   </style>
 </head>
 <body>
-<textarea id="source">
+    <textarea id="source">
 
 class: title-slide
 
 # Designing<br>Generative<br>Experiences
 
-## Week 01 — Hello, World.
+## Week 01: Hello, World.
 
-.kicker[Creative Computing 2025-06 — SHIFTA]
+.kicker[Creative Computing 2025-06: SHIFTA]
 
 ???
 Welcome everyone. This is the first session of Designing Generative Experiences.
-Start by introducing yourself briefly — name, background, what excites you about this course.
+Start by introducing yourself briefly: name, background, what excites you about this course.
 Take 5 min for students to introduce themselves if the group is small.
+
+---
+
+# Rafael Arias Gonzalez
+
+.accent[Education]
+* **MSc** Interactive Arts & Technology
+* **Diploma** Sound Design | **BSc & BEng** Sound Engineering
+
+.accent[Industry]
+* **Co-Founder**, Crafted Mayhem (Mex)
+* **Sr. Data Science Engineer** (SD)
+* **Head of AI**, Marakana (SF)
+
+.accent[Teaching]
+* **Instructor**, SFU | **Sr. Instructor**, VFS
+
+???
+I come from a hybrid background of engineering and arts. 
+I've spent my career bridging the gap between high-level AI strategy in SF and 
+hands-on creative production in Mexico and Canada. 
+Now, I focus on empowering students at SFU and VFS to build their own generative systems.
 
 ---
 
 # Today
 
 .col-left[
-**Part 1 — Theory**
+**Part 1: Theory**
 
 - What is this course?
 - Creative coding & generative art
@@ -303,11 +342,11 @@ Take 5 min for students to introduce themselves if the group is small.
 ]
 
 .col-right[
-**Part 2 — Practice**
+**Part 2: Practice**
 
 - Setting up p5.js
 - The canvas coordinate system
-- Colors — RGB, RGBA
+- Colors: RGB, RGBA
 - Drawing shapes
 - `setup()` and `draw()`
 - Variables + `random()`
@@ -333,7 +372,7 @@ class: section-slide
 # This Course
 
 .col-left[
-**Designing Generative Experiences** is a course about using **code as a creative tool.**
+**Designing Generative Experiences** is a course about using **code as a generative tool.**
 
 Over 6 weeks we'll explore:
 - Drawing systems
@@ -380,8 +419,8 @@ Creative coding: explore a space of possibilities → many interesting answers.
 
 --
 
-> *"The computer is not a device for making things, but for thinking about making things."*
-> — John Maeda, *The Laws of Simplicity*
+> John Maeda's philosophy:
+> *Designers should learn to code. The computer shouldn't just be used to draw a line (making), but to write the logic that generates the line.*
 
 ???
 Ask students: have they used code creatively before?
@@ -391,7 +430,7 @@ What made them sign up for this course?
 
 # What is Generative Art?
 
-Artwork where the artist **defines a system** — an algorithm, a set of rules — and the system **produces the work.**
+Artwork where the artist **defines a system** (an algorithm, a set of rules) and the system **produces the work.**
 
 --
 
@@ -415,30 +454,35 @@ Good analogy: a composer writes music, but the orchestra plays it differently ea
 # A Brief History
 
 .col-left[
-**1960s — The Pioneers**
+**1960s: The Pioneers**
 
-Vera Molnár, Frieder Nake, Harold Cohen — programming plotters to draw.
+Vera Molnár, Frieder Nake, Harold Cohen: programming plotters to draw.
 
 No GUIs. Just punched cards and plotters.
 
-**1970–80s — Algorithmic Art**
+**1970–80s: Algorithmic Art**
 
-Mathematical functions, fractals, L-systems.
+Mathematical functions, fractals, L-systems. 
+Conway's Game of Life: https://playgameoflife.com/ <br />
+Mandelbrot set (1978): https://mandelbrot.site/
+```javascript
+Z = Z^2 + C
+```
 
-**1990s — Net Art & Interactivity**
+**1990s: Net Art & Interactivity**
 
 The web as canvas. Real-time, participatory.
 ]
 
 .col-right[
-**2000s — Processing**
+**2000s: Processing**
 
 Casey Reas + Ben Fry create Processing.
 Code as sketchbook. Art school meets CS.
 
-**2013 — p5.js**
+**2013: p5.js**
 
-Lauren McCarthy creates p5.js — Processing for the browser.
+Lauren McCarthy creates p5.js: Processing for the browser.
 
 **Now**
 
@@ -457,21 +501,21 @@ You can mention that the algorithms Molnár wrote in FORTRAN in 1968 would work 
 
 .col-left[
 **Early Computer Art**
-- .accent[Vera Molnár] — grids, rules, deviations
-- .accent[Frieder Nake] — mathematical drawings
-- .accent[Harold Cohen] — AARON, the painting robot
+- .accent[Vera Molnár]: grids, rules, deviations
+- .accent[Frieder Nake]: mathematical drawings
+- .accent[Harold Cohen]: AARON, the painting robot
 
 **Conceptual / Pattern**
-- .accent[Sol LeWitt] — wall drawings, written instructions
-- .accent[Hélio Oiticica] — Metaesquemas
-- .accent[Lygia Clark] — modular surfaces
+- .accent[Sol LeWitt]: wall drawings, written instructions
+- .accent[Hélio Oiticica]: Metaesquemas
+- .accent[Lygia Clark]: modular surfaces
 ]
 
 .col-right[
 **Contemporary**
-- .accent[Casey Reas] — co-creator of Processing
-- .accent[Manolo Gamboa] — parametric sculpture
-- .accent[Kim Asendorf] — pixel sorting, glitch
+- .accent[Casey Reas]: co-creator of Processing
+- .accent[Manolo Gamboa]: parametric sculpture
+- .accent[Kim Asendorf]: pixel sorting, glitch
 
 **Reference Sites**
 - [openprocessing.org](https://openprocessing.org)
@@ -486,24 +530,100 @@ Show a few images if you have them. Vera Molnár's work is especially relevant f
 
 ---
 
-# Vera Molnár — (Des)ordres, 1974
+# Early Computer Art
 
-.box[
-A grid of concentric squares. The rule is simple: each square is drawn slightly different from the previous. Sometimes a square is missing entirely — an "interruption."
+.col-left[
+![Vera Molnár: (Des)ordres, 1974](images/vera-molnar-desordres.jpg)
+.small[Vera Molnár: *(Des)ordres*, 1974]
 ]
+
+.col-right[
+![Frieder Nake: Hommage à Paul Klee, 1965](images/frieder-nake-hommage-klee.jpg)
+.small[Frieder Nake: *Hommage à Paul Klee*, 1965]
+]
+
+.clearfix[]
+
+???
+Both works were made with pen plotters: mechanical arms controlled by code.
+Molnár's grids explore order vs disorder. Nake's piece reinterprets Klee's "High Roads and Byroads" algorithmically.
+
+---
+
+# More Artists
+
+.col-left[
+![Harold Cohen: AARON, 1995](images/harold-cohen-aaron.jpg)
+.small[Harold Cohen: *AARON* output, 1995]
+]
+
+.col-right[
+![Sol LeWitt: Wall Drawing #1136](images/sol-lewitt-wall-drawing.jpg)
+.small[Sol LeWitt: *Wall Drawing #1136*]
+]
+
+.clearfix[]
+
+???
+Cohen's AARON is one of the earliest AI art programs: it learned to draw and paint autonomously over 40 years.
+LeWitt wrote instructions as the artwork; others executed them on walls. The concept IS the art.
+
+---
+
+# Contemporary Generative Art
+
+.col-left[
+![Casey Reas: RGB](images/casey-reas-process.jpg)
+.small[Casey Reas: co-creator of Processing]
+]
+
+.col-right[
+![Manolo Gamboa Naon: CUDA](images/manolo-gamboa-naon-cuda.jpg)
+.small[Manolo Gamboa Naon: *CUDA*, 2018]
+]
+
+.clearfix[]
+
+???
+Reas co-created Processing, the language p5.js is based on. His work explores emergent systems through code.
+Manolo (manoloide) creates stunning generative compositions using basic geometric shapes, lines and color.
+
+---
+
+# Glitch Art
+
+.center[
+![Kim Asendorf: Mountain Tour, 2010](images/kim-asendorf-pixel-sorting.jpg)
+]
+
+.small.center[Kim Asendorf: *Mountain Tour* (pixel sorting), 2010]
+
+???
+Asendorf invented pixel sorting in 2010: algorithmically sorting pixels by brightness to create streaked, glitch-like effects.
+He open-sourced the Processing code in 2012, spawning an entire movement.
+
+---
+
+# Vera Molnár: (Des)ordres, 1974
+
+.col-left[
+![Vera Molnár: (Des)ordres detail](images/vera-molnar-desordres.jpg)
+]
+
+.col-right[
+A grid of concentric squares. The rule is simple: each square is drawn slightly different from the previous. Sometimes a square is missing entirely: an "interruption."
 
 The **algorithm** is the artwork. The specific output is secondary.
 
---
-
-> *"To make up for her lack of a computer in her early years, she invented what she called 'machine imaginaire' — an imaginary computer."*
-
---
+> *To make up for her lack of a computer in her early years, she invented what she called 'machine imaginaire': an imaginary computer.*
 
 .small[This will be relevant for your first assignment.]
+]
+
+.clearfix[]
 
 ???
-This is a perfect segue into Assignment 01 — replicating a rule-based pattern.
+This is a perfect segue into Assignment 01: replicating a rule-based pattern.
 Students should understand that the art is in the RULE, not just the image.
 
 ---
@@ -525,7 +645,7 @@ Based on **Processing** (Java), but runs in the browser. No installation needed.
 
 Created by **Lauren McCarthy** in 2013.
 
-The community is huge — thousands of examples, tutorials, forums.
+The community is huge: thousands of examples, tutorials, forums.
 ]
 
 .col-right[
@@ -543,12 +663,12 @@ editor.p5js.org
 
 ---
 
-# Setting Up — Create an Account
+# Setting Up: Create an Account
 
 Go to **[editor.p5js.org](https://editor.p5js.org)**
 
 1. Click **Sign Up** (top right)
-2. Create an account — you'll use this all semester
+2. Create an account: you'll use this all semester
 3. Your sketches are saved to the cloud
 4. You can share sketches via a URL
 
@@ -577,8 +697,8 @@ function draw() {
 
 Two functions that p5 calls automatically:
 
-- `setup()` — runs **once** when the sketch starts
-- `draw()` — runs **over and over**, up to 60 times per second
+- `setup()`: runs **once** when the sketch starts
+- `draw()`: runs **over and over**, up to 60 times per second
 
 ???
 Show this live in the editor. Let students create the sketch.
@@ -588,7 +708,7 @@ Ask: what do you think `createCanvas` does? What is 220?
 
 class: code-slide
 
-# Hello, World — Console
+# Hello, World: Console
 
 Before drawing, let's talk to the browser:
 
@@ -612,21 +732,21 @@ Open the **Console** tab in the p5.js editor to see the output.
 
 ???
 Show this live. Open the browser console too (F12 in Chrome).
-The console.log is foundational — they'll use it constantly.
+The console.log is foundational: they'll use it constantly.
 
 ---
 
-# The Canvas — Our World
+# The Canvas: Our World
 
 The p5.js canvas is a **grid of pixels**.
 
 .coord-demo[
-    (0,0) ──────────────────────► x
-      │   ·    ·    ·    ·    ·
-      │   ·    ·    ·    ·    ·
-      │   ·    ·    ·    ·    ·
-      ▼   ·    ·    ·    ·  (400,400)
-     y
+    (0,0) ─────────► x <br />
+      │   ·    ·    ·    ·    · <br />
+      │   ·    ·    ·    ·    · <br />
+      │   ·    ·    ·    ·    · <br />
+      ▼   ·    ·    ·    ·  (400,400) <br />
+     y <br />
 ]
 
 **Key difference from math class:**
@@ -640,12 +760,12 @@ Ask: where is the center of a 400x400 canvas? (200, 200)
 
 ---
 
-# The Canvas — Our World
+# The Canvas: Our World
 
 .box[
 **Center of a 400×400 canvas:** `(200, 200)`
 
-**Bottom-right corner:** `(400, 400)` — but that pixel is *off the canvas*!
+**Bottom-right corner:** `(400, 400)`: but that pixel is *off the canvas*!
 
 Pixels go from `0` to `399` in each direction.
 
@@ -665,7 +785,7 @@ instead of hardcoding numbers.
 
 class: code-slide
 
-# Colors — RGB
+# Colors: RGB
 
 In p5.js, colors are described with **three numbers**: Red, Green, Blue.
 
@@ -684,7 +804,7 @@ background(255, 200, 50); // warm yellow
 ```
 
 .box[
-Think of RGB like mixing light — not paint. Mixing all three at full = white.
+Think of RGB like mixing light: not paint. Mixing all three at full = white.
 ]
 
 ???
@@ -695,7 +815,7 @@ Red + Green light = Yellow. This surprises students from design backgrounds.
 
 class: code-slide
 
-# Colors — Alpha (Transparency)
+# Colors: Alpha (Transparency)
 
 A **4th value** controls transparency: from `0` (invisible) to `255` (opaque).
 
@@ -724,7 +844,7 @@ fill(128, 80);  // mid grey, semi-transparent
 
 class: code-slide
 
-# Drawing — fill() and noStroke()
+# Drawing: fill() and noStroke()
 
 Before drawing a shape, set its colors:
 
@@ -755,7 +875,7 @@ function draw() {
 
 class: code-slide
 
-# Drawing — Circles and Ellipses
+# Drawing: Circles and Ellipses
 
 ```javascript
 function setup() {
@@ -776,9 +896,9 @@ function draw() {
 }
 ```
 
-`circle(x, y, diameter)` — center x, center y, diameter
+`circle(x, y, diameter)`: center x, center y, diameter
 
-`ellipse(x, y, w, h)` — center x, center y, width, height
+`ellipse(x, y, w, h)`: center x, center y, width, height
 
 ???
 Draw this live. Change the values. Ask students: how do I make the circle bigger? Move it to a corner?
@@ -787,7 +907,7 @@ Draw this live. Change the values. Ask students: how do I make the circle bigger
 
 class: code-slide
 
-# Drawing — Rectangles and Lines
+# Drawing: Rectangles and Lines
 
 ```javascript
 // rect(x, y, width, height)
@@ -804,7 +924,7 @@ stroke(255);
 strokeWeight(2);
 line(0, 0, 400, 400);  // diagonal
 
-// point(x, y) — a single pixel
+// point(x, y): a single pixel
 point(200, 200);
 ```
 
@@ -853,26 +973,26 @@ class: code-slide
 A **variable** is a named container that stores a value.
 
 ```javascript
-let myName = "Thiago";
-let age = 35;
-let pi = 3.14159;
-let isHappy = true;
+let myName = "Raf"; // String (symbols, text) type
+let age = 33; // Int type
+let pi = 3.14159; // Float (decimal) type
+let isHappy = true; // Boolean (on or off) type
 ```
 
 --
 
 Why use variables instead of just writing numbers?
 
-1. **Readability** — `circleSize` is clearer than `47`
-2. **Reusability** — change one value, affect everything
-3. **Computation** — do math with them: `let half = circleSize / 2`
-4. **Change over time** — values can update in `draw()`
+1. **Readability**: `circleSize` is clearer than `47`
+2. **Reusability**: change one value, affect everything
+3. **Computation**: do math with them: `let half = circleSize / 2`
+4. **Change over time**: values can update in `draw()`
 
 ---
 
 class: code-slide
 
-# Declaring Variables — `let`
+# Declaring Variables: `let`
 
 ```javascript
 // Declare a variable with `let`:
@@ -906,7 +1026,7 @@ Change circleSize and redraw. Show the power of variables.
 
 class: code-slide
 
-# `random()` — Controlled Chaos
+# `random()`: Controlled Chaos
 
 `random(min, max)` returns a random decimal number between `min` and `max`.
 
@@ -945,7 +1065,7 @@ class: section-slide
 
 class: code-slide
 
-# Step 1 — The Canvas
+# Step 1: The Canvas
 
 Start simple:
 
@@ -962,15 +1082,15 @@ function draw() {
 ```
 
 .box[
-`background()` in `setup()` runs **once** — like setting up a canvas.
-`background()` in `draw()` runs **every frame** — clears the previous drawing.
+`background()` in `setup()` runs **once**: like setting up a canvas.
+`background()` in `draw()` runs **every frame**: clears the previous drawing.
 ]
 
 ---
 
 class: code-slide
 
-# Step 2 — Add a Circle
+# Step 2: Add a Circle
 
 ```javascript
 function setup() {
@@ -986,13 +1106,13 @@ function draw() {
 ```
 
 Notice: no `background()` in `draw()`.
-The circle is drawn on top of itself every frame — but since it doesn't move, we don't see it.
+The circle is drawn on top of itself every frame: but since it doesn't move, we don't see it.
 
 ---
 
 class: code-slide
 
-# Step 3 — Bring in Variables
+# Step 3: Bring in Variables
 
 ```javascript
 let worldSize = 400;
@@ -1019,7 +1139,7 @@ Now play: change `circleSize`, change `worldSize`.
 
 class: code-slide
 
-# Step 4 — Add Randomness + Color
+# Step 4: Add Randomness + Color
 
 ```javascript
 let worldSize = 400;
@@ -1067,7 +1187,7 @@ draw()        →  loops forever  →  it never stops
 .box[
 We wrote ~15 lines of code.
 
-In ~30 seconds of running, it produces an image no human would draw by hand — and it's different every time you run it.
+In ~30 seconds of running, it produces an interesting complex image: and it's different every time you run it.
 
 **That's generative art.**
 ]
@@ -1109,16 +1229,30 @@ In ~30 seconds of running, it produces an image no human would draw by hand — 
 # For Next Session
 
 .box.green[
-**Session 2** — We'll look at two complete examples of the assignment brief.
+**Session 2**: We'll look at two complete examples of the assignment brief.
 We'll code them together, starting from scratch.
 ]
 
 .box[
 **Before Session 2:**
 - Create your p5.js account if you haven't yet
-- Play with the random circles sketch — modify it, break it, fix it
-- Look up **Vera Molnár** and **Yayoi Kusama** — think about their visual rules
+- Play with the random circles sketch: modify it, break it, fix it
+- Look up **Vera Molnár** and **Yayoi Kusama**: think about their visual rules
 ]
+
+---
+
+class: title-slide
+
+# Before next class
+
+## Tutorials 01
+
+.kicker[Due: Go through the Week 1 **[tutorials](https://farrasarias.github.io/ShiftaTutorials/week01/programming/index.html)** to review and learn more about programming! ]
+
+???
+Hand out or project the Assignment 01 document.
+Walk through it briefly. Emphasize Part 1 (replica) vs Part 2 (3 variations).
 
 ---
 
@@ -1128,7 +1262,7 @@ class: title-slide
 
 ## Replicating Patterns
 
-.kicker[Due — check assignment document for deadline]
+.kicker[Due: check assignment document for deadline]
 
 ???
 Hand out or project the Assignment 01 document.
@@ -1142,7 +1276,7 @@ class: title-slide
 
 ## Questions?
 
-.kicker[editor.p5js.org — start playing]
+.kicker[Until next time :D]
 
 </textarea>
 
