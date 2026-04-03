@@ -1,843 +1,978 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>GenXP — Week 02 / Session 1 — Time & Motion</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; }
+    <meta charset="utf-8">
+    <title>GenXP — Week 03 / Session 1 — Conditionals, Loops, Functions & Randomness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+          /* ─────────────────────────────────────────
+        SHIFTA GenXP: Slide Theme
+        ───────────────────────────────────────── */
 
-    .remark-slide-content {
-      background-color: #0f0f0f;
-      color: #f0ece4;
-      font-family: 'Inter', sans-serif;
-      font-size: 22px;
-      line-height: 1.6;
-      padding: 2.5em 3.5em 3em;
-    }
+          * {
+              box-sizing: border-box;
+              margin: 0;
+              padding: 0;
+          }
 
-    .remark-slide-content.title-slide {
-      background-color: #0f0f0f;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 3em 3.5em;
-    }
-    .remark-slide-content.title-slide h1 {
-      font-family: 'Space Mono', monospace;
-      font-size: 2.4em;
-      font-weight: 700;
-      color: #f0ece4;
-      border: none;
-      padding-bottom: 0;
-      letter-spacing: -2px;
-      line-height: 1.1;
-    }
-    .remark-slide-content.title-slide h2 {
-      font-family: 'Space Mono', monospace;
-      font-size: 1.1em;
-      color: #FF4D1C;
-      font-weight: 400;
-      margin-top: 0.5em;
-    }
-    .remark-slide-content.title-slide .kicker {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.72em;
-      color: #555;
-      margin-top: 2em;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
+          body {
+              font-family: 'Inter', sans-serif;
+          }
 
-    .remark-slide-content.section-slide {
-      background-color: #FF4D1C;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .remark-slide-content.section-slide h1 {
-      font-family: 'Space Mono', monospace;
-      font-size: 2.6em;
-      color: #0f0f0f;
-      border: none;
-      padding: 0;
-      letter-spacing: -2px;
-      line-height: 1.1;
-    }
-    .remark-slide-content.section-slide h2 {
-      color: rgba(0,0,0,0.5);
-      font-size: 1em;
-      margin-top: 0.5em;
-    }
+          /* BASE SLIDE */
+          .remark-slide-content {
+              background-color: #0f0f0f;
+              color: #f0ece4;
+              font-family: 'Inter', sans-serif;
+              font-size: 22px;
+              line-height: 1.6;
+              padding: 2.5em 3.5em 3em;
+          }
 
-    .remark-slide-content.dark-slide { background-color: #1a1a1a; }
-    .remark-slide-content.code-slide { background-color: #0d0d0d; font-size: 19px; }
+              /* TITLE SLIDE */
+              .remark-slide-content.title-slide {
+                  background-color: #0f0f0f;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: flex-end;
+                  padding: 3em 3.5em;
+              }
 
-    h1 {
-      font-family: 'Space Mono', monospace;
-      font-size: 1.6em;
-      font-weight: 700;
-      color: #FF4D1C;
-      border-bottom: 2px solid #FF4D1C;
-      padding-bottom: 0.3em;
-      margin-bottom: 0.8em;
-      letter-spacing: -0.5px;
-    }
-    h2 {
-      font-family: 'Space Mono', monospace;
-      font-size: 1.1em;
-      color: #C5F74F;
-      font-weight: 400;
-      margin-bottom: 0.6em;
-      margin-top: 1em;
-    }
-    h3 {
-      font-family: 'Inter', sans-serif;
-      font-size: 1em;
-      color: #f0ece4;
-      font-weight: 600;
-      margin-bottom: 0.4em;
-      margin-top: 0.8em;
-    }
-    ul, ol { padding-left: 1.4em; }
-    li { margin: 0.45em 0; line-height: 1.5; }
-    a { color: #FF4D1C; text-decoration: none; border-bottom: 1px solid #FF4D1C; }
+                  .remark-slide-content.title-slide h1 {
+                      font-family: 'Space Mono', monospace;
+                      font-size: 2.4em;
+                      font-weight: 700;
+                      color: #f0ece4;
+                      border: none;
+                      padding-bottom: 0;
+                      letter-spacing: -2px;
+                      line-height: 1.1;
+                  }
 
-    .remark-inline-code {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.82em;
-      background: #1e1e1e;
-      color: #C5F74F;
-      padding: 0.1em 0.4em;
-      border-radius: 3px;
-    }
-    .remark-code { font-family: 'Space Mono', monospace; font-size: 0.78em; line-height: 1.5; }
-    pre { border-radius: 6px; overflow: hidden; }
+                  .remark-slide-content.title-slide h2 {
+                      font-family: 'Space Mono', monospace;
+                      font-size: 1.1em;
+                      color: #FF4D1C;
+                      font-weight: 400;
+                      margin-top: 0.5em;
+                  }
 
-    blockquote {
-      border-left: 3px solid #FF4D1C;
-      padding-left: 1.2em;
-      color: #aaa;
-      font-style: italic;
-      margin: 0.8em 0;
-      font-size: 0.95em;
-    }
+                  .remark-slide-content.title-slide .kicker {
+                      font-family: 'Space Mono', monospace;
+                      font-size: 0.72em;
+                      color: #555;
+                      margin-top: 2em;
+                      letter-spacing: 2px;
+                      text-transform: uppercase;
+                  }
 
-    .huge    { font-size: 3.5em; font-family: 'Space Mono', monospace; line-height: 1; }
-    .big     { font-size: 1.6em; font-family: 'Space Mono', monospace; }
-    .small   { font-size: 0.82em; color: #888; }
-    .mono    { font-family: 'Space Mono', monospace; }
-    .accent  { color: #FF4D1C; }
-    .green   { color: #C5F74F; }
-    .teal    { color: #4FC5F7; }
-    .dim     { color: #555; }
+              /* SECTION SLIDE */
+              .remark-slide-content.section-slide {
+                  background-color: #FF4D1C;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+              }
 
-    .col-left  { float: left; width: 48%; }
-    .col-right { float: right; width: 48%; }
-    .col-60    { float: left; width: 60%; }
-    .col-40    { float: right; width: 38%; }
-    .clearfix::after { content: ''; display: table; clear: both; }
+                  .remark-slide-content.section-slide h1 {
+                      font-family: 'Space Mono', monospace;
+                      font-size: 2.6em;
+                      color: #0f0f0f;
+                      border: none;
+                      padding: 0;
+                      letter-spacing: -2px;
+                      line-height: 1.1;
+                  }
 
-    .remark-slide-number {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65em;
-      color: #333;
-      bottom: 1.2em;
-      right: 2em;
-    }
+                  .remark-slide-content.section-slide h2 {
+                      color: rgba(0,0,0,0.5);
+                      font-size: 1em;
+                      margin-top: 0.5em;
+                  }
 
-    .box {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-left: 3px solid #FF4D1C;
-      padding: 0.8em 1.2em;
-      border-radius: 4px;
-      margin: 0.6em 0;
-      font-size: 0.9em;
-    }
-    .box.green { border-left-color: #C5F74F; }
-    .box.teal  { border-left-color: #4FC5F7; }
+              /* DARK ALT SLIDE */
+              .remark-slide-content.dark-slide {
+                  background-color: #1a1a1a;
+              }
 
-    .label {
-      display: inline-block;
-      background: #FF4D1C;
-      color: #0f0f0f;
-      font-family: 'Space Mono', monospace;
-      font-size: 0.65em;
-      padding: 0.15em 0.6em;
-      border-radius: 2px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      vertical-align: middle;
-    }
-    .label.green { background: #C5F74F; }
-    .label.teal  { background: #4FC5F7; }
+              /* CODE SLIDE */
+              .remark-slide-content.code-slide {
+                  background-color: #0d0d0d;
+                  font-size: 19px;
+              }
 
-    hr { border: none; border-top: 1px solid #333; margin: 1em 0; }
+          /* HEADINGS */
+          h1 {
+              font-family: 'Space Mono', monospace;
+              font-size: 1.6em;
+              font-weight: 700;
+              color: #FF4D1C;
+              border-bottom: 2px solid #FF4D1C;
+              padding-bottom: 0.3em;
+              margin-bottom: 0.8em;
+              letter-spacing: -0.5px;
+          }
 
-    /* Timeline diagram */
-    .timeline {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.75em;
-      color: #f0ece4;
-      background: #1a1a1a;
-      padding: 1em 1.2em;
-      border-radius: 4px;
-      line-height: 2;
-    }
-    .timeline .t-label { color: #FF4D1C; }
-    .timeline .t-val   { color: #C5F74F; }
-  </style>
+          h2 {
+              font-family: 'Space Mono', monospace;
+              font-size: 1.1em;
+              color: #C5F74F;
+              font-weight: 400;
+              margin-bottom: 0.6em;
+              margin-top: 1em;
+          }
+
+          h3 {
+              font-family: 'Inter', sans-serif;
+              font-size: 1em;
+              color: #f0ece4;
+              font-weight: 600;
+              margin-bottom: 0.4em;
+              margin-top: 0.8em;
+          }
+
+          /* LISTS */
+          ul, ol {
+              padding-left: 1.4em;
+          }
+
+          li {
+              margin: 0.45em 0;
+              line-height: 1.5;
+          }
+
+          /* LINKS */
+          a {
+              color: #FF4D1C;
+              text-decoration: none;
+              border-bottom: 1px solid #FF4D1C;
+          }
+
+          /* INLINE CODE */
+          .remark-inline-code {
+              font-family: 'Space Mono', monospace;
+              font-size: 0.82em;
+              background: #1e1e1e;
+              color: #C5F74F;
+              padding: 0.1em 0.4em;
+              border-radius: 3px;
+          }
+
+          /* CODE BLOCKS */
+          .remark-code {
+              font-family: 'Space Mono', monospace;
+              font-size: 0.78em;
+              line-height: 1.5;
+          }
+
+          pre {
+              border-radius: 6px;
+              overflow: hidden;
+          }
+
+          /* BLOCKQUOTE */
+          blockquote {
+              border-left: 3px solid #FF4D1C;
+              padding-left: 1.2em;
+              color: #aaa;
+              font-style: italic;
+              margin: 0.8em 0;
+              font-size: 0.95em;
+          }
+
+          /* UTILITY CLASSES */
+          .huge {
+              font-size: 3.5em;
+              font-family: 'Space Mono', monospace;
+              line-height: 1;
+          }
+
+          .big {
+              font-size: 1.6em;
+              font-family: 'Space Mono', monospace;
+          }
+
+          .small {
+              font-size: 0.82em;
+              color: #888;
+          }
+
+          .mono {
+              font-family: 'Space Mono', monospace;
+          }
+
+          .accent {
+              color: #FF4D1C;
+          }
+
+          .green {
+              color: #C5F74F;
+          }
+
+          .teal {
+              color: #4FC5F7;
+          }
+
+          .dim {
+              color: #555;
+          }
+
+          .bold {
+              font-weight: 700;
+          }
+
+          .center {
+              text-align: center;
+          }
+
+          .right {
+              text-align: right;
+          }
+
+          /* TWO COLUMNS */
+          .col-left {
+              float: left;
+              width: 48%;
+          }
+
+          .col-right {
+              float: right;
+              width: 48%;
+          }
+
+          .col-60 {
+              float: left;
+              width: 60%;
+          }
+
+          .col-40 {
+              float: right;
+              width: 38%;
+          }
+
+          .clearfix::after {
+              content: '';
+              display: table;
+              clear: both;
+          }
+
+          /* SLIDE NUMBER */
+          .remark-slide-number {
+              font-family: 'Space Mono', monospace;
+              font-size: 0.65em;
+              color: #333;
+              bottom: 1.2em;
+              right: 2em;
+          }
+
+          /* LABEL / BADGE */
+          .label {
+              display: inline-block;
+              background: #FF4D1C;
+              color: #0f0f0f;
+              font-family: 'Space Mono', monospace;
+              font-size: 0.65em;
+              padding: 0.15em 0.6em;
+              border-radius: 2px;
+              font-weight: 700;
+              letter-spacing: 1px;
+              text-transform: uppercase;
+              vertical-align: middle;
+          }
+
+              .label.green {
+                  background: #C5F74F;
+              }
+
+              .label.teal {
+                  background: #4FC5F7;
+              }
+
+          /* HIGHLIGHT BOX */
+          .box {
+              background: #1a1a1a;
+              border: 1px solid #333;
+              border-left: 3px solid #FF4D1C;
+              padding: 0.8em 1.2em;
+              border-radius: 4px;
+              margin: 0.6em 0;
+              font-size: 0.9em;
+          }
+
+              .box.green {
+                  border-left-color: #C5F74F;
+              }
+
+              .box.teal {
+                  border-left-color: #4FC5F7;
+              }
+
+          /* GRID VISUAL */
+          .coord-demo {
+              font-family: 'Space Mono', monospace;
+              font-size: 0.72em;
+              color: #4FC5F7;
+              background: #1a1a1a;
+              padding: 1em;
+              border-radius: 4px;
+              line-height: 1.8;
+          }
+
+          /* SEPARATOR LINE */
+          hr {
+              border: none;
+              border-top: 1px solid #333;
+              margin: 1em 0;
+          }
+
+          /* IMAGE SIZING */
+          img {
+              max-width: 100%;
+              max-height: 60vh;
+          }
+
+          /* SLIDE OVERFLOW FIX */
+          .remark-slide-scaler {
+              overflow: hidden;
+          }
+
+          .remark-slide {
+              overflow: hidden;
+              display: block;
+              height: 100%;
+          }
+
+          .remark-slide-content {
+              display: block;
+              height: 100%;
+              overflow-y: auto;
+          }
+
+          /* MIDDLE CENTERING */
+          .middle-center {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              text-align: center;
+              width: 80%;
+          }
+    </style>
 </head>
 <body>
 <textarea id="source">
 
 class: title-slide
 
-# Time &<br>Motion
+# Conditionals,<br>Loops,<br>Functions<br>& Noise
 
-## Week 02 — Animation, the Draw Loop & User Input
+## Week 02 — Building Systems
 
 .kicker[Designing Generative Experiences — SHIFTA 2025-06]
 
 ???
-This session builds directly on Week 1.
-Students should have p5.js accounts and have played with the random circles sketch.
-Open the editor and have the basic sketch from last week ready to evolve.
+This is a dense session — four major concepts. Keep examples tight.
+The goal is not mastery today, but enough fluency to build the assignment.
+Session 2 will solidify everything through a complete live-coded example.
 
 ---
 
 # Today
 
 .col-left[
-**Theory**
-- How draw() actually works
-- Frames, ticks, time
-- The physics of the screen
-- Clearing vs accumulating
+**Logic**
+- Conditionals — `if`, `else if`, `else`
+- Comparison and logical operators
 
-**Motion**
-- Moving things over time
-- Oscillation with `sin()`
-- Easing — smooth following
+**Repetition**
+- `for` loops — counting, grids
+- Nested loops
+
+**Organisation**
+- Functions — why and how
+- Parameters and return values
 ]
 .col-right[
-**User Input**
-- Mouse position: `mouseX`, `mouseY`
-- Mouse events: `mousePressed()`
-- Keyboard: `keyIsDown()`, `keyPressed()`
+**Randomness — Theory**
+- What is randomness, really?
+- Pseudo-random vs true random
+- White noise vs coherent noise
 
-**Exercises**
-- No conditionals, no loops, no randomness
-- Pure motion, pure input
+**Perlin Noise in p5.js**
+- `noise()` — 1D, 2D, 3D
+- `noiseDetail()`
+- Comparing `random()` vs `noise()`
+- Stochastic algorithms
 
-.box.green[Assignment 02 preview: .accent[TIME]]
+.box.green[Assignment 03 preview: .accent[Generative System]]
 ]
 .clearfix[]
 
-???
-The constraint of "no conditionals, loops, functions, or randomness" in the exercises is intentional.
-It forces students to understand the draw loop itself as the source of change, not branching logic.
-
 ---
 
 class: section-slide
 
-# The Draw Loop
+# Conditionals
 
-## What is p5.js really doing?
-
----
-
-# Reviewing setup() and draw()
-
-```javascript
-function setup() {
-  createCanvas(400, 400);   // runs ONCE
-  background(30);           // set the stage
-}
-
-function draw() {
-  // this runs ~60 times per second, forever
-  // every time it runs = one FRAME
-}
-```
-
---
-
-`setup()` → once at the start.
-
-`draw()` → loops endlessly. This is your animation engine.
-
-.box[
-Every time `draw()` runs, it's a new frame. By default: **60 frames per second**.
-That means `draw()` runs **3,600 times per minute**.
-]
-
-???
-Ask: what does it mean to "animate" something? It means changing it slightly between frames.
-Like film: 24 still images per second → perceived as motion.
+## The code makes decisions.
 
 ---
 
-# Frames and Ticks
+class: code-slide
 
-p5.js gives you several built-in time variables:
-
-| Variable / Function | What it gives you |
-|---|---|
-| `frameCount` | How many frames have run since start (0, 1, 2, 3…) |
-| `frameRate()` | Current frames per second (read-only call) |
-| `frameRate(n)` | Set target FPS in `setup()` |
-| `millis()` | Milliseconds since the sketch started |
-
---
+# if / else
 
 ```javascript
-function draw() {
-  console.log("Frame:", frameCount);
-  console.log("FPS:", frameRate());
-  console.log("Time:", millis(), "ms");
+if (condition) {
+  // runs if condition is TRUE
+} else {
+  // runs if condition is FALSE
 }
 ```
-
-.box[
-`millis()` is a real clock — it doesn't depend on frame rate.
-`frameCount` depends on performance. Prefer `millis()` for time-sensitive things.
-]
-
----
-
-# Real-World Time
-
-p5.js can read the actual clock:
-
-```javascript
-second()  // 0 – 59
-minute()  // 0 – 59
-hour()    // 0 – 23
-day()     // 1 – 31
-month()   // 1 – 12
-year()    // e.g. 2025
-```
-
---
-
-These return the **current system time**, right now.
 
 ```javascript
 function draw() {
   background(30);
-  let s = second();
-  let message = "It is now " + hour() + ":" + minute() + ":" + s;
+
+  if (mouseX > width / 2) {
+    fill(255, 80, 50);    // right half → orange
+  } else {
+    fill(80, 200, 255);   // left half → blue
+  }
+
+  noStroke();
+  circle(mouseX, mouseY, 60);
+}
+```
+
+The condition is a question that has a yes (`true`) or no (`false`) answer.
+
+???
+Draw this live. Move the mouse left and right. The visual change is immediate.
+
+---
+
+class: code-slide
+
+# Comparison Operators
+
+```javascript
+x > 100     // x is greater than 100
+x < 100     // x is less than 100
+x >= 100    // x is greater than or equal to 100
+x <= 100    // x is less than or equal to 100
+x === 100   // x is exactly equal to 100
+x !== 100   // x is NOT equal to 100
+```
+
+---
+
+```javascript
+if (mouseX > width / 2 && mouseY > height / 2) {
+  // only bottom-right quadrant
+}
+
+if (mouseX < 100 || mouseX > 300) {
+  // left zone OR right zone (not the middle)
+}
+
+if (!mouseIsPressed) {
+  // when the mouse is NOT pressed
+}
+```
+
+| Operator | Meaning |
+|---|---|
+| `&&` | AND — both must be true |
+| `\|\|` | OR — at least one must be true |
+| `!` | NOT — flips true/false |
+
+---
+
+class: code-slide
+
+# else if — Multiple branches
+
+```javascript
+function draw() {
+  background(30);
+
+  let zone;
+
+  if (mouseX < width / 3) {
+    zone = "LEFT";
+    fill(255, 80, 50);
+  } else if (mouseX < (width / 3) * 2) {
+    zone = "MIDDLE";
+    fill(200, 255, 80);
+  } else {
+    zone = "RIGHT";
+    fill(80, 200, 255);
+  }
+
+  noStroke();
+  circle(mouseX, height / 2, 60);
+
   fill(255);
-  text(message, 20, 200);
+  textSize(14);
+  textAlign(CENTER);
+  text(zone, mouseX, height / 2 + 50);
 }
 ```
-
-.box.green[
-This is the foundation of Assignment 02 — you now have access to real time.
-]
-
-???
-Show this live. It's a simple but powerful moment: the code is connected to the world.
-
----
-
-class: section-slide
-
-# Clearing vs. Accumulating
-
-## One decision, two aesthetics
 
 ---
 
 class: code-slide
 
-# background() in draw(): The Switch
+# Conditionals for Boundaries — Wrapping
 
-```javascript
-function draw() {
-  background(30);  // ← CLEAR every frame
-
-  // anything drawn here appears freshly each frame
-  // → smooth animation, nothing accumulates
-}
-```
-
-vs.
-
-```javascript
-function draw() {
-  // NO background() → everything accumulates
-
-  // each frame adds to the last
-  // → trails, layering, buildup
-  // → the canvas becomes a record of time
-}
-```
-
-.box[
-This single decision defines whether your piece is **animated** (clear) or **generative/accumulative** (no clear).
-Both are valid — it depends on what you want to express.
-]
-
----
-
-class: code-slide
-
-# The Ghost: Semi-transparent background
-
-A third option — slow fade:
-
-```javascript
-function draw() {
-  // Instead of full clear, draw a semi-transparent layer
-  fill(30, 30, 30, 25);   // dark color, alpha = 25
-  noStroke();
-  rect(0, 0, width, height);
-
-  // now draw your shapes...
-}
-```
-
---
-
-Old marks don't instantly disappear — they fade over time.
-
-.box[
-This creates **motion trails**. The alpha value controls the trail length:
-- Low alpha (5–15) → very long trails, slow fade
-- High alpha (80–100) → short trails, fast fade
-- Full background() → no trail at all
-]
-
-???
-This technique is used everywhere in creative coding.
-It gives the feeling of time passing — "the ghost of where you were."
-
----
-
-class: section-slide
-
-# Motion
-
-## Making things move
-
----
-
-class: code-slide
-
-# The Simplest Motion
-
-Change a variable each frame:
+Without conditionals, a moving object leaves the screen and never comes back.
 
 ```javascript
 let x = 0;
 
-function setup() {
-  createCanvas(400, 400);
-}
+function setup() { createCanvas(400, 400); }
 
 function draw() {
   background(30);
-
-  x = x + 2;   // move 2 pixels to the right every frame
-
-  noStroke();
-  fill(255, 80, 50);
-  circle(x, 200, 40);
-}
-```
-
---
-
-At 60fps: moves **120 pixels per second**.
-
-What happens when `x` goes past the canvas? It just keeps going — off screen.
-
-???
-Ask: how would you make it move left? Up? Diagonally?
-How would you make it move faster? Slower?
-
----
-
-class: code-slide
-
-# += Shorthand
-
-`x = x + 2` is equivalent to `x += 2`
-
-```javascript
-let x = 0;
-let y = 0;
-
-function draw() {
-  background(30);
-
-  x += 1.5;    // move right
-  y += 0.8;    // move down (slower)
-
-  noStroke();
-  fill(255, 80, 50);
-  circle(x, y, 40);
-}
-```
-
-Common shorthands:
-
-| Long form | Shorthand |
-|---|---|
-| `x = x + 2` | `x += 2` |
-| `x = x - 1` | `x -= 1` |
-| `x = x * 1.1` | `x *= 1.1` |
-
----
-
-class: code-slide
-
-# Oscillation with sin()
-
-`sin()` returns a value that smoothly cycles between **-1 and +1**.
-
-```javascript
-let angle = 0;
-
-function setup() {
-  createCanvas(400, 400);
-}
-
-function draw() {
-  background(30);
-
-  angle += 0.05;              // increment the angle each frame
-
-  let offset = sin(angle);    // -1 to 1
-  let x = 200 + offset * 150; // map to -150 to +150 around center
-
-  noStroke();
-  fill(255, 80, 50);
-  circle(x, 200, 40);
-}
-```
-
-The circle oscillates back and forth — .accent[forever] — without any conditional logic.
-
----
-
-# sin() — The Oscillator
-
-.box[
-`sin(angle)` → smooth wave, range **–1 to +1**
-
-To use it for position, size, or color:
-```
-value = center + sin(angle) * amplitude
-```
-- `center` = the middle point (e.g. `200` for center of canvas)
-- `amplitude` = how far it swings (e.g. `150`)
-- `angle` grows over time (add a small amount each frame)
-]
-
---
-
-Control the oscillation:
-
-| Parameter | Effect |
-|---|---|
-| `angle += 0.05` | slow oscillation |
-| `angle += 0.2`  | fast oscillation |
-| `amplitude = 10` | small swing |
-| `amplitude = 190` | nearly full canvas width |
-
----
-
-class: code-slide
-
-# Using sin() for Size and Color
-
-```javascript
-let angle = 0;
-
-function setup() {
-  createCanvas(400, 400);
-  colorMode(HSB, 360, 100, 100);
-}
-
-function draw() {
-  background(0, 0, 15);
-
-  angle += 0.03;
-
-  // Size pulses between 20 and 120
-  let diameter = 70 + sin(angle) * 50;
-
-  // Hue slowly shifts
-  let hue = (frameCount * 0.5) % 360;
-
-  noStroke();
-  fill(hue, 80, 90);
-  circle(width / 2, height / 2, diameter);
-}
-```
-
-.box.teal[
-`colorMode(HSB, 360, 100, 100)` — a different color model.
-**H**ue (0–360), **S**aturation (0–100), **B**rightness (0–100).
-Easier to cycle through colors: just increment Hue.
-]
-
----
-
-class: section-slide
-
-# User Input
-
-## The machine listens.
-
----
-
-# Mouse Position
-
-Two built-in variables, available anywhere:
-
-```javascript
-mouseX   // current x position of the mouse
-mouseY   // current y position of the mouse
-
-pmouseX  // previous x position (last frame)
-pmouseY  // previous y position (last frame)
-```
-
---
-
-```javascript
-function draw() {
-  background(30);
-  noStroke();
-  fill(255, 80, 50);
-  circle(mouseX, mouseY, 40);  // circle follows mouse
-}
-```
-
---
-
-`pmouseX` / `pmouseY` let you calculate **mouse speed**:
-
-```javascript
-let speed = dist(mouseX, mouseY, pmouseX, pmouseY);
-// dist() = distance between two points
-// if the mouse moves fast → speed is large
-```
-
----
-
-class: code-slide
-
-# Mouse Events
-
-Functions that p5.js calls automatically when the mouse does something:
-
-```javascript
-function mousePressed() {
-  // called once when a button is clicked
-  background(30);  // e.g. clear the canvas
-}
-
-function mouseReleased() {
-  // called once when the button is released
-}
-
-function mouseDragged() {
-  // called every frame while mouse button is held and mouse moves
-  circle(mouseX, mouseY, 20);  // draw while dragging
-}
-```
-
-.box[
-These are **event functions** — you define them and p5 calls them for you.
-Just like `setup()` and `draw()`, you never call them yourself.
-]
-
----
-
-class: code-slide
-
-# Keyboard Input
-
-```javascript
-// Event: fires once when a key is pressed
-function keyPressed() {
-  if (key === ' ') {
-    background(30);      // space bar → clear canvas
+  x += 2;
+
+  // When x goes past the right edge, reset to the left
+  if (x > width) {
+    x = 0;
   }
-}
-
-// Continuous check inside draw() — is this key held right now?
-function draw() {
-  if (keyIsDown(LEFT_ARROW)) {
-    x -= 3;
-  }
-  if (keyIsDown(RIGHT_ARROW)) {
-    x += 3;
-  }
-}
-```
-
---
-
-Common key constants: `LEFT_ARROW`, `RIGHT_ARROW`, `UP_ARROW`, `DOWN_ARROW`, `ENTER`, `BACKSPACE`
-
-For letter keys, check the `key` variable: `key === 'a'`, `key === 'r'`, etc.
-
-???
-keyIsDown is for held keys (movement). keyPressed is for one-shot actions (clear, toggle).
-
----
-
-class: code-slide
-
-# Easing — Smooth Following
-
-Instead of jumping directly to the mouse, move *towards* it gradually:
-
-```javascript
-let x = 200;
-let y = 200;
-
-function setup() {
-  createCanvas(400, 400);
-}
-
-function draw() {
-  background(30);
-
-  // Move x 10% of the way towards mouseX each frame
-  x = x + (mouseX - x) * 0.1;
-  y = y + (mouseY - y) * 0.1;
-
-  noStroke();
-  fill(255, 80, 50);
-  circle(x, y, 40);
-}
-```
-
-.box.green[
-This is called **linear interpolation (lerp)** — or just "easing."
-p5.js has a built-in: `lerp(start, stop, amount)`
-Same as: `x = x + (mouseX - x) * 0.1`
-]
-
----
-
-class: section-slide
-
-# Exercises
-
-## No conditions. No loops. No functions. No randomness.
-
----
-
-class: code-slide
-
-# Exercise 1 — Moving Shape
-
-Make something move across the canvas.
-When it exits one side, .accent[don't worry about it coming back yet].
-
-```javascript
-// Starter code — modify and extend this
-let x = 0;
-
-function setup() {
-  createCanvas(400, 400);
-}
-
-function draw() {
-  background(30);
-
-  x += 2;   // try changing the speed
-
-  noStroke();
-  fill(255, 80, 50);
-  circle(x, height / 2, 60);
-}
-```
-
-**Explore:**
-- Can you make it move diagonally?
-- What if the size also changes using `frameCount`?
-- What if the color shifts using `frameCount`?
-
----
-
-class: code-slide
-
-# Exercise 2 — Oscillating Composition
-
-Use `sin()` to create a composition that breathes or pulses.
-No interaction needed yet — just a living, autonomous shape.
-
-```javascript
-let angle = 0;
-
-function setup() {
-  createCanvas(400, 400);
-  colorMode(HSB, 360, 100, 100);
-}
-
-function draw() {
-  background(0, 0, 12);
-  angle += 0.02;
-
-  // Use sin() to control anything: x, y, size, hue...
-  let size  = 80  + sin(angle) * 60;
-  let hue   = (frameCount * 0.3) % 360;
-  let x     = width / 2 + sin(angle * 1.3) * 100;
-  let y     = height / 2 + sin(angle * 0.7) * 80;
-
-  noStroke();
-  fill(hue, 70, 90);
-  circle(x, y, size);
-}
-```
-
----
-
-class: code-slide
-
-# Exercise 3 — A Simple Clock
-
-Use `second()`, `minute()`, `hour()` to make something time-based.
-It doesn't have to look like a clock.
-
-```javascript
-function setup() {
-  createCanvas(400, 400);
-}
-
-function draw() {
-  background(30);
-
-  let s = second();   // 0 – 59
-  let m = minute();   // 0 – 59
-  let h = hour();     // 0 – 23
-
-  // Map seconds to a position, size, or color...
-  // map(value, fromLow, fromHigh, toLow, toHigh)
-  let x = map(s, 0, 59, 20, width - 20);
 
   noStroke();
   fill(255, 80, 50);
   circle(x, height / 2, 40);
+}
+```
 
-  // Minute changes the y position
-  let y = map(m, 0, 59, 20, height - 20);
-  fill(80, 200, 255);
-  circle(width / 2, y, 30);
+.box[
+This is **wrapping** — the object reappears on the other side.
+With `x = -40` instead of `0`, it enters smoothly from off-screen.
+]
+
+---
+
+class: section-slide
+
+# Loops
+
+## Do it again. And again. And again.
+
+---
+
+class: code-slide
+
+# The for Loop
+
+```javascript
+// for (start; condition to keep going; step)
+for (let i = 0; i < 10; i++) {
+  // this block runs 10 times
+  // i = 0, 1, 2, 3 ... 9
+  console.log(i);
+}
+```
+
+Breaking it down:
+
+| Part | What it does |
+|---|---|
+| `let i = 0` | create a counter, start at 0 |
+| `i < 10` | keep looping while this is true |
+| `i++` | add 1 to the counter after each loop |
+| `{ ... }` | the code that runs each time |
+
+---
+
+class: code-slide
+
+# Drawing a Row of Shapes
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(30);
+  noStroke();
+  fill(255, 80, 50);
+
+  let count = 8;
+  let spacing = width / count;
+
+  for (let i = 0; i < count; i++) {
+    let x = spacing * i + spacing / 2;
+    circle(x, height / 2, 30);
+  }
+}
+```
+
+Change `count = 8` to `count = 40` — the loop adapts instantly.
+
+.box.green[
+The loop variable `i` is available inside the loop body.
+Use it to calculate position, color, size — anything that should differ per step.
+]
+
+---
+
+class: code-slide
+
+# Nested Loops — Grids
+
+A loop inside a loop → every combination of row and column:
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+  background(30);
+  noLoop();
+}
+
+function draw() {
+  let cols = 10;
+  let rows = 10;
+  let cellW = width / cols;
+  let cellH = height / rows;
+
+  noStroke();
+
+  for (let col = 0; col < cols; col++) {
+    for (let row = 0; row < rows; row++) {
+      let x = col * cellW + cellW / 2;
+      let y = row * cellH + cellH / 2;
+
+      fill(col * 25, row * 25, 150);
+      circle(x, y, cellW * 0.7);
+    }
+  }
+}
+```
+
+???
+This generates 100 circles in 5 lines of logic. The power of loops.
+
+---
+
+# Loop Thinking
+
+When you see a pattern with repetition, think:
+**"What changes? What stays the same?"**
+
+.col-left[
+**What changes per step?**
+- Position (most common)
+- Color (hue, brightness)
+- Size
+- Rotation
+- Opacity
+
+→ These become expressions using `i`
+]
+.col-right[
+**What stays the same?**
+- Shape type
+- Stroke weight
+- Overall composition
+
+→ These go outside the loop
+]
+.clearfix[]
+
+--
+
+.box[
+The loop variable `i` goes from `0` to `count-1`.
+Use `map(i, 0, count-1, startValue, endValue)` to translate it to any range.
+]
+
+---
+
+class: section-slide
+
+# Functions
+
+## Name a block of code. Reuse it.
+
+---
+
+# Why Write Functions?
+
+Three reasons:
+
+**1. Don't Repeat Yourself (DRY)**
+If you write the same 5 lines 10 times, that's 50 lines. A function = write it once, call it 10 times.
+
+**2. Clarity**
+`drawFlower(x, y, size)` is easier to understand than 20 lines of math.
+
+**3. Thinking in pieces**
+Break a complex sketch into named actions. Design the structure before the details.
+
+--
+
+> *"Programs must be written for people to read, and only incidentally for machines to execute."*
+> — Harold Abelson, *Structure and Interpretation of Computer Programs*
+
+---
+
+class: code-slide
+
+# Defining and Calling a Function
+
+```javascript
+// DEFINE the function (the recipe)
+function drawTarget(x, y, size) {
+  noFill();
+  stroke(255, 80, 50);
+  strokeWeight(2);
+  circle(x, y, size);
+  circle(x, y, size * 0.6);
+  circle(x, y, size * 0.25);
+}
+
+// CALL the function (use the recipe)
+function draw() {
+  background(30);
+  drawTarget(100, 200, 80);
+  drawTarget(300, 200, 120);
+  drawTarget(200, 350, 50);
+}
+```
+
+.box[
+`x`, `y`, `size` are **parameters** — they let you use the function with different values each time.
+]
+
+---
+
+class: code-slide
+
+# Functions with return
+
+A function can compute a value and give it back:
+
+```javascript
+// This function calculates a color based on position
+function positionToHue(x) {
+  return map(x, 0, width, 0, 360);
+}
+
+function draw() {
+  colorMode(HSB, 360, 100, 100);
+  background(0, 0, 10);
+
+  for (let x = 0; x < width; x += 20) {
+    let hue = positionToHue(x);
+    fill(hue, 80, 90);
+    noStroke();
+    circle(x, height / 2, 15);
+  }
+}
+```
+
+.box[
+`return` sends a value back to wherever the function was called.
+The calling code can store it in a variable: `let hue = positionToHue(x);`
+]
+
+---
+
+class: section-slide
+
+# Randomness
+
+## What does "random" really mean?
+
+---
+
+# Two Kinds of Random
+
+.col-left[
+## White Noise
+Every value is completely independent. No relationship between one value and the next.
+
+```javascript
+random(0, 100)
+// → 72, 14, 89, 3, 55, 41...
+// No pattern. No memory.
+```
+
+Visual result: static, gravel, TV noise.
+
+.small[Good for: punctual variation, picking one thing from many, rolling a die]
+]
+.col-right[
+## Coherent Noise (Perlin)
+Each value is related to its neighbours. The sequence flows smoothly.
+
+```javascript
+noise(t)   // t increases slowly
+// → 0.51, 0.53, 0.56, 0.58, 0.55...
+// Gradual change. Organic feeling.
+```
+
+Visual result: clouds, terrain, wood grain.
+
+.small[Good for: organic motion, textures, natural-looking variation]
+]
+.clearfix[]
+
+---
+
+# Noise Theory — A Bit Deeper
+
+**Perlin Noise** was invented by Ken Perlin in 1983 for the film *Tron*.
+He needed a way to make computer graphics look *natural* — not the jagged randomness of `random()`.
+
+.box[
+The key insight: **nature doesn't jump**. A mountain doesn't go from 0m to 3000m in one step. A cloud doesn't have sharp edges. Wind speed changes gradually.
+
+Perlin noise models this — neighbouring values are always *similar*, but the overall field is *unpredictable*.
+]
+
+--
+
+**Dimensions of noise:**
+- **1D noise:** a smooth curve in time. `noise(t)` — use for movement, size, color
+- **2D noise:** a smooth texture over a surface. `noise(x, y)` — use for terrain, flow fields, distortion
+- **3D noise:** a smooth texture that also evolves over time. `noise(x, y, t)`
+
+---
+
+# Comparing random() and noise()
+
+.col-left[
+**`random()` — white noise**
+
+```
+█░░▓██▒░█░▒▓█▒░▓█
+```
+
+Independent values. No structure. Entropy.
+
+]
+.col-right[
+**`noise()` — Perlin noise**
+
+```
+▒▒▓▓██▓▓▒▒░░▒▒▓▓
+```
+
+Smooth transitions. Structure without order. Organic.
+]
+.clearfix[]
+
+--
+
+.box[
+**Rule of thumb:**
+- Use `random()` when you want a *single unrelated value* (pick a color, roll a die, place a dot)
+- Use `noise()` when you want a *field of related values* (terrain, flowing movement, organic texture)
+]
+
+---
+
+class: code-slide
+
+# noise() in p5.js — 1D
+
+`noise(t)` always returns a value between **0 and 1**.
+
+```javascript
+let t = 0;
+
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(30);
+
+  t += 0.01;   // small step → smooth; large step → jumpy
+
+  let n = noise(t);            // 0 to 1
+  let x = n * width;           // map to canvas width
+  let size = n * 100 + 10;     // map to size range
+
+  noStroke();
+  fill(255, 80, 50);
+  circle(x, height / 2, size);
+}
+```
+
+.box[
+The noise value is not random each frame — it's a specific value at position `t` in an infinite noise landscape.
+Incrementing `t` slowly walks through that landscape smoothly.
+]
+
+---
+
+class: code-slide
+
+# noise() — 2D: Textures
+
+Give `noise()` an x and y position to sample a 2D noise field:
+
+```javascript
+function setup() {
+  createCanvas(400, 400);
+  noLoop();
+}
+
+function draw() {
+  let scale = 0.008;  // zoom level: smaller = smoother; larger = finer
+
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      let n = noise(x * scale, y * scale); // 0 to 1
+      let brightness = n * 255;
+      stroke(brightness);
+      point(x, y);
+    }
+  }
+}
+```
+
+.box[
+This looks like clouds or marble. Try changing `scale` — it's like zooming in or out of the noise landscape.
+]
+
+.small[Note: pixel-by-pixel loops are slow. This is for illustration — use images or shaders for production.]
+
+---
+
+class: code-slide
+
+# noise() — 3D: Animated Texture
+
+Add a third value that changes over time → the texture animates:
+
+```javascript
+let t = 0;
+
+function setup() {
+  createCanvas(400, 400);
+  background(20);
+}
+
+function draw() {
+  t += 0.005;
+  let scale = 0.01;
+
+  for (let x = 0; x < width; x += 4) {
+    for (let y = 0; y < height; y += 4) {
+      let n = noise(x * scale, y * scale, t);
+      fill(n * 255, n * 150, n * 60, 30);
+      noStroke();
+      rect(x, y, 4, 4);
+    }
+  }
 }
 ```
 
@@ -845,65 +980,72 @@ function draw() {
 
 class: code-slide
 
-# Exercise 4 — Mouse Drawing Tool
+# noiseDetail() — Octaves
 
-Make a simple drawing tool. Mouse draws. Space bar clears.
+`noiseDetail(octaves, falloff)` controls noise complexity:
 
 ```javascript
-function setup() {
-  createCanvas(400, 400);
-  background(30);
-}
-
-function draw() {
-  // No background() → marks accumulate
-
-  // Calculate mouse speed
-  let speed = dist(mouseX, mouseY, pmouseX, pmouseY);
-
-  if (mouseIsPressed) {
-    noStroke();
-    // Size grows with mouse speed
-    let dotSize = speed * 1.5 + 4;
-    fill(255, 80, 50, 180);
-    circle(mouseX, mouseY, dotSize);
-  }
-}
-
-function keyPressed() {
-  if (key === ' ') {
-    background(30);
-  }
-}
+// Default: 4 octaves, 0.5 falloff
+noiseDetail(8, 0.5);   // more detail, rougher
+noiseDetail(1, 0.5);   // one octave, smoother
 ```
+
+.box[
+**Octaves** = layers of noise at different scales added together.
+More octaves = more detail (like adding fine texture on top of coarse).
+
+**Falloff** = how much each octave contributes.
+Lower = coarser octaves dominate; higher = finer detail is more prominent.
+]
+
+---
+
+# Stochastic Systems
+
+A **stochastic system** is one where randomness plays a role at every step — yet produces recognisable, structured output.
+
+Examples:
+- **AARON** (Harold Cohen, 1973–) — a program that makes paintings. Its rules govern composition; `random()` handles details. No two paintings are alike, but all are clearly "AARON paintings."
+- **L-Systems** — plant growth described as rules + random branching angles
+- **Noise flows** — particles that follow a vector field driven by Perlin noise (Refik Anadol, Casey Reas)
+
+.box[
+The key insight: **randomness is a parameter, not a replacement for design**.
+You design the *space* of possible outputs. Random picks *which* output appears.
+]
+
+???
+Ask students: can a machine be creative? What role does authorship play when you set the rules but don't control the output?
 
 ---
 
 # What We Covered Today
 
 .col-left[
-**The Draw Loop**
-- `frameCount`, `frameRate()`, `millis()`
-- Real-world time: `second()`, `minute()`, `hour()`
-- Clearing vs. accumulating
-- Semi-transparent fade trick
+**Logic**
+- `if`, `else if`, `else`
+- Comparison operators
+- `&&`, `||`, `!`
+- Wrapping with boundaries
 
-**Motion**
-- Moving with `+=`
-- Oscillating with `sin()`
-- HSB color mode
+**Repetition**
+- `for` loops — structure
+- Nested loops — grids
+- Loop variable `i` as a design tool
 ]
 .col-right[
-**User Input**
-- `mouseX`, `mouseY`, `pmouseX`, `pmouseY`
-- `mouseIsPressed`, `mousePressed()`
-- `keyIsDown()`, `keyPressed()`, `key`
-- Easing / `lerp()`
+**Functions**
+- Defining and calling
+- Parameters
+- `return` values
 
-**Built-in functions used**
-- `map(v, low1, high1, low2, high2)`
-- `dist(x1, y1, x2, y2)`
-- `lerp(start, stop, t)`
+**Randomness**
+- White noise vs Perlin noise
+- `noise(t)` — 1D smooth motion
+- `noise(x, y)` — 2D texture
+- `noise(x, y, t)` — animated texture
+- `noiseDetail()` — octaves
+- Stochastic systems
 ]
 .clearfix[]
 
@@ -912,15 +1054,15 @@ function keyPressed() {
 # For Next Session
 
 .box.green[
-**Session 2** — We'll code one complete example of Assignment 02 together.
-The theme is .accent[TIME]. How do you express time visually?
+**Session 2** — We'll build one complete Assignment 03 example together:
+a generative system that uses loops, functions, conditionals, and noise.
 ]
 
 .box[
 **Before Session 2:**
-- Try making your own "time sketch" using any of today's techniques
-- Think: what does time *feel* like? How can motion express it?
-- Look at: [Maeda's 12 o'clocks](https://maedastudio.com), [Moment](http://moment.indigofish.co.uk/), [xkcd: Time](https://xkcd.com/1190/)
+- Make a sketch that draws a grid of something using nested loops
+- Try replacing `random()` in your Week 1/2 work with `noise()`
+- Look up **Refik Anadol** — his large-scale noise visualisations are a direct application of everything we covered today
 ]
 
 ---
@@ -929,9 +1071,9 @@ class: title-slide
 
 # Assignment 02
 
-## Time Piece
+## Generative System
 
-.kicker[Open-ended — at least one user input — animation required]
+.kicker[Loops + functions + randomness — build something with rules]
 
 ---
 
@@ -941,20 +1083,20 @@ class: title-slide
 
 ## Questions?
 
-.kicker[editor.p5js.org — keep experimenting]
+.kicker[editor.p5js.org — break things with loops]
 
 </textarea>
 
-<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
-<script>
-  var slideshow = remark.create({
-    ratio: '16:9',
-    navigation: { scroll: false, touch: true, click: false },
-    slideNumberFormat: '%current% / %total%',
-    highlightStyle: 'atom-one-dark',
-    highlightLines: true,
-    countIncrementalSlides: false
-  });
-</script>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script>
+        var slideshow = remark.create({
+            ratio: '16:9',
+            navigation: { scroll: false, touch: true, click: false },
+            slideNumberFormat: '%current% / %total%',
+            highlightStyle: 'atom-one-dark',
+            highlightLines: true,
+            countIncrementalSlides: false
+        });
+    </script>
 </body>
 </html>
