@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>GenXP — Week 03 / Session 1 — Conditionals, Loops, Functions & Randomness</title>
+    <title>GenXP: Week 03 / Session 1: Conditionals, Loops, Functions & Randomness</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -361,18 +361,18 @@
     </style>
 </head>
 <body>
-<textarea id="source">
+    <textarea id="source">
 
 class: title-slide
 
 # Conditionals,<br>Loops,<br>Functions<br>& Noise
 
-## Week 02 — Building Systems
+## Week 02: Building Systems
 
-.kicker[Designing Generative Experiences — SHIFTA 2026-04]
+.kicker[Designing Generative Experiences: SHIFTA 2026-04]
 
 ???
-This is a dense session — four major concepts. Keep examples tight.
+This is a dense session: four major concepts. Keep examples tight.
 The goal is not mastery today, but enough fluency to build the assignment.
 Session 2 will solidify everything through a complete live-coded example.
 
@@ -382,25 +382,25 @@ Session 2 will solidify everything through a complete live-coded example.
 
 .col-left[
 **Logic**
-- Conditionals — `if`, `else if`, `else`
+- Conditionals: `if`, `else if`, `else`
 - Comparison and logical operators
 
 **Repetition**
-- `for` loops — counting, grids
+- `for` loops: counting, grids
 - Nested loops
 
 **Organisation**
-- Functions — why and how
+- Functions: why and how
 - Parameters and return values
 ]
 .col-right[
-**Randomness — Theory**
+**Randomness: Theory**
 - What is randomness, really?
 - Pseudo-random vs true random
 - White noise vs coherent noise
 
 **Perlin Noise in p5.js**
-- `noise()` — 1D, 2D, 3D
+- `noise()`: 1D, 2D, 3D
 - `noiseDetail()`
 - Comparing `random()` vs `noise()`
 - Stochastic algorithms
@@ -482,17 +482,30 @@ if (!mouseIsPressed) {
 }
 ```
 
-| Operator | Meaning |
-|---|---|
-| `&&` | AND — both must be true |
-| `\|\|` | OR — at least one must be true |
-| `!` | NOT — flips true/false |
+<table style="text-align: left; border-collapse: collapse; min-width: 60%;">
+    <tr>
+        <th style="padding: 0.5em 1em 0.5em 0; border-bottom: 1px solid #333;">Operator</th>
+        <th style="padding: 0.5em 1em 0.5em 0; border-bottom: 1px solid #333;">Meaning</th>
+    </tr>
+    <tr>
+        <td style="padding: 0.5em 1em 0.5em 0;"><span class="remark-inline-code">&amp;&amp;</span></td>
+        <td style="padding: 0.5em 1em 0.5em 0;">AND: both must be true</td>
+    </tr>
+    <tr>
+        <td style="padding: 0.5em 1em 0.5em 0;"><span class="remark-inline-code">||</span></td>
+        <td style="padding: 0.5em 1em 0.5em 0;">OR: at least one must be true</td>
+    </tr>
+    <tr>
+        <td style="padding: 0.5em 1em 0.5em 0;"><span class="remark-inline-code">!</span></td>
+        <td style="padding: 0.5em 1em 0.5em 0;">NOT: flips true/false</td>
+    </tr>
+</table>
 
 ---
 
 class: code-slide
 
-# else if — Multiple branches
+# else if: Multiple branches
 
 ```javascript
 function draw() {
@@ -525,7 +538,7 @@ function draw() {
 
 class: code-slide
 
-# Conditionals for Boundaries — Wrapping
+# Conditionals for Boundaries: Wrapping
 
 Without conditionals, a moving object leaves the screen and never comes back.
 
@@ -550,7 +563,7 @@ function draw() {
 ```
 
 .box[
-This is **wrapping** — the object reappears on the other side.
+This is **wrapping**: the object reappears on the other side.
 With `x = -40` instead of `0`, it enters smoothly from off-screen.
 ]
 
@@ -612,18 +625,18 @@ function draw() {
 }
 ```
 
-Change `count = 8` to `count = 40` — the loop adapts instantly.
+Change `count = 8` to `count = 40`: the loop adapts instantly.
 
 .box.green[
 The loop variable `i` is available inside the loop body.
-Use it to calculate position, color, size — anything that should differ per step.
+Use it to calculate position, color, size: anything that should differ per step.
 ]
 
 ---
 
 class: code-slide
 
-# Nested Loops — Grids
+# Nested Loops: Grids
 
 A loop inside a loop → every combination of row and column:
 
@@ -717,7 +730,7 @@ Break a complex sketch into named actions. Design the structure before the detai
 --
 
 > *"Programs must be written for people to read, and only incidentally for machines to execute."*
-> — Harold Abelson, *Structure and Interpretation of Computer Programs*
+>: Harold Abelson, *Structure and Interpretation of Computer Programs*
 
 ---
 
@@ -746,7 +759,7 @@ function draw() {
 ```
 
 .box[
-`x`, `y`, `size` are **parameters** — they let you use the function with different values each time.
+`x`, `y`, `size` are **parameters**: they let you use the function with different values each time.
 ]
 
 ---
@@ -825,22 +838,22 @@ Visual result: clouds, terrain, wood grain.
 
 ---
 
-# Noise Theory — A Bit Deeper
+# Noise Theory: A Bit Deeper
 
 **Perlin Noise** was invented by Ken Perlin in 1983 for the film *Tron*.
-He needed a way to make computer graphics look *natural* — not the jagged randomness of `random()`.
+He needed a way to make computer graphics look *natural*: not the jagged randomness of `random()`.
 
 .box[
 The key insight: **nature doesn't jump**. A mountain doesn't go from 0m to 3000m in one step. A cloud doesn't have sharp edges. Wind speed changes gradually.
 
-Perlin noise models this — neighbouring values are always *similar*, but the overall field is *unpredictable*.
+Perlin noise models this: neighbouring values are always *similar*, but the overall field is *unpredictable*.
 ]
 
 --
 
 **Dimensions of noise:**
-- **1D noise:** a smooth curve in time. `noise(t)` — use for movement, size, color
-- **2D noise:** a smooth texture over a surface. `noise(x, y)` — use for terrain, flow fields, distortion
+- **1D noise:** a smooth curve in time. `noise(t)`: use for movement, size, color
+- **2D noise:** a smooth texture over a surface. `noise(x, y)`: use for terrain, flow fields, distortion
 - **3D noise:** a smooth texture that also evolves over time. `noise(x, y, t)`
 
 ---
@@ -848,7 +861,7 @@ Perlin noise models this — neighbouring values are always *similar*, but the o
 # Comparing random() and noise()
 
 .col-left[
-**`random()` — white noise**
+**`random()`: white noise**
 
 ```
 █░░▓██▒░█░▒▓█▒░▓█
@@ -858,7 +871,7 @@ Independent values. No structure. Entropy.
 
 ]
 .col-right[
-**`noise()` — Perlin noise**
+**`noise()`: Perlin noise**
 
 ```
 ▒▒▓▓██▓▓▒▒░░▒▒▓▓
@@ -880,7 +893,7 @@ Smooth transitions. Structure without order. Organic.
 
 class: code-slide
 
-# noise() in p5.js — 1D
+# noise() in p5.js: 1D
 
 `noise(t)` always returns a value between **0 and 1**.
 
@@ -907,7 +920,7 @@ function draw() {
 ```
 
 .box[
-The noise value is not random each frame — it's a specific value at position `t` in an infinite noise landscape.
+The noise value is not random each frame: it's a specific value at position `t` in an infinite noise landscape.
 Incrementing `t` slowly walks through that landscape smoothly.
 ]
 
@@ -915,7 +928,7 @@ Incrementing `t` slowly walks through that landscape smoothly.
 
 class: code-slide
 
-# noise() — 2D: Textures
+# noise(): 2D: Textures
 
 Give `noise()` an x and y position to sample a 2D noise field:
 
@@ -940,16 +953,16 @@ function draw() {
 ```
 
 .box[
-This looks like clouds or marble. Try changing `scale` — it's like zooming in or out of the noise landscape.
+This looks like clouds or marble. Try changing `scale`: it's like zooming in or out of the noise landscape.
 ]
 
-.small[Note: pixel-by-pixel loops are slow. This is for illustration — use images or shaders for production.]
+.small[Note: pixel-by-pixel loops are slow. This is for illustration: use images or shaders for production.]
 
 ---
 
 class: code-slide
 
-# noise() — 3D: Animated Texture
+# noise(): 3D: Animated Texture
 
 Add a third value that changes over time → the texture animates:
 
@@ -980,7 +993,7 @@ function draw() {
 
 class: code-slide
 
-# noiseDetail() — Octaves
+# noiseDetail(): Octaves
 
 `noiseDetail(octaves, falloff)` controls noise complexity:
 
@@ -1002,12 +1015,12 @@ Lower = coarser octaves dominate; higher = finer detail is more prominent.
 
 # Stochastic Systems
 
-A **stochastic system** is one where randomness plays a role at every step — yet produces recognisable, structured output.
+A **stochastic system** is one where randomness plays a role at every step: yet produces recognisable, structured output.
 
 Examples:
-- **AARON** (Harold Cohen, 1973–) — a program that makes paintings. Its rules govern composition; `random()` handles details. No two paintings are alike, but all are clearly "AARON paintings."
-- **L-Systems** — plant growth described as rules + random branching angles
-- **Noise flows** — particles that follow a vector field driven by Perlin noise (Refik Anadol, Casey Reas)
+- **AARON** (Harold Cohen, 1973–): a program that makes paintings. Its rules govern composition; `random()` handles details. No two paintings are alike, but all are clearly "AARON paintings."
+- **L-Systems**: plant growth described as rules + random branching angles
+- **Noise flows**: particles that follow a vector field driven by Perlin noise (Refik Anadol, Casey Reas)
 
 .box[
 The key insight: **randomness is a parameter, not a replacement for design**.
@@ -1029,8 +1042,8 @@ Ask students: can a machine be creative? What role does authorship play when you
 - Wrapping with boundaries
 
 **Repetition**
-- `for` loops — structure
-- Nested loops — grids
+- `for` loops: structure
+- Nested loops: grids
 - Loop variable `i` as a design tool
 ]
 .col-right[
@@ -1041,10 +1054,10 @@ Ask students: can a machine be creative? What role does authorship play when you
 
 **Randomness**
 - White noise vs Perlin noise
-- `noise(t)` — 1D smooth motion
-- `noise(x, y)` — 2D texture
-- `noise(x, y, t)` — animated texture
-- `noiseDetail()` — octaves
+- `noise(t)`: 1D smooth motion
+- `noise(x, y)`: 2D texture
+- `noise(x, y, t)`: animated texture
+- `noiseDetail()`: octaves
 - Stochastic systems
 ]
 .clearfix[]
@@ -1054,7 +1067,7 @@ Ask students: can a machine be creative? What role does authorship play when you
 # For Next Session
 
 .box.green[
-**Session 2** — We'll build one complete Assignment 03 example together:
+**Session 2**: We'll build one complete Assignment 02 example together:
 a generative system that uses loops, functions, conditionals, and noise.
 ]
 
@@ -1062,7 +1075,7 @@ a generative system that uses loops, functions, conditionals, and noise.
 **Before Session 2:**
 - Make a sketch that draws a grid of something using nested loops
 - Try replacing `random()` in your Week 1/2 work with `noise()`
-- Look up **Refik Anadol** — his large-scale noise visualisations are a direct application of everything we covered today
+- Look up **Refik Anadol**: his large-scale noise visualisations are a direct application of everything we covered today
 ]
 
 ---
@@ -1073,7 +1086,7 @@ class: title-slide
 
 ## Generative System
 
-.kicker[Loops + functions + randomness — build something with rules]
+.kicker[Loops + functions + randomness: build something with rules]
 
 ---
 
@@ -1083,7 +1096,7 @@ class: title-slide
 
 ## Questions?
 
-.kicker[editor.p5js.org — break things with loops]
+.kicker[editor.p5js.org: break things with loops]
 
 </textarea>
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>GenXP — Week 04 / Session 1 — Arrays, Objects, Classes & Data</title>
+  <title>GenXP: Week 04 / Session 1: Arrays, Objects, Classes & Data</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
@@ -85,12 +85,12 @@ class: title-slide
 
 # Arrays,<br>Objects,<br>Classes<br>& Data
 
-## Week 04 — Structures, Collections & the World Outside
+## Week 04: Structures, Collections & the World Outside
 
-.kicker[Designing Generative Experiences — SHIFTA 2026-04]
+.kicker[Designing Generative Experiences: SHIFTA 2026-04]
 
 ???
-This is a pivotal session — students learn to think in collections.
+This is a pivotal session: students learn to think in collections.
 Everything up to now was one-of-a-kind. Today they learn to manage many things at once.
 The shift from "one particle" to "an array of 500 particles" is transformative.
 
@@ -100,17 +100,17 @@ The shift from "one particle" to "an array of 500 particles" is transformative.
 
 .col-left[
 **Data Structures**
-- Arrays — ordered collections
-- Objects — named properties
-- Arrays of objects — the big pattern
-- Classes — blueprints for objects
+- Arrays: ordered collections
+- Objects: named properties
+- Arrays of objects: the big pattern
+- Classes: blueprints for objects
 
 **Loading the Outside World**
-- `preload()` — the loading phase
+- `preload()`: the loading phase
 - `.csv` files with `loadTable()`
 - `.json` files with `loadJSON()`
 - Images with `loadImage()`
-- Sound with `loadSound()` .dim[(preview — Week 6)]
+- Sound with `loadSound()` .dim[(preview: Week 6)]
 ]
 .col-right[
 **Fun Examples**
@@ -150,7 +150,7 @@ let positions = [50, 120, 200, 280, 350]; // one line
 --
 
 .box[
-An array is an **ordered list** — items in a specific sequence, accessed by number (index).
+An array is an **ordered list**: items in a specific sequence, accessed by number (index).
 Index starts at **0**, not 1.
 ]
 
@@ -187,7 +187,7 @@ class: code-slide
 
 # Looping Over an Array
 
-Two ways — both valid:
+Two ways: both valid:
 
 ```javascript
 let sizes = [20, 45, 10, 80, 35, 60];
@@ -225,7 +225,7 @@ circle(330, 200, 30);
 ```
 
 ```javascript
-// With array + loop: draw 500 circles — same effort
+// With array + loop: draw 500 circles: same effort
 let positions = [];
 
 function setup() {
@@ -258,14 +258,14 @@ class: section-slide
 An object groups related values under one name.
 
 ```javascript
-// Five separate variables — hard to manage
+// Five separate variables: hard to manage
 let px = 200;
 let py = 300;
 let pr = 20;
 let pvx = 1.5;
 let pvy = -0.8;
 
-// One object — easy to pass around, store, loop over
+// One object: easy to pass around, store, loop over
 let particle = {
   x:  200,
   y:  300,
@@ -289,7 +289,7 @@ circle(particle.x, particle.y, particle.r);
 
 class: code-slide
 
-# Arrays of Objects — The Key Pattern
+# Arrays of Objects: The Key Pattern
 
 This is the most important pattern in creative coding:
 
@@ -337,13 +337,13 @@ class: section-slide
 
 An **object literal** (`{ x: 100, y: 200 }`) is one specific thing.
 
-A **class** is a *blueprint* — a recipe you can use to create as many objects as you like, all with the same structure but different values.
+A **class** is a *blueprint*: a recipe you can use to create as many objects as you like, all with the same structure but different values.
 
 ```javascript
-// Object literal — one specific particle
+// Object literal: one specific particle
 let p = { x: 100, y: 200, vx: 1.5, vy: -0.8 };
 
-// Class — a recipe for making any number of particles
+// Class: a recipe for making any number of particles
 class Particle {
   constructor(x, y) {
     this.x  = x;
@@ -422,7 +422,7 @@ function draw() {
 
 .box.green[
 Classes make it trivially easy to go from 200 to 2000 particles.
-They also keep the code organised — `p.update()` and `p.draw()` are self-contained.
+They also keep the code organised: `p.update()` and `p.draw()` are self-contained.
 ]
 
 ???
@@ -431,7 +431,7 @@ Just add one line to update(): this.col = color(frameCount * 0.5 % 255, 80, 50);
 
 ---
 
-# Fun Example — Snow
+# Fun Example: Snow
 
 A Snowflake class demonstrates that classes aren't just for technical demos:
 
@@ -469,7 +469,7 @@ class: section-slide
 
 ---
 
-# preload() — Loading Assets
+# preload(): Loading Assets
 
 p5.js has a special function that runs **before** `setup()`:
 
@@ -491,14 +491,14 @@ function setup() {
 
 .box[
 **Never load files inside `setup()` or `draw()`.**
-Use `preload()` — it pauses the sketch until all assets are ready.
+Use `preload()`: it pauses the sketch until all assets are ready.
 ]
 
 ---
 
 class: code-slide
 
-# Loading CSV — loadTable()
+# Loading CSV: loadTable()
 
 A `.csv` file is a spreadsheet saved as plain text:
 
@@ -562,16 +562,16 @@ function setup() {
 ```
 
 .box.green[
-Now `planets` is a regular array of objects — use it exactly like the particle systems from earlier.
+Now `planets` is a regular array of objects: use it exactly like the particle systems from earlier.
 ]
 
 ---
 
 class: code-slide
 
-# Loading JSON — loadJSON()
+# Loading JSON: loadJSON()
 
-JSON is more flexible than CSV — it handles nested structures:
+JSON is more flexible than CSV: it handles nested structures:
 
 ```json
 {
@@ -606,7 +606,7 @@ function setup() {
 
 class: code-slide
 
-# Loading Images — loadImage() + pixels
+# Loading Images: loadImage() + pixels
 
 ```javascript
 let img;
@@ -636,7 +636,7 @@ function draw() {
 }
 ```
 
-.small[`img.get(x, y)` returns the color at that pixel — use it as a fill or stroke.]
+.small[`img.get(x, y)` returns the color at that pixel: use it as a fill or stroke.]
 
 ---
 
@@ -658,10 +658,10 @@ Ask yourself:
 --
 
 > *"The purpose of visualization is insight, not pictures."*
-> — Ben Schneiderman
+>: Ben Schneiderman
 
-> *"Data is the new oil — and like oil, it needs to be refined before it's useful."*
-> — Clive Humby
+> *"Data is the new oil: and like oil, it needs to be refined before it's useful."*
+>: Clive Humby
 
 ---
 
@@ -687,10 +687,10 @@ Ask yourself:
 - `new` in a loop = many instances
 
 **Loading Data**
-- `preload()` — always for assets
-- `loadTable()` — CSV
-- `loadJSON()` — JSON
-- `loadImage()` — images
+- `preload()`: always for assets
+- `loadTable()`: CSV
+- `loadJSON()`: JSON
+- `loadImage()`: images
 ]
 .clearfix[]
 
@@ -699,7 +699,7 @@ Ask yourself:
 # For Next Session
 
 .box.green[
-**Session 2** — We'll build a complete "Drawing with Data" example together.
+**Session 2**: We'll build a complete "Drawing with Data" example together.
 Loading CSV data → creating objects → making a generative visualization.
 ]
 
@@ -707,8 +707,8 @@ Loading CSV data → creating objects → making a generative visualization.
 **Before Session 2:**
 - Think about a dataset that interests you. It can be tiny (8 rows) or large.
 - Try creating a plain-text `.csv` file in the p5.js editor (File → New File)
-- Look at: [Dear Data](https://www.dear-data.com) — handmade data visualisations by Giorgia Lupi and Stefanie Posavec
-- Look at: [The Pudding](https://pudding.cool) — visual essays built on data
+- Look at: [Dear Data](https://www.dear-data.com): handmade data visualisations by Giorgia Lupi and Stefanie Posavec
+- Look at: [The Pudding](https://pudding.cool): visual essays built on data
 ]
 
 ---
@@ -729,7 +729,7 @@ class: title-slide
 
 ## Questions?
 
-.kicker[editor.p5js.org — try creating a .csv file in the editor]
+.kicker[editor.p5js.org: try creating a .csv file in the editor]
 
 </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

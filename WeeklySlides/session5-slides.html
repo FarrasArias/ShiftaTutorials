@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>GenXP — Week 05 / Session 1 — Trigonometry, Recursion, Modulo & Map</title>
+  <title>GenXP: Week 05 / Session 1: Trigonometry, Recursion, Modulo & Map</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
@@ -80,13 +80,13 @@ class: title-slide
 
 # Trigonometry,<br>Recursion,<br>Modulo<br>& Map
 
-## Week 05 — Mathematics as Aesthetics
+## Week 05: Mathematics as Aesthetics
 
-.kicker[Designing Generative Experiences — SHIFTA 2026-04]
+.kicker[Designing Generative Experiences: SHIFTA 2026-04]
 
 ???
 This is the most math-heavy session. Reassure students that we're using intuition, not proofs.
-The goal is not to understand why sin() works — it's to know what it produces visually.
+The goal is not to understand why sin() works: it's to know what it produces visually.
 Keep every concept anchored to a visual result on screen.
 
 ---
@@ -96,25 +96,25 @@ Keep every concept anchored to a visual result on screen.
 .col-left[
 **Trigonometry**
 - Radians vs degrees
-- The unit circle — `sin()` and `cos()` revisited deeply
+- The unit circle: `sin()` and `cos()` revisited deeply
 - Polar → Cartesian coordinates
 - Spirals, roses, Lissajous figures
-- Phyllotaxis — nature's maths
+- Phyllotaxis: nature's maths
 
 **Recursion**
 - What is a recursive function?
-- The base case — why it's essential
+- The base case: why it's essential
 - Nested shapes
 - Branching trees and fractals
 ]
 .col-right[
 **Modulo & Map**
-- The `%` operator — cycling and wrapping
-- `map()` — deep dive
-- `constrain()` — safe ranges
+- The `%` operator: cycling and wrapping
+- `map()`: deep dive
+- `constrain()`: safe ranges
 - Combining them for patterns
 
-.box.green[Session 2: .accent[Recursive tree drawings] — modified with mouse/keyboard input]
+.box.green[Session 2: .accent[Recursive tree drawings]: modified with mouse/keyboard input]
 ]
 .clearfix[]
 
@@ -158,7 +158,7 @@ Convert: `radians(180)` → `PI`
 
 .box[
 **Why radians?** Because maths. `sin(PI)` = 0 exactly. Radians map naturally to the unit circle.
-You don't need to understand why — just know that `TWO_PI` = one full revolution.
+You don't need to understand why: just know that `TWO_PI` = one full revolution.
 ]
 
 ---
@@ -194,7 +194,7 @@ class: code-slide
 
 # Drawing a Circle with Trig
 
-Without using `circle()` — doing it manually reveals the formula:
+Without using `circle()`: doing it manually reveals the formula:
 
 ```javascript
 let angle = 0;
@@ -228,7 +228,7 @@ function draw() {
 
 class: code-slide
 
-# Spirals — Grow the Radius
+# Spirals: Grow the Radius
 
 Increment both the angle AND the radius to trace a spiral:
 
@@ -263,7 +263,7 @@ function draw() {
 
 class: code-slide
 
-# Parametric Curves — Rose
+# Parametric Curves: Rose
 
 A **rose curve** `r = cos(k * θ)` produces petal shapes.
 `k` controls the number of petals.
@@ -278,7 +278,7 @@ function setup() {
 
 function draw() {
   let cx = width / 2, cy = height / 2;
-  let k  = 5;       // try: 2, 3, 4, 5, 7 — odd k = k petals, even k = 2k petals
+  let k  = 5;       // try: 2, 3, 4, 5, 7: odd k = k petals, even k = 2k petals
   let steps = 800;
 
   noFill();
@@ -301,10 +301,10 @@ function keyPressed() { redraw(); }
 
 class: code-slide
 
-# Phyllotaxis — Nature's Algorithm
+# Phyllotaxis: Nature's Algorithm
 
 The arrangement of seeds in a sunflower follows the **golden angle** (≈ 137.5°).
-This produces the most efficient packing — no two seeds overlap.
+This produces the most efficient packing: no two seeds overlap.
 
 ```javascript
 let goldenAngle = 137.508 * (PI / 180);  // in radians
@@ -349,14 +349,14 @@ The fact that this simple formula produces the sunflower is genuinely beautiful.
 x = cx + cos(angle) * radius
 y = cy + sin(angle) * radius
 ```
-Draws a point on a circle. Everything else — spirals, roses, clocks, particles, branches — is a variation of this.
+Draws a point on a circle. Everything else: spirals, roses, clocks, particles, branches: is a variation of this.
 ]
 
 | Technique | What you vary |
 |---|---|
 | Circular orbit | `angle` grows over time |
 | Spiral | both `angle` and `radius` grow |
-| Rose curve | `r = A * cos(k * θ)` — use as radius |
+| Rose curve | `r = A * cos(k * θ)`: use as radius |
 | Lissajous | different frequencies on x and y |
 | Phyllotaxis | `angle = i * goldenAngle`, `radius = sqrt(i) * c` |
 
@@ -390,8 +390,8 @@ countDown(5);  // prints: 5, 4, 3, 2, 1, 0
 --
 
 **Two essential parts:**
-1. **The recursive call** — the function calls itself with a modified argument
-2. **The base case** — the condition that stops the recursion
+1. **The recursive call**: the function calls itself with a modified argument
+2. **The base case**: the condition that stops the recursion
 
 .box[
 **Without a base case:** infinite recursion → crash.
@@ -402,7 +402,7 @@ The base case is not optional. It is the exit door.
 
 class: code-slide
 
-# Visual Recursion — Nested Squares
+# Visual Recursion: Nested Squares
 
 ```javascript
 function nestedSquare(x, y, size) {
@@ -436,7 +436,7 @@ The call stack: `nestedSquare(380)` → `nestedSquare(285)` → `nestedSquare(21
 
 ---
 
-# Recursion Depth — Call Stack
+# Recursion Depth: Call Stack
 
 Every recursive call adds a frame to the **call stack**.
 
@@ -457,14 +457,14 @@ For visual purposes, you rarely need more than 10–15 levels.
 
 Your base case controls the depth. Common choices:
 - `if (size < minimumSize) return;`
-- `if (depth <= 0) return;` — pass depth as a decreasing parameter
+- `if (depth <= 0) return;`: pass depth as a decreasing parameter
 ]
 
 ---
 
 class: code-slide
 
-# Branching — The Recursive Tree
+# Branching: The Recursive Tree
 
 The tree is the canonical recursive structure.
 Use `push()`/`pop()` + `translate()`/`rotate()` to branch:
@@ -521,27 +521,27 @@ function keyPressed() { redraw(); }
 .box.green[
 Next session we'll make this interactive:
 `mouseX` controls the branch angle, `mouseY` controls the length ratio.
-The tree will respond in real time — recursion becomes a live instrument.
+The tree will respond in real time: recursion becomes a live instrument.
 ]
 
 ---
 
 # Fractals and Self-Similarity
 
-A **fractal** is a structure where every part looks like the whole — at any scale.
+A **fractal** is a structure where every part looks like the whole: at any scale.
 
 The tree is a fractal. So is the branching of lungs, rivers, lightning, coastlines.
 
 > *"Clouds are not spheres, mountains are not cones, coastlines are not circles, and bark is not smooth, nor does lightning travel in a straight line."*
-> — Benoît Mandelbrot, *The Fractal Geometry of Nature*, 1982
+>: Benoît Mandelbrot, *The Fractal Geometry of Nature*, 1982
 
 --
 
 Other classic visual fractals in p5.js:
-- **Koch snowflake** — recursive line subdivision
-- **Sierpiński triangle** — recursive triangle removal
-- **Dragon curve** — fold a piece of paper in half repeatedly
-- **Mandelbrot set** — recursion in complex number space .dim[(advanced)]
+- **Koch snowflake**: recursive line subdivision
+- **Sierpiński triangle**: recursive triangle removal
+- **Dragon curve**: fold a piece of paper in half repeatedly
+- **Mandelbrot set**: recursion in complex number space .dim[(advanced)]
 
 All share the same property: a simple rule applied to its own output.
 
@@ -555,7 +555,7 @@ class: section-slide
 
 ---
 
-# Modulo `%` — The Remainder
+# Modulo `%`: The Remainder
 
 `a % b` returns the **remainder** after dividing `a` by `b`.
 
@@ -615,7 +615,7 @@ if (i % 2 === 0) { /* even */ } else { /* odd */ }
 
 class: code-slide
 
-# map() — Deep Dive
+# map(): Deep Dive
 
 `map(value, fromLow, fromHigh, toLow, toHigh)` translates a value from one range to another:
 
@@ -626,7 +626,7 @@ let x = map(mouseX, 0, width, 0, 360);   // mouse pos → hue
 // Inverted: large input → small output
 let size = map(mouseX, 0, width, 100, 5);  // right → smaller
 
-// Beyond the input range — extrapolation (can be surprising)
+// Beyond the input range: extrapolation (can be surprising)
 let y = map(200, 0, 100, 0, 400);  // input 200 is outside 0-100 → output 800!
 
 // Add 5th/6th args to clamp to the output range:
@@ -659,9 +659,9 @@ Common patterns:
 
 class: code-slide
 
-# constrain() — Safe Ranges
+# constrain(): Safe Ranges
 
-Clamp a value to stay within bounds — no matter what:
+Clamp a value to stay within bounds: no matter what:
 
 ```javascript
 constrain(value, min, max)
@@ -686,7 +686,7 @@ function draw() {
 
 class: code-slide
 
-# Combining Everything — Sunburst Grid
+# Combining Everything: Sunburst Grid
 
 Trig + modulo + map working together:
 
@@ -729,23 +729,23 @@ function keyPressed() { redraw(); }
 .col-left[
 **Trigonometry**
 - Radians, `TWO_PI`, `HALF_PI`
-- `x = cx + cos(θ) * r` — the formula
+- `x = cx + cos(θ) * r`: the formula
 - Circular orbit, spirals, rose curves
 - Phyllotaxis (golden angle)
 
 **Recursion**
 - Self-calling functions
-- Base case — mandatory
+- Base case: mandatory
 - Call stack depth
 - Nested shapes, branching trees, fractals
 ]
 .col-right[
 **Modulo & Map**
-- `%` — remainder, cycling, wrapping
+- `%`: remainder, cycling, wrapping
 - 1D index → 2D grid: `i % cols`
 - Palette cycling: `i % palette.length`
-- `map(value, from, to)` — linear translation
-- `constrain(v, min, max)` — safety clamp
+- `map(value, from, to)`: linear translation
+- `constrain(v, min, max)`: safety clamp
 
 **Built-in constants**
 - `TWO_PI`, `PI`, `HALF_PI`, `QUARTER_PI`
@@ -758,17 +758,17 @@ function keyPressed() { redraw(); }
 # For Next Session
 
 .box.green[
-**Session 2** — We'll build an interactive recursive tree.
+**Session 2**: We'll build an interactive recursive tree.
 Mouse controls the branch angle and length ratio in real time.
 Keyboard changes depth and colour palette. The tree becomes an instrument.
 ]
 
 .box[
 **Before Session 2:**
-- Play with the phyllotaxis sketch — try different values of `n`, different golden angles
-- Try changing the rose curve's `k` value — what does `k = 2.5` produce?
-- Look up **M.C. Escher** — his tesselations are mathematical art at its most refined
-- Look up **Manolo Gamboa Naon** (Instagram: @manoloidee) — contemporary generative math art
+- Play with the phyllotaxis sketch: try different values of `n`, different golden angles
+- Try changing the rose curve's `k` value: what does `k = 2.5` produce?
+- Look up **M.C. Escher**: his tesselations are mathematical art at its most refined
+- Look up **Manolo Gamboa Naon** (Instagram: @manoloidee): contemporary generative math art
 ]
 
 ---
@@ -779,7 +779,7 @@ class: title-slide
 
 ## Mathematical Portrait
 
-.kicker[Trig + recursion + modulo — make maths beautiful]
+.kicker[Trig + recursion + modulo: make maths beautiful]
 
 ---
 
@@ -789,7 +789,7 @@ class: title-slide
 
 ## Questions?
 
-.kicker[editor.p5js.org — try the phyllotaxis sketch]
+.kicker[editor.p5js.org: try the phyllotaxis sketch]
 
 </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

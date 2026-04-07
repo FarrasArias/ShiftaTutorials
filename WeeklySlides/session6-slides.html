@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>GenXP — Week 06 — Sound as Material</title>
+<title>GenXP: Week 06: Sound as Material</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
@@ -134,7 +134,7 @@
 <textarea id="source">
 class: title-slide
 
-.week-label[Designing Generative Experiences — Week 06]
+.week-label[Designing Generative Experiences: Week 06]
 
 # Sound as Material
 
@@ -161,8 +161,8 @@ Trig, recursion, modulo, map().
 ]
 
 .box-orange[
-### Week 6 — Sound
-**Sound is data.** Amplitude is a number. Frequency is a number. A waveform is an array. Everything you already know applies — the input is just your ears now.
+### Week 6: Sound
+**Sound is data.** Amplitude is a number. Frequency is a number. A waveform is an array. Everything you already know applies: the input is just your ears now.
 ]
 
 ---
@@ -175,7 +175,7 @@ class: section-slide
 
 ## Adding p5.sound
 
-p5.sound is a **separate library** — not included by default.
+p5.sound is a **separate library**: not included by default.
 
 In the **p5.js web editor**, open `index.html` and add:
 
@@ -187,7 +187,7 @@ In the **p5.js web editor**, open `index.html` and add:
 Or use **Sketch › Add Library** and search "p5.sound" in the editor sidebar.
 
 .box-teal[
-**Important:** browsers block audio until the user interacts with the page. Always start sound playback inside `mousePressed()` or `keyPressed()` — never in `setup()` or `draw()` directly.
+**Important:** browsers block audio until the user interacts with the page. Always start sound playback inside `mousePressed()` or `keyPressed()`: never in `setup()` or `draw()` directly.
 ]
 
 ---
@@ -263,7 +263,7 @@ class: section-slide
 
 ---
 
-## p5.Amplitude — measuring loudness
+## p5.Amplitude: measuring loudness
 
 `p5.Amplitude` measures the current volume level as a number from **0** (silence) to **1** (maximum).
 
@@ -295,7 +295,7 @@ function draw() {
 ```
 
 .box[
-**`amp.getLevel()`** returns the current RMS amplitude — a smoothed measure of loudness.
+**`amp.getLevel()`** returns the current RMS amplitude: a smoothed measure of loudness.
 
 You can connect it to any sound source:
 ```javascript
@@ -308,7 +308,7 @@ amp.setInput(osc);   // oscillator
 
 ---
 
-## p5.FFT — frequency analysis
+## p5.FFT: frequency analysis
 
 **FFT** (Fast Fourier Transform) breaks sound into its frequency components.
 
@@ -361,7 +361,7 @@ function draw() {
 ```
 
 .box-orange[
-**`beginShape()` / `endShape()`** — draws a connected polygon or line through a series of `vertex()` points. The first shape you've drawn with a loop rather than a single call.
+**`beginShape()` / `endShape()`**: draws a connected polygon or line through a series of `vertex()` points. The first shape you've drawn with a loop rather than a single call.
 ]
 
 ---
@@ -398,9 +398,9 @@ class: section-slide
 
 ---
 
-## p5.Oscillator — making tones
+## p5.Oscillator: making tones
 
-An **oscillator** generates a continuous waveform — the fundamental unit of synthesis.
+An **oscillator** generates a continuous waveform: the fundamental unit of synthesis.
 
 ```javascript
 let osc;
@@ -423,7 +423,7 @@ function mouseReleased() {
 ```
 
 .box-green[
-**Always fade in and out** — instantaneous amplitude changes cause audible clicks (DC discontinuity). Use the second argument: `osc.amp(value, rampTime)`.
+**Always fade in and out**: instantaneous amplitude changes cause audible clicks (DC discontinuity). Use the second argument: `osc.amp(value, rampTime)`.
 ]
 
 ---
@@ -454,14 +454,14 @@ Synthesizer strings.
 ]
 
 .box[
-**Square** — odd harmonics, hollow and reedy, like a clarinet. `'square'`
+**Square**: odd harmonics, hollow and reedy, like a clarinet. `'square'`
 
-The waveform type is a **timbre** decision — the same note on a sine and a sawtooth have the same pitch but sound completely different.
+The waveform type is a **timbre** decision: the same note on a sine and a sawtooth have the same pitch but sound completely different.
 ]
 
 ---
 
-## p5.Envelope — shaping sound over time
+## p5.Envelope: shaping sound over time
 
 An envelope controls **how amplitude changes** when a note is triggered and released.
 
@@ -491,9 +491,9 @@ function mousePressed() {
 
 ---
 
-## p5.Noise — all frequencies at once
+## p5.Noise: all frequencies at once
 
-Noise generators produce sound with **no pitch** — useful for percussion, texture, and ambience.
+Noise generators produce sound with **no pitch**: useful for percussion, texture, and ambience.
 
 ```javascript
 let noise;
@@ -531,7 +531,7 @@ class: section-slide
 
 ---
 
-## p5.AudioIn — listening to the world
+## p5.AudioIn: listening to the world
 
 ```javascript
 let mic, amp;
@@ -559,7 +559,7 @@ function draw() {
 ```
 
 .box-orange[
-Browsers will ask for microphone permission — this only works over `https://` or `localhost`. The p5.js web editor runs on HTTPS, so it works.
+Browsers will ask for microphone permission: this only works over `https://` or `localhost`. The p5.js web editor runs on HTTPS, so it works.
 ]
 
 ---
@@ -577,7 +577,7 @@ This is the same pattern you've been using all course.
 **Sound as data (like Week 4)**
 The amplitude of a kick drum is a number.
 The frequency of a voice is a number.
-Map those numbers to position, size, color, rotation — anything.
+Map those numbers to position, size, color, rotation: anything.
 ]
 .box-teal[
 **Sound as time (like Week 2)**
@@ -588,7 +588,7 @@ The draw loop is your sampler.
 ]
 
 .box[
-**The difference:** in Week 4 the data was *static* (a CSV loaded once). Sound data is *live* — it changes every frame. The same tools work; the rate of change is different.
+**The difference:** in Week 4 the data was *static* (a CSV loaded once). Sound data is *live*: it changes every frame. The same tools work; the rate of change is different.
 ]
 
 ---
@@ -619,7 +619,7 @@ let count = floor(map(treble, 0, 255, 5, 80));
 
 ---
 
-## `fft.getEnergy()` — named frequency bands
+## `fft.getEnergy()`: named frequency bands
 
 Rather than reading all 1024 spectrum values, you can query specific bands directly:
 
@@ -640,7 +640,7 @@ Named bands map to *musical* frequency ranges. A kick drum lives in **bass**. A 
 ---
 class: dark-slide
 
-## Live coding — Session 2 preview
+## Live coding: Session 2 preview
 
 Today's two sketches:
 
@@ -675,26 +675,26 @@ class: dark-slide
 
 .two-col[
 .box[
-**Alvin Lucier** — *I Am Sitting in a Room* (1969): a recording of a voice re-recorded in the same room until the room's resonances replace all intelligible speech. The room is the instrument.
+**Alvin Lucier**: *I Am Sitting in a Room* (1969): a recording of a voice re-recorded in the same room until the room's resonances replace all intelligible speech. The room is the instrument.
 
-**Ryoji Ikeda** — ultra-precise data-to-sound-to-image. Test tones, scanning frequencies, and pixel-level visualizations that treat audio as information architecture.
+**Ryoji Ikeda**: ultra-precise data-to-sound-to-image. Test tones, scanning frequencies, and pixel-level visualizations that treat audio as information architecture.
 ]
 .box[
-**Brian Eno** — *Discreet Music* (1975), *Music for Airports* (1978): generative, ambient music built on feedback loops and time-shifted tape delays. Sound as environment.
+**Brian Eno**: *Discreet Music* (1975), *Music for Airports* (1978): generative, ambient music built on feedback loops and time-shifted tape delays. Sound as environment.
 
-**Camille Norment** — *Triplight* and *Siren*: immersive sound installations that use resonance, interference, and psychoacoustics as sculptural material.
+**Camille Norment**: *Triplight* and *Siren*: immersive sound installations that use resonance, interference, and psychoacoustics as sculptural material.
 ]
 ]
 
 ---
 class: dark-slide
 
-## Exercise — 20 minutes
+## Exercise: 20 minutes
 
 Connect a sound source to a visual parameter of your choice.
 
 1. Start from Snippet 03 (amplitude → circle) or Snippet 05 (FFT spectrum)
-2. Change **what the sound controls** — not just size. Try: rotation, number of shapes, color, spacing
+2. Change **what the sound controls**: not just size. Try: rotation, number of shapes, color, spacing
 3. Add **one keyboard or mouse control** that changes something about the visual system (not the sound)
 
 .box-green[
@@ -704,7 +704,7 @@ Connect a sound source to a visual parameter of your choice.
 ---
 class: title-slide
 
-.week-label[Week 06 — Sound as Material]
+.week-label[Week 06: Sound as Material]
 
 # Session 2 is live coding.
 
