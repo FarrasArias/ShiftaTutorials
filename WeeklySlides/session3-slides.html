@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>GenXP: Week 02 / Session 1: Time & Motion</title>
+    <title>GenXP: Week 03 / Session 1: Time & Motion</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -361,7 +361,7 @@
     </style>
 </head>
 <body>
-<textarea id="source">
+    <textarea id="source">
 
 class: title-slide
 
@@ -402,7 +402,7 @@ Open the editor and have the basic sketch from last week ready to evolve.
 - No conditionals, no loops, no randomness
 - Pure motion, pure input
 
-.box.green[Assignment 02 preview: .accent[TIME]]
+.box.green[Assignment 03 preview: .accent[TIME]]
 ]
 .clearfix[]
 
@@ -507,7 +507,7 @@ function draw() {
 ```
 
 .box.green[
-This is the foundation of Assignment 02: you now have access to real time.
+This is the foundation of Assignment 03: you now have access to real time.
 ]
 
 ???
@@ -703,9 +703,10 @@ The circle oscillates back and forth: .accent[forever]: without any conditional 
 
 To use it for position, size, or color:
 ```
-value = center + sin(angle) * amplitude
+value = center + sin(angle * speed) * amplitude
 ```
 - `center` = the middle point (e.g. `200` for center of canvas)
+- `speed` = scaling the angle, how fast it swings (e.g. `10`)
 - `amplitude` = how far it swings (e.g. `150`)
 - `angle` grows over time (add a small amount each frame)
 ]
@@ -1080,7 +1081,7 @@ function keyPressed() {
 # For Next Session
 
 .box.green[
-**Session 2**: We'll code one complete example of Assignment 02 together.
+**Session 2**: We'll code one complete example of Assignment 03 together.
 The theme is .accent[TIME]. How do you express time visually?
 ]
 
@@ -1088,7 +1089,7 @@ The theme is .accent[TIME]. How do you express time visually?
 **Before Session 2:**
 - Try making your own "time sketch" using any of today's techniques
 - Think: what does time *feel* like? How can motion express it?
-- Look at: [Maeda's 12 o'clocks](https://maedastudio.com), [Moment](http://moment.indigofish.co.uk/), [xkcd: Time](https://xkcd.com/1190/)
+- Look at: [Maeda's 12 o'clocks](https://codingtrain.github.io/12oclocks/), [xkcd: Time](https://xkcd.com/1190/)
 ]
 
 ---
