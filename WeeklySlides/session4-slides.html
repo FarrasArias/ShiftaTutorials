@@ -6,76 +6,358 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; }
-    .remark-slide-content {
-      background-color: #0f0f0f; color: #f0ece4;
-      font-family: 'Inter', sans-serif; font-size: 22px;
-      line-height: 1.6; padding: 2.5em 3.5em 3em;
-    }
-    .remark-slide-content.title-slide {
-      display: flex; flex-direction: column; justify-content: flex-end; padding: 3em 3.5em;
-    }
-    .remark-slide-content.title-slide h1 {
-      font-family: 'Space Mono', monospace; font-size: 2.4em; font-weight: 700;
-      color: #f0ece4; border: none; padding-bottom: 0; letter-spacing: -2px; line-height: 1.1;
-    }
-    .remark-slide-content.title-slide h2 {
-      font-family: 'Space Mono', monospace; font-size: 1.1em;
-      color: #FF4D1C; font-weight: 400; margin-top: 0.5em;
-    }
-    .remark-slide-content.title-slide .kicker {
-      font-family: 'Space Mono', monospace; font-size: 0.72em;
-      color: #555; margin-top: 2em; letter-spacing: 2px; text-transform: uppercase;
-    }
-    .remark-slide-content.section-slide {
-      background-color: #FF4D1C; display: flex; flex-direction: column; justify-content: center;
-    }
-    .remark-slide-content.section-slide h1 {
-      font-family: 'Space Mono', monospace; font-size: 2.6em; color: #0f0f0f;
-      border: none; padding: 0; letter-spacing: -2px; line-height: 1.1;
-    }
-    .remark-slide-content.section-slide h2 { color: rgba(0,0,0,0.5); font-size: 1em; margin-top: 0.5em; }
-    .remark-slide-content.dark-slide  { background-color: #1a1a1a; }
-    .remark-slide-content.code-slide  { background-color: #0d0d0d; font-size: 19px; }
-    h1 {
-      font-family: 'Space Mono', monospace; font-size: 1.6em; font-weight: 700;
-      color: #FF4D1C; border-bottom: 2px solid #FF4D1C;
-      padding-bottom: 0.3em; margin-bottom: 0.8em; letter-spacing: -0.5px;
-    }
-    h2 { font-family: 'Space Mono', monospace; font-size: 1.1em; color: #C5F74F; font-weight: 400; margin-bottom: 0.6em; margin-top: 1em; }
-    h3 { font-family: 'Inter', sans-serif; font-size: 1em; color: #f0ece4; font-weight: 600; margin-bottom: 0.4em; margin-top: 0.8em; }
-    ul, ol { padding-left: 1.4em; }
-    li { margin: 0.45em 0; line-height: 1.5; }
-    a { color: #FF4D1C; text-decoration: none; border-bottom: 1px solid #FF4D1C; }
-    .remark-inline-code {
-      font-family: 'Space Mono', monospace; font-size: 0.82em;
-      background: #1e1e1e; color: #C5F74F; padding: 0.1em 0.4em; border-radius: 3px;
-    }
-    .remark-code { font-family: 'Space Mono', monospace; font-size: 0.78em; line-height: 1.5; }
-    pre { border-radius: 6px; overflow: hidden; }
-    blockquote { border-left: 3px solid #FF4D1C; padding-left: 1.2em; color: #aaa; font-style: italic; margin: 0.8em 0; font-size: 0.95em; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.88em; margin: 0.8em 0; }
-    th { font-family: 'Space Mono', monospace; font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #333; padding: 0.4em 0.6em; text-align: left; color: #888; }
-    td { padding: 0.5em 0.6em; border-bottom: 1px solid #222; vertical-align: top; }
-    .huge  { font-size: 3.5em; font-family: 'Space Mono', monospace; line-height: 1; }
-    .big   { font-size: 1.6em; font-family: 'Space Mono', monospace; }
-    .small { font-size: 0.82em; color: #888; }
-    .mono  { font-family: 'Space Mono', monospace; }
-    .accent { color: #FF4D1C; }
-    .green  { color: #C5F74F; }
-    .teal   { color: #4FC5F7; }
-    .dim    { color: #555; }
-    .col-left  { float: left; width: 48%; }
-    .col-right { float: right; width: 48%; }
-    .col-60    { float: left; width: 60%; }
-    .col-40    { float: right; width: 38%; }
-    .clearfix::after { content: ''; display: table; clear: both; }
-    .remark-slide-number { font-family: 'Space Mono', monospace; font-size: 0.65em; color: #333; bottom: 1.2em; right: 2em; }
-    .box { background: #1a1a1a; border: 1px solid #333; border-left: 3px solid #FF4D1C; padding: 0.8em 1.2em; border-radius: 4px; margin: 0.6em 0; font-size: 0.9em; }
-    .box.green { border-left-color: #C5F74F; }
-    .box.teal  { border-left-color: #4FC5F7; }
-    hr { border: none; border-top: 1px solid #333; margin: 1em 0; }
+        /* ─────────────────────────────────────────
+      SHIFTA GenXP: Slide Theme
+      ───────────────────────────────────────── */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* BASE SLIDE */
+        .remark-slide-content {
+            background-color: #0f0f0f;
+            color: #f0ece4;
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            line-height: 1.6;
+            padding: 2.5em 3.5em 3em;
+        }
+
+            /* TITLE SLIDE */
+            .remark-slide-content.title-slide {
+                background-color: #0f0f0f;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                padding: 3em 3.5em;
+            }
+
+                .remark-slide-content.title-slide h1 {
+                    font-family: 'Space Mono', monospace;
+                    font-size: 2.4em;
+                    font-weight: 700;
+                    color: #f0ece4;
+                    border: none;
+                    padding-bottom: 0;
+                    letter-spacing: -2px;
+                    line-height: 1.1;
+                }
+
+                .remark-slide-content.title-slide h2 {
+                    font-family: 'Space Mono', monospace;
+                    font-size: 1.1em;
+                    color: #FF4D1C;
+                    font-weight: 400;
+                    margin-top: 0.5em;
+                }
+
+                .remark-slide-content.title-slide .kicker {
+                    font-family: 'Space Mono', monospace;
+                    font-size: 0.72em;
+                    color: #555;
+                    margin-top: 2em;
+                    letter-spacing: 2px;
+                    text-transform: uppercase;
+                }
+
+            /* SECTION SLIDE */
+            .remark-slide-content.section-slide {
+                background-color: #FF4D1C;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+                .remark-slide-content.section-slide h1 {
+                    font-family: 'Space Mono', monospace;
+                    font-size: 2.6em;
+                    color: #0f0f0f;
+                    border: none;
+                    padding: 0;
+                    letter-spacing: -2px;
+                    line-height: 1.1;
+                }
+
+                .remark-slide-content.section-slide h2 {
+                    color: rgba(0,0,0,0.5);
+                    font-size: 1em;
+                    margin-top: 0.5em;
+                }
+
+            /* DARK ALT SLIDE */
+            .remark-slide-content.dark-slide {
+                background-color: #1a1a1a;
+            }
+
+            /* CODE SLIDE */
+            .remark-slide-content.code-slide {
+                background-color: #0d0d0d;
+                font-size: 19px;
+            }
+
+        /* HEADINGS */
+        h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #FF4D1C;
+            border-bottom: 2px solid #FF4D1C;
+            padding-bottom: 0.3em;
+            margin-bottom: 0.8em;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1em;
+            color: #C5F74F;
+            font-weight: 400;
+            margin-bottom: 0.6em;
+            margin-top: 1em;
+        }
+
+        h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1em;
+            color: #f0ece4;
+            font-weight: 600;
+            margin-bottom: 0.4em;
+            margin-top: 0.8em;
+        }
+
+        /* LISTS */
+        ul, ol {
+            padding-left: 1.4em;
+        }
+
+        li {
+            margin: 0.45em 0;
+            line-height: 1.5;
+        }
+
+        /* LINKS */
+        a {
+            color: #FF4D1C;
+            text-decoration: none;
+            border-bottom: 1px solid #FF4D1C;
+        }
+
+        /* INLINE CODE */
+        .remark-inline-code {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.82em;
+            background: #1e1e1e;
+            color: #C5F74F;
+            padding: 0.1em 0.4em;
+            border-radius: 3px;
+        }
+
+        /* CODE BLOCKS */
+        .remark-code {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.78em;
+            line-height: 1.5;
+        }
+
+        pre {
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        /* BLOCKQUOTE */
+        blockquote {
+            border-left: 3px solid #FF4D1C;
+            padding-left: 1.2em;
+            color: #aaa;
+            font-style: italic;
+            margin: 0.8em 0;
+            font-size: 0.95em;
+        }
+
+        /* UTILITY CLASSES */
+        .huge {
+            font-size: 3.5em;
+            font-family: 'Space Mono', monospace;
+            line-height: 1;
+        }
+
+        .big {
+            font-size: 1.6em;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .small {
+            font-size: 0.82em;
+            color: #888;
+        }
+
+        .mono {
+            font-family: 'Space Mono', monospace;
+        }
+
+        .accent {
+            color: #FF4D1C;
+        }
+
+        .green {
+            color: #C5F74F;
+        }
+
+        .teal {
+            color: #4FC5F7;
+        }
+
+        .dim {
+            color: #555;
+        }
+
+        .bold {
+            font-weight: 700;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        /* TWO COLUMNS */
+        .col-left {
+            float: left;
+            width: 48%;
+        }
+
+        .col-right {
+            float: right;
+            width: 48%;
+        }
+
+        .col-60 {
+            float: left;
+            width: 60%;
+        }
+
+        .col-40 {
+            float: right;
+            width: 38%;
+        }
+
+        .clearfix::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+
+        /* SLIDE NUMBER */
+        .remark-slide-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65em;
+            color: #333;
+            bottom: 1.2em;
+            right: 2em;
+        }
+
+        /* LABEL / BADGE */
+        .label {
+            display: inline-block;
+            background: #FF4D1C;
+            color: #0f0f0f;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65em;
+            padding: 0.15em 0.6em;
+            border-radius: 2px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            vertical-align: middle;
+        }
+
+            .label.green {
+                background: #C5F74F;
+            }
+
+            .label.teal {
+                background: #4FC5F7;
+            }
+
+        /* HIGHLIGHT BOX */
+        .box {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-left: 3px solid #FF4D1C;
+            padding: 0.8em 1.2em;
+            border-radius: 4px;
+            margin: 0.6em 0;
+            font-size: 0.9em;
+        }
+
+            .box.green {
+                border-left-color: #C5F74F;
+            }
+
+            .box.teal {
+                border-left-color: #4FC5F7;
+            }
+
+        /* GRID VISUAL */
+        .coord-demo {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72em;
+            color: #4FC5F7;
+            background: #1a1a1a;
+            padding: 1em;
+            border-radius: 4px;
+            line-height: 1.8;
+        }
+
+        /* SEPARATOR LINE */
+        hr {
+            border: none;
+            border-top: 1px solid #333;
+            margin: 1em 0;
+        }
+
+        /* IMAGE SIZING */
+        img {
+            max-width: 100%;
+            max-height: 60vh;
+        }
+
+        /* SLIDE OVERFLOW FIX */
+        .remark-slide-scaler {
+            overflow: hidden;
+        }
+
+        .remark-slide {
+            overflow: hidden;
+            display: block;
+            height: 100%;
+        }
+
+        .remark-slide-content {
+            display: block;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* MIDDLE CENTERING */
+        .middle-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 80%;
+        }
   </style>
 </head>
 <body>
@@ -128,7 +410,7 @@ class: section-slide
 
 # Arrays
 
-## A list you can talk to.
+## Lists of things.
 
 ---
 
@@ -432,8 +714,6 @@ Just add one line to update(): this.col = color(frameCount * 0.5 % 255, 80, 50);
 ---
 
 # Fun Example: Snow
-
-A Snowflake class demonstrates that classes aren't just for technical demos:
 
 ```javascript
 class Snowflake {
