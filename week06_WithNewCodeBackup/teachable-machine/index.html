@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Spectral Analysis</title>
+<meta content="2511 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2511 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Spectral Analysis</h1>
+
+<p>In the <a href="../concurrency/index.html">envelopes tutorial</a> we learned that every sound is a combination of sine waves at different frequencies and amplitudes. But how do we go the other direction:  given a complex sound, how do we figure out <em>which</em> frequencies are in it and how strong each one is?</p>
+
+<p>The answer is the <strong>Fourier Transform</strong>, one of the most important mathematical tools in all of science and engineering.</p>
+
+<h2 id="time-vs-frequency">Time Domain vs. Frequency Domain</h2>
+
+<p>There are two ways to look at any sound:</p>
+
+<ul>
+<li><strong>Time domain</strong>: amplitude as a function of time. This is what you see if you plot the raw waveform:  the wiggly line that oscilloscopes show. It answers: "what is the pressure doing right now?"</li>
+<li><strong>Frequency domain</strong>: amplitude as a function of frequency. This is the <strong>spectrum</strong>:  a bar chart showing how much energy is at each frequency. It answers: "what frequencies make up this sound?"</li>
+</ul>
+
+<p>The Fourier Transform converts between these two representations. Given a time-domain signal, it produces the frequency-domain spectrum. The inverse Fourier Transform does the opposite.</p>
+
+<p>Mathematically, the Fourier Transform of a signal \(x(t)\) is:</p>
+
+\[X(f) = \int_{-\infty}^{\infty} x(t) \, e^{-i 2\pi f t} \, dt\]
+
+<p>Don't worry about the integral:  the key insight is conceptual: the transform <strong>decomposes</strong> a complex signal into its constituent sine waves, telling us the amplitude and phase of each frequency component.</p>
+
+<h2 id="fft">The FFT: Fast Fourier Transform</h2>
+
+<p>In practice, digital audio uses the <strong>FFT</strong> (Fast Fourier Transform), an efficient algorithm that computes the discrete version of the Fourier Transform. The FFT takes a window of \(N\) audio samples and produces \(N/2\) frequency bins.</p>
+
+<p>With the standard FFT size of 1024 samples at a 44,100 Hz sample rate:</p>
+<ul>
+<li>Each frequency bin covers \(\frac{44100}{1024} \approx 43\) Hz</li>
+<li>We get 512 bins, ranging from 0 Hz to ~22,050 Hz</li>
+<li>Lower bins = bass frequencies, higher bins = treble frequencies</li>
+</ul>
+
+<p>In <code class="language-plaintext highlighter-rouge">p5.sound</code>, the FFT is available through the <code class="language-plaintext highlighter-rouge">p5.FFT</code> class, which gives us two views of the sound:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let fft = new p5.FFT();
+
+// In draw():
+let waveform = fft.waveform();   // time domain: array of 1024 values, -1 to 1
+let spectrum = fft.analyze();     // frequency domain: array of 1024 values, 0 to 255
+</code></pre></div></div>
+
+<h2 id="drawing-waveform">Drawing a Waveform</h2>
+
+<p>The waveform shows the raw shape of the sound wave:  what the speaker cone is physically doing at each moment. We draw it by mapping each sample to a point on the canvas:</p>
+
+<!-- SKETCH 11: Waveform visualization -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_11"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_11">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, fft;
+
+function setup() {
+  createCanvas(500, 300);
+  osc = new p5.Oscillator('sawtooth');
+  osc.freq(220);
+  osc.amp(0);
+
+  fft = new p5.FFT();
+
+  textAlign(CENTER);
+  textSize(14);
+}
+
+function draw() {
+  background(15);
+
+  let wave = fft.waveform();
+
+  noFill();
+  stroke(79, 197, 247);
+  strokeWeight(1.5);
+  beginShape();
+  for (let i = 0; i < wave.length; i++) {
+    let x = map(i, 0, wave.length, 0, width);
+    let y = map(wave[i], -1, 1, height * 0.8, height * 0.2);
+    vertex(x, y);
+  }
+  endShape();
+
+  noStroke();
+  fill('#888');
+  text('click and hold to play:  move mouse for pitch', width / 2, height - 15);
+}
+
+function mousePressed() {
+  osc.start();
+  osc.amp(0.3, 0.05);
+}
+
+function mouseMoved() {
+  if (mouseIsPressed) {
+    let freq = map(mouseX, 0, width, 80, 800);
+    osc.freq(freq);
+  }
+}
+
+function mouseReleased() {
+  osc.amp(0, 0.2);
+}
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">beginShape()</code> / <code class="language-plaintext highlighter-rouge">vertex()</code> / <code class="language-plaintext highlighter-rouge">endShape()</code> pattern draws a connected line through all 1024 points. At low frequencies you can clearly see the individual wave cycles. At higher frequencies the cycles get compressed together.</p>
+
+<p>Notice how different oscillator types produce different wave shapes: a sine wave looks smooth and rounded, a sawtooth looks like a zigzag ramp, and a square wave looks like flat plateaus with sharp transitions.</p>
+
+<h2 id="drawing-spectrum">Drawing a Frequency Spectrum</h2>
+
+<p>The spectrum shows how much energy is at each frequency:  the "ingredients" of the sound. Low frequencies (bass) are on the left, high frequencies (treble) on the right:</p>
+
+<!-- SKETCH 12: Spectrum visualization -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_12"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_12">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, fft;
+
+function setup() {
+  createCanvas(500, 300);
+  colorMode(HSB, 360, 100, 100);
+  osc = new p5.Oscillator('sawtooth');
+  osc.freq(220);
+  osc.amp(0);
+
+  fft = new p5.FFT(0.8, 256);
+  textAlign(CENTER);
+  textSize(12);
+}
+
+function draw() {
+  background(0, 0, 6);
+
+  let spectrum = fft.analyze();
+  let barW = width / spectrum.length;
+
+  noStroke();
+  for (let i = 0; i < spectrum.length; i++) {
+    let x = i * barW;
+    let h = map(spectrum[i], 0, 255, 0, height - 40);
+    let hue = map(i, 0, spectrum.length, 0, 260);
+    fill(hue, 80, 80);
+    rect(x, height - 30 - h, barW - 1, h);
+  }
+
+  fill(0, 0, 50);
+  text('← bass                    treble →', width / 2, height - 10);
+  text('click to play sawtooth at 220 Hz', width / 2, 20);
+}
+
+function mousePressed() {
+  osc.start();
+  osc.amp(0.3, 0.05);
+}
+
+function mouseReleased() {
+  osc.amp(0, 0.2);
+}
+</code></pre></div></div>
+
+<p>When you play the sawtooth at 220 Hz, you should see a tall spike at the fundamental (220 Hz), then progressively shorter spikes at 440, 660, 880, 1100 Hz, and so on:  exactly the harmonic series. This is the FFT literally showing us the "recipe" of the sawtooth wave: all harmonics, each at amplitude \(1/n\).</p>
+
+<p>A sine wave would show only a single spike. A square wave would show spikes only at odd harmonics.</p>
+
+<h2 id="fft-constructor">FFT Parameters</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">p5.FFT</code> constructor takes two optional arguments:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let fft = new p5.FFT(smoothing, bins);
+// smoothing: 0.0 to 1.0 (default 0.8)
+//   Higher = smoother but slower response
+//   Lower = more responsive but jittery
+// bins: 16, 32, 64, 128, 256, 512, 1024 (default 1024)
+//   More bins = finer frequency resolution but more data to process
+</code></pre></div></div>
+
+<p>The <strong>smoothing</strong> parameter is particularly important for visuals. At 0.0, the spectrum updates instantly every frame, which can look chaotic. At 0.8, each frame blends 80% of the previous value with 20% new data, creating smooth, flowing animations. Think of it as the "inertia" of the display.</p>
+
+<h2 id="frequency-bands">Named Frequency Bands</h2>
+
+<p>Rather than working with the full spectrum array, <code class="language-plaintext highlighter-rouge">p5.FFT</code> lets us query specific frequency ranges using <code class="language-plaintext highlighter-rouge">getEnergy()</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let bass   = fft.getEnergy('bass');      // 20–140 Hz
+let lowMid = fft.getEnergy('lowMid');    // 140–400 Hz
+let mid    = fft.getEnergy('mid');       // 400–2600 Hz
+let highMid = fft.getEnergy('highMid');  // 2600–5200 Hz
+let treble = fft.getEnergy('treble');    // 5200–14000 Hz
+
+// Or specify exact frequency range:
+let sub = fft.getEnergy(20, 80);         // sub-bass
+</code></pre></div></div>
+
+<p>Each returns a value from 0 to 255. These named bands correspond roughly to musical and perceptual categories: bass covers kick drums and bass guitars, mid covers vocals and most melodic instruments, treble covers hi-hats and cymbals and the "air" of a recording.</p>
+
+<!-- SKETCH 13: Frequency band visualizer -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_13"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_13">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, fft;
+let waveTypes = ['sine', 'triangle', 'sawtooth', 'square'];
+let currentWave = 0;
+
+function setup() {
+  createCanvas(500, 300);
+  osc = new p5.Oscillator(waveTypes[currentWave]);
+  osc.freq(150);
+  osc.amp(0);
+  fft = new p5.FFT(0.85);
+  textAlign(CENTER, CENTER);
+  textSize(12);
+}
+
+function draw() {
+  background(15);
+  fft.analyze();
+
+  let bands = [
+    { name: 'bass',    val: fft.getEnergy('bass'),    col: '#FF4D1C' },
+    { name: 'lowMid',  val: fft.getEnergy('lowMid'),  col: '#FF8C42' },
+    { name: 'mid',     val: fft.getEnergy('mid'),     col: '#C5F74F' },
+    { name: 'highMid', val: fft.getEnergy('highMid'), col: '#4FC5F7' },
+    { name: 'treble',  val: fft.getEnergy('treble'),  col: '#A77BCA' }
+  ];
+
+  let barW = width / bands.length - 20;
+  for (let i = 0; i < bands.length; i++) {
+    let x = map(i, 0, bands.length, 15, width - barW);
+    let h = map(bands[i].val, 0, 255, 0, height - 80);
+
+    noStroke();
+    fill(bands[i].col);
+    rect(x, height - 40 - h, barW, h, 4);
+
+    fill('#888');
+    text(bands[i].name, x + barW / 2, height - 20);
+    text(bands[i].val, x + barW / 2, height - 50 - h);
+  }
+
+  fill('#f0ece4');
+  text('wave: ' + waveTypes[currentWave] + ' | click=play | 1-4=wave type', width / 2, 15);
+}
+
+function mousePressed() {
+  osc.start();
+  osc.amp(0.3, 0.05);
+}
+
+function mouseReleased() {
+  osc.amp(0, 0.2);
+}
+
+function keyPressed() {
+  let idx = int(key) - 1;
+  if (idx >= 0 && idx < waveTypes.length) {
+    currentWave = idx;
+    osc.setType(waveTypes[currentWave]);
+  }
+}
+</code></pre></div></div>
+
+<p>Try switching between wave types while playing. A sine wave puts all its energy in the bass/lowMid band (depending on the frequency). A sawtooth spreads energy across all bands because it contains all harmonics. This is spectral analysis making the abstract concept of timbre <em>visible</em>.</p>
+
+<h2 id="combining-views">Combining Waveform and Spectrum</h2>
+
+<p>For a complete picture, we can draw both the time-domain waveform and the frequency-domain spectrum together. The waveform shows <em>what</em> the sound looks like; the spectrum shows <em>what it's made of</em>:</p>
+
+<!-- SKETCH 14: Combined waveform + spectrum -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_14"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_14">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, fft;
+
+function setup() {
+  createCanvas(500, 400);
+  osc = new p5.Oscillator('sawtooth');
+  osc.freq(220);
+  osc.amp(0);
+  fft = new p5.FFT(0.8, 512);
+  textAlign(CENTER);
+  textSize(12);
+}
+
+function draw() {
+  background(15);
+  let wave = fft.waveform();
+  let spectrum = fft.analyze();
+
+  // Top half: waveform
+  noFill();
+  stroke(79, 197, 247);
+  strokeWeight(1.2);
+  beginShape();
+  for (let i = 0; i < wave.length; i++) {
+    let x = map(i, 0, wave.length, 0, width);
+    let y = map(wave[i], -1, 1, height * 0.45, 10);
+    vertex(x, y);
+  }
+  endShape();
+
+  // Bottom half: spectrum
+  noStroke();
+  let barW = width / spectrum.length;
+  for (let i = 0; i < spectrum.length; i++) {
+    let h = map(spectrum[i], 0, 255, 0, height * 0.4);
+    fill(255, 77, 28, spectrum[i] + 50);
+    rect(i * barW, height - 30 - h, barW, h);
+  }
+
+  // Labels
+  noStroke();
+  fill('#555');
+  text('waveform (time domain)', width / 2, height * 0.5);
+  text('spectrum (frequency domain)', width / 2, height - 15);
+  text('click to play', width / 2, height * 0.53);
+}
+
+function mousePressed() {
+  osc.start();
+  osc.amp(0.3, 0.05);
+}
+
+function mouseReleased() {
+  osc.amp(0, 0.2);
+}
+</code></pre></div></div>
+
+<p>In the <a href="../transformers/index.html">next tutorial</a>, we'll use the frequency information from FFT to drive audio filters and effects:  processing sound in real time.</p>
+
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Sound as Material</span>
+</summary>
+<ul>
+<li><a href="../neural-nets/index.html">Sound Synthesis</a></li>
+<li><a href="../concurrency/index.html">Envelopes &amp; Timbre</a></li>
+<li><a href="../ml5/index.html">Scales &amp; Frequency</a></li>
+<li><a href="../teachable-machine/index.html">Spectral Analysis</a></li>
+<li><a href="../transformers/index.html">Filters &amp; Effects</a></li>
+<li><a href="../gradio/index.html">Microphone &amp; Reactivity</a></li>
+<li><a href="../gemini/index.html">Generative Music</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

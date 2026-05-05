@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Sound Synthesis</title>
+<meta content="2511 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2511 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Sound Synthesis</h1>
+
+<p>Sound is vibration. When an object vibrates:  a guitar string, a speaker cone, your vocal cords:  it pushes and pulls the air molecules around it, creating waves of high and low pressure that travel outward. When those pressure waves reach your ear, your eardrum vibrates in sympathy and your brain interprets the pattern as sound.</p>
+
+<p>This means sound is fundamentally <em>physical</em>: it's a pattern of pressure changes over time. And because pressure can be measured as a number, sound is also fundamentally <em>data</em>.</p>
+
+<h2 id="the-sine-wave">The Sine Wave</h2>
+
+<p>The simplest possible sound is a <strong>sine wave</strong>: a smooth, periodic oscillation described by:</p>
+
+\[y(t) = A \times \sin(2\pi f t)\]
+
+<p>where \(A\) is the <strong>amplitude</strong> (how loud:  the height of the wave), \(f\) is the <strong>frequency</strong> (how many cycles per second, measured in Hertz), and \(t\) is time in seconds.</p>
+
+<p>A sine wave at 440 Hz completes 440 full cycles every second. We hear this as the note A above middle C:  the standard tuning reference used by orchestras worldwide.</p>
+
+<p>Key relationships:</p>
+<ul>
+<li><strong>Frequency → pitch</strong>: higher frequency = higher pitch. Doubling the frequency raises the pitch by one octave: 440 Hz is A4, 880 Hz is A5.</li>
+<li><strong>Amplitude → loudness</strong>: larger amplitude = louder sound. An amplitude of 0 is silence.</li>
+<li><strong>Phase → timing</strong>: the starting point within a cycle. Phase differences become important when combining multiple waves.</li>
+</ul>
+
+<h2 id="digital-audio">Digital Audio</h2>
+
+<p>Computers can't store a continuous wave:  they work with discrete numbers. To represent sound digitally, we <strong>sample</strong> the wave at regular intervals: we measure the pressure value thousands of times per second and store each measurement as a number.</p>
+
+<p>The <strong>sample rate</strong> is how many measurements we take per second. Standard audio uses 44,100 samples per second (44.1 kHz):  the same rate used on CDs. This means every second of audio is an array of 44,100 numbers.</p>
+
+<p>Why 44,100? The <strong>Nyquist theorem</strong> tells us that to faithfully capture a frequency, we need to sample at <em>at least</em> twice that frequency. Human hearing tops out around 20,000 Hz, so we need at least 40,000 samples per second. 44,100 gives us some headroom.</p>
+
+\[\text{sample rate} \geq 2 \times f_{\text{max}}\]
+
+<p>The <strong>bit depth</strong> determines how precisely we measure each sample. 16-bit audio gives us \(2^{16} = 65,536\) possible amplitude levels. 24-bit audio gives \(2^{24} = 16,777,216\) levels:  much more detail in quiet passages.</p>
+
+<p>When we use <code class="language-plaintext highlighter-rouge">p5.sound</code>, all of this sampling and reconstruction happens behind the scenes. The Web Audio API (which p5.sound wraps) handles the conversion between the numbers in our code and the actual speaker vibrations.</p>
+
+<h2 id="oscillators">Oscillators in p5.js</h2>
+
+<p>An <strong>oscillator</strong> is a sound source that generates a continuous periodic waveform. In <code class="language-plaintext highlighter-rouge">p5.sound</code>, we create one with <code class="language-plaintext highlighter-rouge">new p5.Oscillator(type)</code>, where <code class="language-plaintext highlighter-rouge">type</code> is the shape of the wave:</p>
+
+<ul>
+<li><code class="language-plaintext highlighter-rouge">'sine'</code>:  smooth and pure. Only contains the fundamental frequency. Sounds like a flute or a tuning fork.</li>
+<li><code class="language-plaintext highlighter-rouge">'triangle'</code>:  contains odd harmonics that fall off quickly. Softer and warmer than a square wave. Sounds hollow, woody.</li>
+<li><code class="language-plaintext highlighter-rouge">'sawtooth'</code>:  contains <em>all</em> harmonics (odd and even). Bright and buzzy. The classic synthesizer sound for strings and leads.</li>
+<li><code class="language-plaintext highlighter-rouge">'square'</code>:  contains odd harmonics only. Hollow and reedy, like a clarinet or early video game music.</li>
+</ul>
+
+<p>Here is the most basic oscillator sketch:</p>
+
+<!-- SKETCH 01: Basic Oscillator -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/rafael.arias.glez/sketches/ooMSt9rRo"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/rafael.arias.glez/sketches/ooMSt9rRo">open example in new window</a>
+</div>
+
+<p>The code for this sketch:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc;
+let isPlaying = false;
+
+function setup() {
+  createCanvas(400, 300);
+  osc = new p5.Oscillator('sine');
+  osc.freq(440);
+  osc.amp(0);
+  textAlign(CENTER, CENTER);
+  textSize(18);
+}
+
+function draw() {
+  background(15);
+  fill(isPlaying ? '#FF4D1C' : '#555');
+  text(isPlaying ? 'click to stop' : 'click to start', width / 2, height / 2);
+}
+
+function mousePressed() {
+  if (!isPlaying) {
+    osc.start();
+    osc.amp(0.3, 0.1);
+    isPlaying = true;
+  } else {
+    osc.amp(0, 0.3);
+    isPlaying = false;
+  }
+}
+</code></pre></div></div>
+
+<p>Notice we never set the amplitude to a value instantly:  we always provide a <strong>ramp time</strong> (the second argument to <code class="language-plaintext highlighter-rouge">amp()</code>). Jumping from 0 to 0.3 in a single sample creates a harsh click called a <em>DC discontinuity</em>. Fading over even 0.1 seconds eliminates this.</p>
+
+<h2 id="frequency-and-pitch">Frequency and Pitch</h2>
+
+<p>The relationship between frequency and musical pitch is <strong>logarithmic</strong>, not linear. Doubling a frequency always raises the pitch by one octave, regardless of the starting frequency:</p>
+
+<ul>
+<li>A3 = 220 Hz → A4 = 440 Hz (difference: 220 Hz)</li>
+<li>A4 = 440 Hz → A5 = 880 Hz (difference: 440 Hz)</li>
+<li>A5 = 880 Hz → A6 = 1760 Hz (difference: 880 Hz)</li>
+</ul>
+
+<p>Each octave covers <em>twice as much frequency range</em> as the one below it, but our ears perceive each step as the same size. This is why we use exponential formulas for pitch calculations rather than linear ones.</p>
+
+<p>The general formula for converting a MIDI note number \(n\) to a frequency in Hz is:</p>
+
+\[f = 440 \times 2^{(n - 69)/12}\]
+
+<p>where MIDI note 69 = A4 = 440 Hz. This gives us every note on a standard piano keyboard.</p>
+
+<h2 id="interactive-oscillator">Interactive Oscillator</h2>
+
+<p>We can use <code class="language-plaintext highlighter-rouge">mouseX</code> and <code class="language-plaintext highlighter-rouge">mouseY</code> to control pitch and amplitude in real time. Since pitch is logarithmic, we should map the mouse position exponentially:  using <code class="language-plaintext highlighter-rouge">pow()</code>:  rather than linearly:</p>
+
+<!-- SKETCH 02: Mouse-controlled oscillator -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_02"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_02">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc;
+
+function setup() {
+  createCanvas(400, 300);
+  osc = new p5.Oscillator('sine');
+  osc.amp(0);
+  osc.start();
+  textAlign(CENTER);
+  textSize(14);
+}
+
+function draw() {
+  background(15);
+
+  let minFreq = 100;
+  let maxFreq = 2000;
+  let freq = minFreq * pow(maxFreq / minFreq, mouseX / width);
+  let amp = map(mouseY, 0, height, 0.5, 0);
+  amp = constrain(amp, 0, 0.5);
+
+  osc.freq(freq, 0.05);
+  osc.amp(amp, 0.05);
+
+  fill('#C5F74F');
+  noStroke();
+  let d = map(amp, 0, 0.5, 5, 150);
+  circle(mouseX, mouseY, d);
+
+  fill('#888');
+  text(nf(freq, 1, 1) + ' Hz', width / 2, height - 20);
+}
+
+function mousePressed() {
+  osc.start();
+}
+</code></pre></div></div>
+
+<p>The exponential mapping <code class="language-plaintext highlighter-rouge">minFreq * pow(maxFreq / minFreq, mouseX / width)</code> ensures that moving the mouse the same distance always changes the pitch by the same musical interval. If we used <code class="language-plaintext highlighter-rouge">map(mouseX, 0, width, 100, 2000)</code> instead, the lower octaves would be crammed into a tiny sliver on the left side of the canvas.</p>
+
+<h2 id="multiple-oscillators">Multiple Oscillators</h2>
+
+<p>Real sounds are almost never a single sine wave. A violin playing A4 produces a fundamental at 440 Hz <em>plus</em> overtones at 880, 1320, 1760 Hz and beyond, each at different amplitudes. The recipe of overtones is what gives each instrument its unique character:  its <strong>timbre</strong>.</p>
+
+<p>We can start building richer sounds by layering oscillators:</p>
+
+<!-- SKETCH 03: Two oscillators detuned -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_03"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_03">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc1, osc2;
+
+function setup() {
+  createCanvas(400, 300);
+  osc1 = new p5.Oscillator('sine');
+  osc2 = new p5.Oscillator('sine');
+  osc1.amp(0);
+  osc2.amp(0);
+  osc1.freq(440);
+  osc2.freq(443);
+  textAlign(CENTER, CENTER);
+  textSize(16);
+}
+
+function draw() {
+  background(15);
+  fill('#f0ece4');
+  text('click to hear beating\n440 Hz + 443 Hz', width / 2, height / 2);
+}
+
+function mousePressed() {
+  osc1.start();
+  osc2.start();
+  osc1.amp(0.2, 0.1);
+  osc2.amp(0.2, 0.1);
+}
+
+function mouseReleased() {
+  osc1.amp(0, 0.3);
+  osc2.amp(0, 0.3);
+}
+</code></pre></div></div>
+
+<p>When two oscillators are close in frequency but not identical, they create <strong>beating</strong>: a pulsing effect where the combined amplitude rises and falls. The beat frequency equals the difference between the two frequencies. Here, 443 − 440 = 3 beats per second. This is how piano tuners work:  they listen for beats to disappear as two strings approach the same pitch.</p>
+
+<p>This phenomenon:  <strong>interference</strong>:  is fundamental to understanding how waves combine. When the peaks align (<em>constructive interference</em>), the sound gets louder. When a peak meets a trough (<em>destructive interference</em>), they cancel out. The result is that pulsing, tremolo-like effect.</p>
+
+<p>In the <a href="../concurrency/index.html">next tutorial</a> we'll look at how to shape these oscillators over time using envelopes, and explore how different waveforms create different timbres.</p>
+
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Sound as Material</span>
+</summary>
+<ul>
+<li><a href="../neural-nets/index.html">Sound Synthesis</a></li>
+<li><a href="../concurrency/index.html">Envelopes &amp; Timbre</a></li>
+<li><a href="../ml5/index.html">Scales &amp; Frequency</a></li>
+<li><a href="../teachable-machine/index.html">Spectral Analysis</a></li>
+<li><a href="../transformers/index.html">Filters &amp; Effects</a></li>
+<li><a href="../gradio/index.html">Microphone &amp; Reactivity</a></li>
+<li><a href="../gemini/index.html">Generative Music</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

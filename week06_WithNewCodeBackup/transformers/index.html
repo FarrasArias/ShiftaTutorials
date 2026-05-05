@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Filters &amp; Effects</title>
+<meta content="2511 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2511 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Filters &amp; Effects</h1>
+
+<p>So far we've generated sound (oscillators) and analyzed it (FFT). Now we'll <strong>process</strong> it:  changing its spectral content and adding spatial effects. This is where synthesis starts sounding like <em>production</em>.</p>
+
+<h2 id="what-are-filters">What Are Filters?</h2>
+
+<p>An audio filter selectively removes or attenuates certain frequencies from a sound. It's the sonic equivalent of a color filter on a camera lens:  it lets some frequencies through while blocking others.</p>
+
+<p>The three fundamental filter types:</p>
+
+<ul>
+<li><strong>Low-pass filter (LPF)</strong>: passes frequencies <em>below</em> a cutoff frequency, attenuates frequencies above it. Makes sounds darker, warmer, muffled. Think of hearing music through a wall:  the wall is a low-pass filter.</li>
+<li><strong>High-pass filter (HPF)</strong>: passes frequencies <em>above</em> the cutoff, attenuates below. Removes bass, making sounds thinner and brighter. A telephone line is essentially a high-pass filter.</li>
+<li><strong>Band-pass filter (BPF)</strong>: passes a <em>band</em> of frequencies around a center frequency, attenuates everything else. Like tuning a radio:  you isolate one station (frequency band) from the noise.</li>
+</ul>
+
+<p>The key parameters of any filter are:</p>
+<ul>
+<li><strong>Cutoff frequency</strong>: the frequency where the filter starts attenuating. For a low-pass at 1000 Hz, frequencies above 1000 Hz get quieter.</li>
+<li><strong>Resonance (Q)</strong>: a boost at the cutoff frequency. High resonance creates a sharp peak:  the filter "rings" at the cutoff. This is the classic synthesizer filter sweep sound.</li>
+</ul>
+
+<h2 id="p5-filter">p5.Filter</h2>
+
+<p>In <code class="language-plaintext highlighter-rouge">p5.sound</code>, filters are created with <code class="language-plaintext highlighter-rouge">new p5.Filter(type)</code> where type is <code class="language-plaintext highlighter-rouge">'lowpass'</code>, <code class="language-plaintext highlighter-rouge">'highpass'</code>, or <code class="language-plaintext highlighter-rouge">'bandpass'</code>:</p>
+
+<!-- SKETCH 15: Filter sweep -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_15"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_15">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, filt, fft;
+
+function setup() {
+  createCanvas(500, 300);
+  osc = new p5.Oscillator('sawtooth');
+  osc.freq(110);
+  osc.amp(0);
+
+  filt = new p5.Filter('lowpass');
+
+  osc.disconnect();
+  osc.connect(filt);
+
+  fft = new p5.FFT(0.8, 256);
+
+  textAlign(CENTER);
+  textSize(12);
+}
+
+function draw() {
+  background(15);
+
+  let cutoff = map(mouseX, 0, width, 80, 10000);
+  let res = map(mouseY, 0, height, 30, 0.5);
+  filt.freq(cutoff);
+  filt.res(res);
+
+  let spectrum = fft.analyze();
+  noStroke();
+  for (let i = 0; i < spectrum.length; i++) {
+    let x = map(i, 0, spectrum.length, 0, width);
+    let h = map(spectrum[i], 0, 255, 0, height - 60);
+    fill(255, 77, 28, spectrum[i] + 30);
+    rect(x, height - 40 - h, width / spectrum.length, h);
+  }
+
+  fill('#C5F74F');
+  noStroke();
+  text('cutoff: ' + nf(cutoff, 1, 0) + ' Hz', width / 2, 20);
+  text('resonance: ' + nf(res, 1, 1), width / 2, 38);
+  text('mouseX → cutoff | mouseY → resonance | click to play', width / 2, height - 15);
+}
+
+function mousePressed() {
+  osc.start();
+  osc.amp(0.4, 0.1);
+}
+
+function mouseReleased() {
+  osc.amp(0, 0.3);
+}
+</code></pre></div></div>
+
+<p>The signal chain here is: <code class="language-plaintext highlighter-rouge">oscillator → filter → speakers</code>. We manually <code class="language-plaintext highlighter-rouge">disconnect()</code> the oscillator from the default output and <code class="language-plaintext highlighter-rouge">connect()</code> it to the filter instead. The filter's output goes to the speakers by default.</p>
+
+<p>Move the mouse left and right while holding click to sweep the cutoff frequency. This is the "wah-wah" or "filter sweep" sound that's fundamental to electronic music. Move the mouse up for high resonance:  you'll hear the filter start to "sing" at the cutoff frequency.</p>
+
+<h2 id="signal-chains">Signal Chains</h2>
+
+<p>Audio modules in <code class="language-plaintext highlighter-rouge">p5.sound</code> can be chained together just like physical audio equipment. Each module has an input and output, and we connect them with <code class="language-plaintext highlighter-rouge">.connect()</code> and <code class="language-plaintext highlighter-rouge">.disconnect()</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Source → Filter → Output
+osc.disconnect();
+osc.connect(filter);
+// filter output goes to speakers by default
+
+// Source → Filter → Reverb → Output
+osc.disconnect();
+osc.connect(filter);
+filter.disconnect();
+filter.connect(reverb);
+
+// Analyzing the final output
+fft.setInput(reverb);
+</code></pre></div></div>
+
+<p>This modular approach:  connecting processing blocks in series:  is the fundamental architecture of every synthesizer and audio workstation. Each block transforms the signal, and the order matters: filtering before reverb sounds very different from reverb before filtering.</p>
+
+<h2 id="delay">Delay</h2>
+
+<p>A <strong>delay</strong> effect records the incoming signal and plays it back after a specified time, creating echoes. The key parameters are:</p>
+
+<ul>
+<li><strong>Delay time</strong>: how long before the echo plays (in seconds)</li>
+<li><strong>Feedback</strong>: how much of the delayed signal is fed back into the input, creating repeating echoes. At 0, you get a single echo. At high values, echoes repeat many times, gradually fading.</li>
+</ul>
+
+<!-- SKETCH 16: Delay effect -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_16"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_16">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, env, delay, fft;
+
+function setup() {
+  createCanvas(500, 300);
+  osc = new p5.Oscillator('sine');
+  osc.amp(0);
+  osc.start();
+
+  env = new p5.Envelope();
+  env.setADSR(0.001, 0.1, 0.0, 0.1);
+  env.setRange(0.4, 0);
+
+  delay = new p5.Delay();
+  delay.process(osc, 0.35, 0.5, 3000);
+
+  fft = new p5.FFT(0.9);
+
+  textAlign(CENTER);
+  textSize(13);
+}
+
+function draw() {
+  background(15, 15, 15, 40);
+
+  let wave = fft.waveform();
+  noFill();
+  stroke(197, 247, 79, 180);
+  strokeWeight(1.5);
+  beginShape();
+  for (let i = 0; i < wave.length; i++) {
+    let x = map(i, 0, wave.length, 0, width);
+    let y = map(wave[i], -1, 1, height * 0.8, height * 0.2);
+    vertex(x, y);
+  }
+  endShape();
+
+  noStroke();
+  fill('#888');
+  text('click to trigger notes:  listen to the echoes', width / 2, height - 15);
+}
+
+function mousePressed() {
+  let freq = map(mouseX, 0, width, 200, 900);
+  osc.freq(freq);
+  env.play(osc);
+}
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">delay.process(source, delayTime, feedback, filterFreq)</code> connects the source to the delay and configures it in one call. The <code class="language-plaintext highlighter-rouge">filterFreq</code> parameter applies a low-pass filter to the delayed signal:  this mimics how real echoes lose high-frequency content over distance, making each repetition warmer and darker.</p>
+
+<h2 id="reverb">Reverb</h2>
+
+<p><strong>Reverb</strong> (reverberation) simulates the way sound reflects off surfaces in a physical space. A small room has short, dense reflections; a cathedral has long, diffuse ones. Reverb is perhaps the single most important effect for making synthesized sounds feel "real" and "present."</p>
+
+<!-- SKETCH 17: Reverb effect -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_17"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_17">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, env, reverb;
+
+function setup() {
+  createCanvas(400, 300);
+  osc = new p5.Oscillator('triangle');
+  osc.amp(0);
+  osc.start();
+
+  env = new p5.Envelope();
+  env.setADSR(0.001, 0.15, 0.0, 0.1);
+  env.setRange(0.3, 0);
+
+  reverb = new p5.Reverb();
+  reverb.process(osc, 3, 2);
+
+  textAlign(CENTER, CENTER);
+  textSize(14);
+}
+
+function draw() {
+  background(15);
+  fill('#f0ece4');
+  text('click to play notes with reverb', width / 2, height / 2);
+  fill('#888');
+  text('reverb time: 3s | decay rate: 2', width / 2, height / 2 + 25);
+}
+
+function mousePressed() {
+  let notes = [220, 277.18, 329.63, 369.99, 440];
+  osc.freq(random(notes));
+  env.play(osc);
+}
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">reverb.process(source, reverbTime, decayRate)</code>:  <code class="language-plaintext highlighter-rouge">reverbTime</code> is how long the reverb tail lasts (in seconds), and <code class="language-plaintext highlighter-rouge">decayRate</code> controls how quickly it fades (higher = faster decay). A <code class="language-plaintext highlighter-rouge">reverbTime</code> of 0.5 simulates a small room; 5+ simulates a cathedral or concert hall.</p>
+
+<h2 id="combining-effects">Combining Effects</h2>
+
+<p>Real sound design chains multiple effects together. A common creative chain for generative ambient music:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// oscillator → filter → delay → reverb → speakers
+osc.disconnect();
+osc.connect(filt);
+
+filt.disconnect();
+filt.connect(delay);
+
+delay.disconnect();
+delay.connect(reverb);
+
+// The reverb output goes to speakers by default
+</code></pre></div></div>
+
+<p>Each stage transforms the sound. The filter shapes the timbre, the delay creates rhythmic echoes, and the reverb places everything in a virtual space. Changing any one parameter:  the filter cutoff, the delay time, the reverb length:  can completely transform the character of the output.</p>
+
+<p>In the <a href="../gradio/index.html">next tutorial</a>, we'll use the microphone as an input source and build real-time audio-reactive visuals.</p>
+
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Sound as Material</span>
+</summary>
+<ul>
+<li><a href="../neural-nets/index.html">Sound Synthesis</a></li>
+<li><a href="../concurrency/index.html">Envelopes &amp; Timbre</a></li>
+<li><a href="../ml5/index.html">Scales &amp; Frequency</a></li>
+<li><a href="../teachable-machine/index.html">Spectral Analysis</a></li>
+<li><a href="../transformers/index.html">Filters &amp; Effects</a></li>
+<li><a href="../gradio/index.html">Microphone &amp; Reactivity</a></li>
+<li><a href="../gemini/index.html">Generative Music</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

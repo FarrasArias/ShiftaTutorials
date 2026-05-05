@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Generative Music</title>
+<meta content="2511 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2511 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Generative Music</h1>
+
+<p>We now have all the building blocks: oscillators, envelopes, scales, FFT analysis, filters, delay, reverb, and microphone input. In this final tutorial, we bring everything together to build systems that <strong>compose music on their own</strong>:  generative music.</p>
+
+<p>The term was coined by Brian Eno in the 1990s, though the concept is much older. Eno described generative music as systems that produce "ever-changing, ever-different music":  music that is not performed or sequenced by a human, but <em>emerges</em> from a set of rules and constraints.</p>
+
+<h2 id="random-melody">Random Melody Generator</h2>
+
+<p>The simplest generative music: pick random notes from a scale at random intervals. We already built something like this in the <a href="../ml5/index.html">Scales &amp; Frequency</a> tutorial. Let's refine it with proper timing and envelopes:</p>
+
+<!-- SKETCH 21: Random melody -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_21"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_21">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, env;
+let baseFreq = 220;
+let pentatonic = [0, 2, 4, 7, 9, 12, 14, 16];
+let nextNoteTime = 0;
+let started = false;
+let lastFreq = 0;
+
+function setup() {
+  createCanvas(400, 300);
+  osc = new p5.Oscillator('triangle');
+  osc.amp(0);
+  osc.start();
+
+  env = new p5.Envelope();
+  env.setADSR(0.01, 0.2, 0.15, 0.3);
+  env.setRange(0.3, 0);
+
+  textAlign(CENTER, CENTER);
+  textSize(14);
+}
+
+function draw() {
+  background(15, 15, 15, 30);
+
+  if (started && millis() > nextNoteTime) {
+    let step = random(pentatonic);
+    lastFreq = baseFreq * pow(2, step / 12);
+    osc.freq(lastFreq);
+    env.play(osc);
+    nextNoteTime = millis() + random(150, 600);
+  }
+
+  if (lastFreq > 0) {
+    let level = osc.amp().value;
+    let d = map(level, 0, 0.3, 5, 150);
+    let hue = map(lastFreq, 200, 900, 0, 360);
+    noStroke();
+    fill(255, 77, 28, map(level, 0, 0.3, 0, 220));
+    circle(width / 2, height / 2, d);
+
+    fill('#888');
+    text(nf(lastFreq, 1, 1) + ' Hz', width / 2, height - 20);
+  }
+
+  if (!started) {
+    fill('#f0ece4');
+    text('click to start', width / 2, height / 2);
+  }
+}
+
+function mousePressed() {
+  if (!started) {
+    started = true;
+    nextNoteTime = millis();
+  }
+}
+</code></pre></div></div>
+
+<p>This uses a <strong>pentatonic scale</strong> in 12-TET. Pentatonic scales are ideal for random generation because no note combination sounds dissonant:  you can pick any two notes and they'll harmonize.</p>
+
+<h2 id="weighted-random">Weighted Random Selection</h2>
+
+<p>Pure randomness treats every note as equally likely, which produces a flat, aimless quality. Real music has <strong>tendencies</strong>:  certain notes appear more often, melodies tend to move in small steps rather than large jumps.</p>
+
+<p>We can introduce tendencies with <strong>weighted random selection</strong>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function weightedRandom(items, weights) {
+  let total = 0;
+  for (let i = 0; i < weights.length; i++) {
+    total += weights[i];
+  }
+  let r = random(total);
+  let sum = 0;
+  for (let i = 0; i < items.length; i++) {
+    sum += weights[i];
+    if (r < sum) return items[i];
+  }
+  return items[items.length - 1];
+}
+
+// Root and fifth are most likely; other notes less so
+let notes   = [0, 2, 4, 7, 9];
+let weights = [4, 1, 2, 3, 1];
+let step = weightedRandom(notes, weights);
+</code></pre></div></div>
+
+<p>By giving the root (0) and fifth (7) higher weights, the melody gravitates toward these "home" tones, creating a sense of key and stability even though the specific sequence is random.</p>
+
+<h2 id="step-sequencer">A Step Sequencer</h2>
+
+<p>A <strong>sequencer</strong> plays notes at regular intervals (steps). Unlike the random timing above, a sequencer has a steady pulse:  a <strong>tempo</strong>. Each step can have a note, a rest (silence), or different parameters:</p>
+
+<!-- SKETCH 22: Step sequencer -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_22"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_22">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, env;
+let baseFreq = 220;
+let N = 19;
+let scaleSteps = [0, 3, 6, 8, 11, 14, 17];
+let sequence = [];
+let seqLength = 16;
+let currentStep = 0;
+let stepInterval = 200;
+let nextStepTime = 0;
+let started = false;
+
+function setup() {
+  createCanvas(500, 300);
+
+  osc = new p5.Oscillator('sine');
+  osc.amp(0);
+  osc.start();
+
+  env = new p5.Envelope();
+  env.setADSR(0.005, 0.12, 0.1, 0.15);
+  env.setRange(0.35, 0);
+
+  generateSequence();
+
+  textAlign(CENTER, CENTER);
+  textSize(11);
+}
+
+function generateSequence() {
+  sequence = [];
+  for (let i = 0; i < seqLength; i++) {
+    if (random() < 0.25) {
+      sequence.push(-1);
+    } else {
+      let step = random(scaleSteps);
+      let octave = floor(random(0, 2));
+      sequence.push(step + octave * N);
+    }
+  }
+}
+
+function draw() {
+  background(15);
+
+  if (started && millis() > nextStepTime) {
+    let note = sequence[currentStep];
+    if (note >= 0) {
+      let freq = baseFreq * pow(2, note / N);
+      osc.freq(freq);
+      env.play(osc);
+    }
+    currentStep = (currentStep + 1) % seqLength;
+    nextStepTime = millis() + stepInterval;
+  }
+
+  let boxW = (width - 40) / seqLength;
+  for (let i = 0; i < seqLength; i++) {
+    let x = 20 + i * boxW;
+    let isActive = (i === currentStep && started);
+
+    if (sequence[i] < 0) {
+      fill(isActive ? '#555' : '#222');
+    } else {
+      let brightness = map(sequence[i], 0, N * 2, 50, 255);
+      fill(isActive ? '#FF4D1C' : color(197, 247, 79, brightness));
+    }
+    rect(x, 80, boxW - 2, 140, 3);
+
+    if (sequence[i] >= 0) {
+      fill('#000');
+      text(sequence[i], x + boxW / 2 - 1, 150);
+    }
+  }
+
+  fill('#f0ece4');
+  text(started ? '19-TET sequencer running | press R to regenerate'
+               : 'click to start | 19-TET step sequencer', width / 2, 40);
+  fill('#888');
+  text('step ' + currentStep + ' / ' + seqLength, width / 2, height - 20);
+}
+
+function mousePressed() {
+  if (!started) {
+    started = true;
+    nextStepTime = millis();
+  }
+}
+
+function keyPressed() {
+  if (key === 'r' || key === 'R') {
+    generateSequence();
+  }
+}
+</code></pre></div></div>
+
+<p>This sequencer uses <strong>19-TET</strong>:  a microtonal tuning with 19 divisions of the octave. The scale subset <code class="language-plaintext highlighter-rouge">[0, 3, 6, 8, 11, 14, 17]</code> gives us something close to a major scale but with microtonal "color." Some steps are rests (shown as dark boxes). Press R to generate a new random sequence.</p>
+
+<h2 id="markov">Markov Chains: Memory in Randomness</h2>
+
+<p>A <strong>Markov chain</strong> adds a simple form of memory: the next note depends on the <em>current</em> note. Instead of choosing from a global probability distribution, each note has its own set of probabilities for what comes next.</p>
+
+<p>We define this as a <strong>transition table</strong>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Each key maps to an array of possible next notes
+// Notes that appear more often are more likely
+let transitions = {
+  0:  [0, 2, 4, 7],      // from root: can go anywhere
+  2:  [0, 4, 4, 2],      // from 2nd: tends toward 3rd
+  4:  [2, 7, 7, 4],      // from 3rd: tends toward 5th
+  7:  [0, 0, 4, 9],      // from 5th: tends back to root
+  9:  [7, 7, 0, 4]       // from 6th: tends toward 5th
+};
+
+let currentNote = 0;
+
+function nextNote() {
+  let options = transitions[currentNote];
+  currentNote = random(options);
+  return currentNote;
+}
+</code></pre></div></div>
+
+<p>The result is a melody that has <strong>local coherence</strong>:  it tends to move in steps rather than jumps, and it gravitates toward certain pitch centers:  while still being unpredictable at a global level. This is much closer to how real melodies work than pure randomness.</p>
+
+<h2 id="ambient-generator">Ambient Generator: Putting It All Together</h2>
+
+<p>Here's a more complete generative system that combines everything: microtonal scales, multiple oscillators with different envelopes, delay and reverb, and visual feedback.</p>
+
+<!-- SKETCH 23: Ambient generator -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_23"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_23">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc1, osc2, env1, env2;
+let delay, reverb, fft;
+let baseFreq = 220;
+let N = 19;
+let scaleSteps = [0, 3, 6, 8, 11, 14, 17, 19];
+let nextNoteTime = 0;
+let started = false;
+let notes = [];
+
+function setup() {
+  createCanvas(500, 400);
+  colorMode(HSB, 360, 100, 100, 100);
+
+  osc1 = new p5.Oscillator('sine');
+  osc2 = new p5.Oscillator('triangle');
+  osc1.amp(0);
+  osc2.amp(0);
+  osc1.start();
+  osc2.start();
+
+  env1 = new p5.Envelope();
+  env1.setADSR(0.05, 0.3, 0.2, 0.8);
+  env1.setRange(0.2, 0);
+
+  env2 = new p5.Envelope();
+  env2.setADSR(0.2, 0.5, 0.15, 1.2);
+  env2.setRange(0.1, 0);
+
+  reverb = new p5.Reverb();
+  reverb.process(osc1, 4, 3);
+  reverb.process(osc2, 4, 3);
+
+  delay = new p5.Delay();
+  delay.process(osc1, 0.4, 0.35, 4000);
+
+  fft = new p5.FFT(0.92, 128);
+
+  textAlign(CENTER);
+  textSize(13);
+}
+
+function draw() {
+  background(0, 0, 6, 8);
+
+  if (started && millis() > nextNoteTime) {
+    playGenerativeNote();
+    nextNoteTime = millis() + random(300, 1200);
+  }
+
+  // Draw note trails
+  for (let i = notes.length - 1; i >= 0; i--) {
+    let n = notes[i];
+    n.life -= 0.5;
+    if (n.life <= 0) {
+      notes.splice(i, 1);
+      continue;
+    }
+    let alpha = map(n.life, 0, 100, 0, 80);
+    let size = map(n.life, 0, 100, 2, n.size);
+    noStroke();
+    fill(n.hue, 70, 80, alpha);
+    circle(n.x, n.y, size);
+  }
+
+  // Waveform overlay
+  let wave = fft.waveform();
+  noFill();
+  stroke(0, 0, 40, 40);
+  strokeWeight(1);
+  beginShape();
+  for (let i = 0; i < wave.length; i++) {
+    let x = map(i, 0, wave.length, 0, width);
+    let y = height / 2 + wave[i] * 100;
+    vertex(x, y);
+  }
+  endShape();
+
+  noStroke();
+  if (!started) {
+    fill(0, 0, 90);
+    text('click to start generative ambient', width / 2, height / 2);
+  }
+}
+
+function playGenerativeNote() {
+  let step = random(scaleSteps);
+  let octave = floor(random(0, 3));
+  let freq = baseFreq * pow(2, (step + octave * N) / N);
+
+  osc1.freq(freq);
+  osc2.freq(freq * pow(2, 11 / N));
+  env1.play(osc1);
+  env2.play(osc2);
+
+  let hue = map(freq, baseFreq, baseFreq * 8, 180, 30);
+  notes.push({
+    x: map(freq, baseFreq, baseFreq * 8, 40, width - 40),
+    y: random(60, height - 60),
+    size: map(octave, 0, 2, 40, 15),
+    hue: hue,
+    life: 100
+  });
+}
+
+function mousePressed() {
+  if (!started) {
+    started = true;
+    nextNoteTime = millis();
+  }
+}
+</code></pre></div></div>
+
+<p>This sketch creates a self-playing ambient piece in 19-TET. Two oscillators play together:  one tuned to the fundamental, the other to an approximate fourth above (step 11 in 19-TET). Each note triggers two envelopes with different shapes: the sine has a quicker attack for presence, the triangle swells in slowly for warmth. Delay and reverb create a wash of overlapping echoes. Visually, each note spawns a fading circle whose position and color map to the pitch.</p>
+
+<h2 id="design-principles">Design Principles for Generative Music</h2>
+
+<p>Some principles that make generative systems sound more musical:</p>
+
+<ul>
+<li><strong>Constrain the pitch palette.</strong> Use a scale:  pentatonic, modal, or microtonal. Fewer pitch options often sound better than more.</li>
+<li><strong>Vary the rhythm, not just the notes.</strong> Random timing (within bounds) creates organic feel. Regular timing creates pulse. Both are valid; mixing them creates texture.</li>
+<li><strong>Use space.</strong> Not every step needs a note. Rests and silences are musical events. A 25% chance of silence per step makes a big difference.</li>
+<li><strong>Layer slow and fast.</strong> Combine a slow-changing bass drone with faster melodic gestures. Different time scales create depth.</li>
+<li><strong>Let effects do work.</strong> Reverb and delay turn sparse notes into dense textures. A single plucked note through a long reverb becomes a pad.</li>
+<li><strong>Add tendencies, not rules.</strong> Weighted probabilities and Markov chains create coherence without rigidity. The system should surprise even you.</li>
+</ul>
+
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Sound as Material</span>
+</summary>
+<ul>
+<li><a href="../neural-nets/index.html">Sound Synthesis</a></li>
+<li><a href="../concurrency/index.html">Envelopes &amp; Timbre</a></li>
+<li><a href="../ml5/index.html">Scales &amp; Frequency</a></li>
+<li><a href="../teachable-machine/index.html">Spectral Analysis</a></li>
+<li><a href="../transformers/index.html">Filters &amp; Effects</a></li>
+<li><a href="../gradio/index.html">Microphone &amp; Reactivity</a></li>
+<li><a href="../gemini/index.html">Generative Music</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Envelopes &amp; Timbre</title>
+<meta content="2511 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2511 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Envelopes &amp; Timbre</h1>
+
+<p>In the <a href="../neural-nets/index.html">previous tutorial</a> we created oscillators that play continuous tones. But real sounds don't behave like that:  a piano note starts suddenly and fades away; a violin note swells gradually and holds. The way a sound's <strong>amplitude changes over time</strong> is called its <strong>envelope</strong>, and it's one of the most powerful tools in synthesis.</p>
+
+<h2 id="adsr">ADSR: The Four Stages of a Note</h2>
+
+<p>Since the 1960s, synthesizers have used a four-stage model called <strong>ADSR</strong> to shape how each note evolves:</p>
+
+<ul>
+<li><strong>Attack</strong>: the time it takes for the sound to rise from silence to its peak amplitude. A snare drum has an attack of nearly 0 ms. A bowed cello might take 200–500 ms.</li>
+<li><strong>Decay</strong>: the time it takes to drop from the peak to the sustain level. A piano's initial hammer strike is loud, then quickly drops to a quieter ringing tone:  that drop is the decay.</li>
+<li><strong>Sustain</strong>: the amplitude level held while the note is active (while a key is pressed). This is a <em>level</em>, not a time:  it's expressed as a fraction of the peak. A pipe organ sustains at full volume; a plucked guitar has zero sustain.</li>
+<li><strong>Release</strong>: the time it takes to fade from the sustain level to silence after the note is released.</li>
+</ul>
+
+<p>Mathematically, the envelope \(e(t)\) is a piecewise function that multiplies the oscillator's output:</p>
+
+\[\text{output}(t) = e(t) \times \sin(2\pi f t)\]
+
+<p>The envelope never changes the frequency:  it only scales the amplitude. This is why a note can fade out without changing pitch.</p>
+
+<h2 id="p5-envelope">p5.Envelope</h2>
+
+<p>In <code class="language-plaintext highlighter-rouge">p5.sound</code>, we create an envelope with <code class="language-plaintext highlighter-rouge">new p5.Envelope()</code> and configure it with <code class="language-plaintext highlighter-rouge">setADSR()</code>:</p>
+
+<!-- SKETCH 04: ADSR envelope demo -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/rafael.arias.glez/sketches/ooMSt9rRo"></iframe>
+</div>
+<a class="editor-link" href="https://editor.p5js.org/rafael.arias.glez/sketches/ooMSt9rRo">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, env;
+
+function setup() {
+  createCanvas(400, 300);
+  osc = new p5.Oscillator('triangle');
+  osc.amp(0);
+  osc.start();
+
+  env = new p5.Envelope();
+  env.setADSR(0.05, 0.2, 0.3, 0.4);
+  env.setRange(0.5, 0);
+
+  textAlign(CENTER, CENTER);
+  textSize(16);
+}
+
+function draw() {
+  background(15);
+  fill('#f0ece4');
+  text('click to trigger a note', width / 2, height / 2);
+}
+
+function mousePressed() {
+  osc.freq(random([220, 330, 440, 550, 660]));
+  env.play(osc);
+}
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">setADSR(attackTime, decayTime, sustainLevel, releaseTime)</code> takes times in <strong>seconds</strong> and sustain as a <strong>ratio</strong> (0 to 1). <code class="language-plaintext highlighter-rouge">setRange(peak, floor)</code> sets the actual amplitude values that the envelope scales between.</p>
+
+<p>When you call <code class="language-plaintext highlighter-rouge">env.play(osc)</code>, the envelope runs through all four stages automatically. If you want manual control (hold a key, release a key), use <code class="language-plaintext highlighter-rouge">env.triggerAttack(osc)</code> and <code class="language-plaintext highlighter-rouge">env.triggerRelease(osc)</code> instead.</p>
+
+<h2 id="envelope-shapes">Envelope Shapes and Their Character</h2>
+
+<p>Different ADSR settings produce radically different sonic characters from the <em>same</em> oscillator:</p>
+
+<!-- SKETCH 05: Comparing envelope shapes -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_05"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_05">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, env;
+let envelopes = {
+  'pluck':   [0.001, 0.15, 0.0, 0.1],
+  'pad':     [0.8,   0.3,  0.6, 1.0],
+  'bell':    [0.001, 2.0,  0.0, 0.5],
+  'swell':   [1.5,   0.1,  0.8, 0.3]
+};
+let currentType = 'pluck';
+
+function setup() {
+  createCanvas(400, 300);
+  osc = new p5.Oscillator('triangle');
+  osc.amp(0);
+  osc.start();
+
+  env = new p5.Envelope();
+  env.setRange(0.4, 0);
+  setEnvelope(currentType);
+
+  textAlign(CENTER, CENTER);
+  textSize(14);
+}
+
+function setEnvelope(type) {
+  let e = envelopes[type];
+  env.setADSR(e[0], e[1], e[2], e[3]);
+  currentType = type;
+}
+
+function draw() {
+  background(15);
+  fill('#f0ece4');
+  text('press 1-4 to change envelope, click to play', width / 2, 30);
+  fill('#FF4D1C');
+  text('current: ' + currentType, width / 2, height / 2);
+
+  let labels = ['1: pluck', '2: pad', '3: bell', '4: swell'];
+  fill('#888');
+  for (let i = 0; i < labels.length; i++) {
+    text(labels[i], width / 2, height - 80 + i * 20);
+  }
+}
+
+function mousePressed() {
+  osc.freq(330);
+  env.play(osc);
+}
+
+function keyPressed() {
+  if (key === '1') setEnvelope('pluck');
+  if (key === '2') setEnvelope('pad');
+  if (key === '3') setEnvelope('bell');
+  if (key === '4') setEnvelope('swell');
+}
+</code></pre></div></div>
+
+<p>Notice:</p>
+<ul>
+<li><strong>Pluck</strong> (0.001, 0.15, 0.0, 0.1): near-instant attack, quick decay to silence, no sustain. Guitar, harp, marimba.</li>
+<li><strong>Pad</strong> (0.8, 0.3, 0.6, 1.0): slow attack, moderate sustain, long release. Ambient, cinematic, ethereal.</li>
+<li><strong>Bell</strong> (0.001, 2.0, 0.0, 0.5): instant attack, very long decay, no sustain. The sound rings out naturally.</li>
+<li><strong>Swell</strong> (1.5, 0.1, 0.8, 0.3): very slow attack. The sound gradually fades in, like a reversed cymbal or a bowed instrument starting from nothing.</li>
+</ul>
+
+<h2 id="harmonics-and-timbre">Harmonics and Timbre</h2>
+
+<p>Why does a violin sound different from a flute playing the same note? Both produce the same fundamental frequency, but they differ in <strong>timbre</strong>:  the tonal quality or "color" of the sound.</p>
+
+<p>Timbre is determined by the <strong>harmonic content</strong>: the specific mix of overtones present above the fundamental. When a string vibrates at 440 Hz, it also vibrates at 880 Hz (2nd harmonic), 1320 Hz (3rd harmonic), 1760 Hz (4th harmonic), and so on. The pattern is:</p>
+
+\[f_n = n \times f_0 \quad \text{where } n = 1, 2, 3, 4, \ldots\]
+
+<p>Each instrument produces these harmonics at different relative amplitudes. A flute is almost a pure sine (strong fundamental, weak harmonics). A violin has strong harmonics all the way up. An oboe has particularly strong odd harmonics.</p>
+
+<p>This is exactly what the different oscillator types in p5.js are modeling:</p>
+
+<ul>
+<li><strong>Sine</strong>: only \(f_0\). No harmonics. Pure tone.</li>
+<li><strong>Triangle</strong>: odd harmonics (\(f_0, 3f_0, 5f_0, \ldots\)), each at amplitude \(\frac{1}{n^2}\). They fall off fast, so it's soft.</li>
+<li><strong>Square</strong>: odd harmonics at amplitude \(\frac{1}{n}\). Brighter than triangle.</li>
+<li><strong>Sawtooth</strong>: all harmonics (odd and even) at amplitude \(\frac{1}{n}\). The richest, brightest standard waveform.</li>
+</ul>
+
+<h2 id="additive-synthesis">Additive Synthesis: Building Timbre from Scratch</h2>
+
+<p>Since any periodic sound is a sum of sine waves (this is <strong>Fourier's theorem</strong>), we can build custom timbres by stacking sine oscillators at harmonic frequencies with chosen amplitudes. This technique is called <strong>additive synthesis</strong>.</p>
+
+<!-- SKETCH 06: Additive synthesis -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_06"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_06">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let oscillators = [];
+let amplitudes = [0.35, 0.25, 0.15, 0.1, 0.06, 0.04];
+let baseFreq = 220;
+let env;
+let playing = false;
+
+function setup() {
+  createCanvas(400, 300);
+
+  for (let i = 0; i < amplitudes.length; i++) {
+    let o = new p5.Oscillator('sine');
+    o.freq(baseFreq * (i + 1));
+    o.amp(0);
+    o.start();
+    oscillators.push(o);
+  }
+
+  env = new p5.Envelope();
+  env.setADSR(0.01, 0.3, 0.4, 0.5);
+  env.setRange(1.0, 0);
+
+  textAlign(CENTER, CENTER);
+  textSize(14);
+}
+
+function draw() {
+  background(15);
+
+  fill('#f0ece4');
+  text('click to play:  6 harmonics stacked', width / 2, 20);
+
+  for (let i = 0; i < amplitudes.length; i++) {
+    let x = map(i, 0, amplitudes.length - 1, 60, width - 60);
+    let h = amplitudes[i] * 400;
+    noStroke();
+    fill('#FF4D1C');
+    rect(x - 15, height - 40 - h, 30, h);
+    fill('#888');
+    text('h' + (i + 1), x, height - 20);
+  }
+}
+
+function mousePressed() {
+  for (let i = 0; i < oscillators.length; i++) {
+    oscillators[i].amp(amplitudes[i], 0.01);
+  }
+  env.play(oscillators[0]);
+
+  setTimeout(function () {
+    for (let i = 0; i < oscillators.length; i++) {
+      oscillators[i].amp(0, 0.5);
+    }
+  }, 1500);
+}
+</code></pre></div></div>
+
+<p>Here, harmonic 1 (the fundamental at 220 Hz) is the loudest, and each successive harmonic is quieter. Changing the amplitude ratios changes the timbre entirely:  try making the 3rd harmonic dominant for a clarinet-like quality, or boost all harmonics equally for a harsh, buzzing sound.</p>
+
+<p>This is the core insight: <strong>timbre is not a mysterious quality:  it's a recipe</strong>. Every sound is a specific combination of sine waves at specific amplitudes. Additive synthesis makes that recipe explicit.</p>
+
+<h2 id="layering">Layering Oscillators with Different Envelopes</h2>
+
+<p>One powerful technique is giving each oscillator its own envelope. The attack portion might emphasize higher harmonics (bright, percussive onset), while the sustain portion lets lower harmonics dominate (warm, mellow body). This mimics how real instruments behave:  the initial bow scratch on a cello is spectrally very different from the sustained note that follows.</p>
+
+<!-- SKETCH 07: Layered with different envelopes -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_07"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_07">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let oscLow, oscHigh, envLow, envHigh;
+
+function setup() {
+  createCanvas(400, 300);
+
+  oscLow = new p5.Oscillator('sine');
+  oscHigh = new p5.Oscillator('sawtooth');
+  oscLow.amp(0);
+  oscHigh.amp(0);
+  oscLow.start();
+  oscHigh.start();
+
+  envLow = new p5.Envelope();
+  envLow.setADSR(0.3, 0.2, 0.5, 0.8);
+  envLow.setRange(0.3, 0);
+
+  envHigh = new p5.Envelope();
+  envHigh.setADSR(0.005, 0.1, 0.0, 0.05);
+  envHigh.setRange(0.15, 0);
+
+  textAlign(CENTER, CENTER);
+  textSize(14);
+}
+
+function draw() {
+  background(15);
+  fill('#f0ece4');
+  text('click: percussive high + sustained low', width / 2, height / 2);
+}
+
+function mousePressed() {
+  let f = random([110, 165, 220, 275, 330]);
+  oscLow.freq(f);
+  oscHigh.freq(f * 3);
+  envLow.play(oscLow);
+  envHigh.play(oscHigh);
+}
+</code></pre></div></div>
+
+<p>The low sine oscillator swells in slowly and sustains:  it provides the body. The high sawtooth oscillator has an almost instant attack and no sustain:  it provides the percussive "click" at the start of the note. Together, they create a much more interesting and organic sound than either alone.</p>
+
+<p>In the <a href="../ml5/index.html">next tutorial</a> we'll explore how frequency relates to musical scales, and how to build microtonal tuning systems that go beyond the standard 12 notes.</p>
+
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Sound as Material</span>
+</summary>
+<ul>
+<li><a href="../neural-nets/index.html">Sound Synthesis</a></li>
+<li><a href="../concurrency/index.html">Envelopes &amp; Timbre</a></li>
+<li><a href="../ml5/index.html">Scales &amp; Frequency</a></li>
+<li><a href="../teachable-machine/index.html">Spectral Analysis</a></li>
+<li><a href="../transformers/index.html">Filters &amp; Effects</a></li>
+<li><a href="../gradio/index.html">Microphone &amp; Reactivity</a></li>
+<li><a href="../gemini/index.html">Generative Music</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -2,13 +2,12 @@
 
 <html>
 <head>
-<title>Teachable Machine</title>
+<title>Spectral Analysis</title>
 <meta content="2511 Term" name="description"/>
 <meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <link href="../../css/main.css" rel="stylesheet"/>
-<!-- <link rel="stylesheet" href="/assets/simplelightbox/simple-lightbox.min.css"> -->
 <link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
 <link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
 
@@ -27,127 +26,135 @@
 <div class="body-container">
 <div class="body-section content-section">
 <content class="body-section-content">
-<h1>Teachable Machine</h1>
-<p>We’ve seen how to use the <a href="https://ml5js.org/">ml5 library</a> to detect faces and hands on images, and briefly mentioned that it can be used to detect objects or classify images coming from video streams.</p>
-<p>Let’s set up a sketch to do classification on a video stream.</p>
-<p>We’ll start by modifying our hand detection sketch to work with the camera. We’ll have to add a capture stream, and instead of calling <code class="language-plaintext highlighter-rouge">detect()</code> just once on a static image, we’ll have to keep calling <code class="language-plaintext highlighter-rouge">detect()</code> every time we’re done detecting. So our detection callback function will look like this now:</p>
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">doneDetecting</span><span class="p">(</span><span class="nx">results</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">mResults</span> <span class="o">=</span> <span class="nx">results</span><span class="p">;</span>
-  <span class="nx">model</span><span class="p">.</span><span class="nx">detect</span><span class="p">(</span><span class="nx">mCamera</span><span class="p">,</span> <span class="nx">doneDetecting</span><span class="p">);</span>
-<span class="p">}</span>
+<h1>Spectral Analysis</h1>
+
+<p>In the <a href="../concurrency/index.html">envelopes tutorial</a> we learned that every sound is a combination of sine waves at different frequencies and amplitudes. But how do we go the other direction:  given a complex sound, how do we figure out <em>which</em> frequencies are in it and how strong each one is?</p>
+
+<p>The answer is the <strong>Fourier Transform</strong>, one of the most important mathematical tools in all of science and engineering.</p>
+
+<h2 id="time-vs-frequency">Time Domain vs. Frequency Domain</h2>
+
+<p>There are two ways to look at any sound:</p>
+
+<ul>
+<li><strong>Time domain</strong>: amplitude as a function of time. This is what you see if you plot the raw waveform:  the wiggly line that oscilloscopes show. It answers: "what is the pressure doing right now?"</li>
+<li><strong>Frequency domain</strong>: amplitude as a function of frequency. This is the <strong>spectrum</strong>:  a bar chart showing how much energy is at each frequency. It answers: "what frequencies make up this sound?"</li>
+</ul>
+
+<p>The Fourier Transform converts between these two representations. Given a time-domain signal, it produces the frequency-domain spectrum. The inverse Fourier Transform does the opposite.</p>
+
+<p>Mathematically, the Fourier Transform of a signal \(x(t)\) is:</p>
+
+\[X(f) = \int_{-\infty}^{\infty} x(t) \, e^{-i 2\pi f t} \, dt\]
+
+<p>Don't worry about the integral:  the key insight is conceptual: the transform <strong>decomposes</strong> a complex signal into its constituent sine waves, telling us the amplitude and phase of each frequency component.</p>
+
+<h2 id="fft">The FFT: Fast Fourier Transform</h2>
+
+<p>In practice, digital audio uses the <strong>FFT</strong> (Fast Fourier Transform), an efficient algorithm that computes the discrete version of the Fourier Transform. The FFT takes a window of \(N\) audio samples and produces \(N/2\) frequency bins.</p>
+
+<p>With the standard FFT size of 1024 samples at a 44,100 Hz sample rate:</p>
+<ul>
+<li>Each frequency bin covers \(\frac{44100}{1024} \approx 43\) Hz</li>
+<li>We get 512 bins, ranging from 0 Hz to ~22,050 Hz</li>
+<li>Lower bins = bass frequencies, higher bins = treble frequencies</li>
+</ul>
+
+<p>In <code class="language-plaintext highlighter-rouge">p5.sound</code>, the FFT is available through the <code class="language-plaintext highlighter-rouge">p5.FFT</code> class, which gives us two views of the sound:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let fft = new p5.FFT();
+
+// In draw():
+let waveform = fft.waveform();   // time domain: array of 1024 values, -1 to 1
+let spectrum = fft.analyze();     // frequency domain: array of 1024 values, 0 to 255
 </code></pre></div></div>
-<p>Since we’re drawing the video stream at every frame of <code class="language-plaintext highlighter-rouge">draw()</code>, and we might be drawing faster than detecting, we can’t rely on drawing the landmarks inside the callback function anymore. What we can do is copy the results of the detection to a global variable to make sure they are available in our <code class="language-plaintext highlighter-rouge">draw()</code> function. That’s what <code class="language-plaintext highlighter-rouge">mResults = results;</code> is doing.</p>
-<p>The rest of the sketch should look very familiar, we run <code class="language-plaintext highlighter-rouge">detect()</code>, make the results available globally, and run <code class="language-plaintext highlighter-rouge">detect()</code> again. Then, in <code class="language-plaintext highlighter-rouge">draw()</code>, we iterate through the latest results and draw landmark points for detected hands:</p>
+
+<h2 id="drawing-waveform">Drawing a Waveform</h2>
+
+<p>The waveform shows the raw shape of the sound wave:  what the speaker cone is physically doing at each moment. We draw it by mapping each sample to a point on the canvas:</p>
+
+<!-- SKETCH 11: Waveform visualization -->
 <div class="editor-block-wrapper">
 <div class="p5-editor-wrapper editor-wrapper">
-<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/xQrvjIfCT"></iframe>
+<iframe class="editor" data-src="https://editor.p5js.org/rafael.arias.glez/sketches/iIG22nJgQ"></iframe>
 </div>
-<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/xQrvjIfCT">
-    open example in new window
-  </a>
+<a class="editor-link" href="https://editor.p5js.org/rafael.arias.glez/sketches/iIG22nJgQ">open example in new window</a>
 </div>
-<p>This works and we could use specific landmark locations to detect basic gestures like pinches or taps.</p>
-<h2 id="classification-model">Classification Model</h2>
-<p>Let’s try the image classification model from <code class="language-plaintext highlighter-rouge">ml5</code>.</p>
-<p>Since the <code class="language-plaintext highlighter-rouge">ml5</code> library wraps up a bunch of different models into consistent interfaces, we can swap our hand model for a classification model with some minor changes.</p>
-<p>The new model is instantiated like this:</p>
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">model</span> <span class="o">=</span> <span class="nx">ml5</span><span class="p">.</span><span class="nx">imageClassifier</span><span class="p">(</span><span class="dl">"</span><span class="s2">MobileNet</span><span class="dl">"</span><span class="p">);</span>
-</code></pre></div></div>
-<p>And used like this:</p>
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">model</span><span class="p">.</span><span class="nx">classify</span><span class="p">(</span><span class="nx">mCamera</span><span class="p">,</span> <span class="nx">doneDetecting</span><span class="p">);</span>
-</code></pre></div></div>
-<p>The results are not lists of hands or faces and their landmark objects, but lists of detected objects and how confident the model is about its classification of the image. For example:</p>
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span>
-  <span class="p">{</span>
-    <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">wig</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">confidence</span><span class="dl">"</span><span class="p">:</span> <span class="mf">0.195567</span>
-  <span class="p">},</span>
-  <span class="p">{</span>
-    <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">mask</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">confidence</span><span class="dl">"</span><span class="p">:</span> <span class="mf">0.026581</span>
-  <span class="p">},</span>
-  <span class="p">{</span>
-    <span class="dl">"</span><span class="s2">label</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">neck tie</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">confidence</span><span class="dl">"</span><span class="p">:</span> <span class="mf">0.025564</span>
-  <span class="p">},</span>
-<span class="p">]</span>
-</code></pre></div></div>
-<p>By default, the model only outputs the top-3 classes, but this can be adjusted with the <code class="language-plaintext highlighter-rouge">{topk: K}</code> parameter to the model constructor, where <code class="language-plaintext highlighter-rouge">K</code> is an integer that specifies how many classes to report.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">beginShape()</code> / <code class="language-plaintext highlighter-rouge">vertex()</code> / <code class="language-plaintext highlighter-rouge">endShape()</code> pattern draws a connected line through all 1024 points. At low frequencies you can clearly see the individual wave cycles. At higher frequencies the cycles get compressed together.</p>
+
+<p>Notice how different oscillator types produce different wave shapes: a sine wave looks smooth and rounded, a sawtooth looks like a zigzag ramp, and a square wave looks like flat plateaus with sharp transitions.</p>
+
+<h2 id="drawing-spectrum">Drawing a Frequency Spectrum</h2>
+
+<p>The spectrum shows how much energy is at each frequency:  the "ingredients" of the sound. Low frequencies (bass) are on the left, high frequencies (treble) on the right:</p>
+
+<!-- SKETCH 12: Spectrum visualization -->
 <div class="editor-block-wrapper">
 <div class="p5-editor-wrapper editor-wrapper">
-<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/C-ZVXe2Xm"></iframe>
+<iframe class="editor" data-src="https://editor.p5js.org/rafael.arias.glez/sketches/CiRIBcq72"></iframe>
 </div>
-<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/C-ZVXe2Xm">
-    open example in new window
-  </a>
+<a class="editor-link" href="https://editor.p5js.org/rafael.arias.glez/sketches/CiRIBcq72">open example in new window</a>
 </div>
-<p>Like previously mentioned, the <code class="language-plaintext highlighter-rouge">ml5</code> documentation doesn’t really specify which version of <code class="language-plaintext highlighter-rouge">MobileNetV2</code> was used, nor does it specify which classes this model detects.</p>
-<p>The <code class="language-plaintext highlighter-rouge">wig, mask, neck tie</code> result was for a picture of a human face 🤔.</p>
-<p>Other images give slightly more accurate, or rather, reasonable, results:</p>
-<div class="scaled-images left">
-<img src="../../assets/images/week06/tm-classification-00.jpg"/>
-</div>
-<p>They’re very specific in some cases, and in other cases, wildly varying.</p>
-<p>This isn’t a problem, but if we’re going to use this model it would help to know exactly what classes it was trained to identify. We might also want to add, remove or edit the classes in the model.</p>
-<p>Luckily, there’s a separate project that helps us do just that.</p>
-<h2 id="teachable-machine">Teachable Machine</h2>
-<p><a href="https://teachablemachine.withgoogle.com/">Teachable Machine</a> is a web-based platform that helps us collect data and finetune certain types of models.</p>
-<p>When we access the site we first have to choose the type of project we’re working on, so it sets up the correct framework and initial model for our tuning. Let’s see how to use it to augment an image classification model.</p>
-<p>Again, these are models that look at an image and predict what class of objects it represents. It can be used to differentiate between breeds of dogs, or classify digits written on envelopes. What we want to do, though, is use a classification model to detect and interpret American Sign Language signs.</p>
-<p>We looked at the hand pose model from <code class="language-plaintext highlighter-rouge">ml5</code>, and we could use that to detect hand landmarks, but then we would need to manually come up with specific landmark relationships for each of the letters we want to detect. With the proper data, we can just train an image classification model to do the same thing, but in a more automated fashion.</p>
-<h3 id="the-data">The Data</h3>
-<p>We’ll go to <a href="https://teachablemachine.withgoogle.com/">Teachable Machine</a>, select <em>Image Project</em> and then <em>Standard image model</em>. We’re greeted with this interface:</p>
-<div class="scaled-images left">
-<img src="../../assets/images/week06/tm-interface-00.jpg"/>
-</div>
-<p>We can start by adding a class for the letter ‘A’. Once we give it a name, we could start uploading hand signal images we find on the internet, but the interface gives us a simpler way to do this: video. If we click the Webcam button, we can use video to generate a series of images of the hand signal for the letter ‘A’.</p>
-<div class="scaled-images left">
-<img src="../../assets/images/week06/tm-interface-01.jpg"/>
-</div>
-<p>When generating images for training a classification model, it’s good to have as large of a variety of images as possible. The hand signal should always be for the letter ‘A’, but its position on the screen, the distance from the camera, the lighting, the background, etc… should all be different from image to image.</p>
-<p>We want the model to pick up on the common elements of all of the images.</p>
-<div class="video-container w100">
-<video autoplay="" class="video" loop="" muted="" playsinline="">
-<source src="../../assets/images/week06/tm-capture-00.webm" type="video/webm"/>
-<source src="../../assets/images/week06/tm-capture-00.mp4" type="video/mp4"/>
-</video>
-</div>
-<p>Sometimes it’s a good idea to add an “<em>empty</em>” class to our dataset with images that aren’t part of any other class. For this example, this could be a series of images without hands, or with hands that aren’t showing any of the alphabet signals.</p>
-<div class="scaled-images left">
-<img src="../../assets/images/week06/tm-interface-02.jpg"/>
-</div>
-<p>Once we’ve collected enough varied images for all of the classes we want to detect, we can press the <em>Train Model</em> button. This will use our images to modify a pre-trained model and make it so it only detects the classes that we’re specifying.</p>
-<p>Once the model is ready, Teachable Machine gives us an interface for testing it, but more importantly, it gives us a way to add it to a <code class="language-plaintext highlighter-rouge">p5.js</code> sketch using <code class="language-plaintext highlighter-rouge">ml5</code>.</p>
-<h3 id="the-model">The Model</h3>
-<p>When we click on the <em>Export Model</em> button, we get a screen like this:</p>
-<div class="scaled-images left">
-<img src="../../assets/images/week06/tm-export-00.jpg"/>
-</div>
-<p>We want to select the <em>Tensorflow.js</em> tab and the <em>Upload</em> option, and then click the <em>Upload my model</em> button.</p>
-<p>Once the model is done uploading, we want to copy the url it gives us for our finetuned model.</p>
-<p>For this example it was:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://teachablemachine.withgoogle.com/models/hrStMX1V2/
+
+<p>When you play the sawtooth at 220 Hz, you should see a tall spike at the fundamental (220 Hz), then progressively shorter spikes at 440, 660, 880, 1100 Hz, and so on:  exactly the harmonic series. This is the FFT literally showing us the "recipe" of the sawtooth wave: all harmonics, each at amplitude \(1/n\).</p>
+
+<p>A sine wave would show only a single spike. A square wave would show spikes only at odd harmonics.</p>
+
+<h2 id="fft-constructor">FFT Parameters</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">p5.FFT</code> constructor takes two optional arguments:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let fft = new p5.FFT(smoothing, bins);
+// smoothing: 0.0 to 1.0 (default 0.8)
+//   Higher = smoother but slower response
+//   Lower = more responsive but jittery
+// bins: 16, 32, 64, 128, 256, 512, 1024 (default 1024)
+//   More bins = finer frequency resolution but more data to process
 </code></pre></div></div>
-<p>Save the url somewhere. Don’t worry too much about the <code class="language-plaintext highlighter-rouge">p5.js</code> example code that Teachable Machine provides. It was written for an older version of <code class="language-plaintext highlighter-rouge">p5.js</code> and an older version of <code class="language-plaintext highlighter-rouge">ml5</code>, and it doesn’t work, so we’ll just modify the code we already have working.</p>
-<h3 id="the-p5js-code">The <code class="language-plaintext highlighter-rouge">p5.js</code> Code</h3>
-<p>If we start with the plain image classifier example from above, all we have to do is change the line that instantiates our model to use the model that we finetuned.</p>
-<p>We do this with:</p>
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">model</span> <span class="o">=</span> <span class="nx">ml5</span><span class="p">.</span><span class="nx">imageClassifier</span><span class="p">(</span><span class="nx">modelUrl</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">/model.json</span><span class="dl">"</span><span class="p">);</span>
+
+<p>The <strong>smoothing</strong> parameter is particularly important for visuals. At 0.0, the spectrum updates instantly every frame, which can look chaotic. At 0.8, each frame blends 80% of the previous value with 20% new data, creating smooth, flowing animations. Think of it as the "inertia" of the display.</p>
+
+<h2 id="frequency-bands">Named Frequency Bands</h2>
+
+<p>Rather than working with the full spectrum array, <code class="language-plaintext highlighter-rouge">p5.FFT</code> lets us query specific frequency ranges using <code class="language-plaintext highlighter-rouge">getEnergy()</code>:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let bass   = fft.getEnergy('bass');      // 20–140 Hz
+let lowMid = fft.getEnergy('lowMid');    // 140–400 Hz
+let mid    = fft.getEnergy('mid');       // 400–2600 Hz
+let highMid = fft.getEnergy('highMid');  // 2600–5200 Hz
+let treble = fft.getEnergy('treble');    // 5200–14000 Hz
+
+// Or specify exact frequency range:
+let sub = fft.getEnergy(20, 80);         // sub-bass
 </code></pre></div></div>
-<p>Where <code class="language-plaintext highlighter-rouge">modelUrl</code> is the url we got from Teachable Machine above.</p>
-<p>And that’s it ! Done ! We now have a custom, finetuned, image classification model.</p>
+
+<p>Each returns a value from 0 to 255. These named bands correspond roughly to musical and perceptual categories: bass covers kick drums and bass guitars, mid covers vocals and most melodic instruments, treble covers hi-hats and cymbals and the "air" of a recording.</p>
+
+<!-- SKETCH 13: Frequency band visualizer -->
 <div class="editor-block-wrapper">
 <div class="p5-editor-wrapper editor-wrapper">
-<iframe class="editor" data-src="https://editor.p5js.org/tgh-p5-tutorials/sketches/3plC1NlxY"></iframe>
+<iframe class="editor" data-src="https://editor.p5js.org/rafael.arias.glez/sketches/1Bt56ka4e"></iframe>
 </div>
-<a class="editor-link" href="https://editor.p5js.org/tgh-p5-tutorials/sketches/3plC1NlxY">
-    open example in new window
-  </a>
+<a class="editor-link" href="https://editor.p5js.org/rafael.arias.glez/sketches/1Bt56ka4e">open example in new window</a>
 </div>
-<p>We can change the output a little bit, adjust it to make something visual or auditory happen based on the letters detected, but the majority of the code for setting up the camera, the model and the detection, stays the same.</p>
-<div class="scaled-images left">
-<img src="../../assets/images/week06/tm-result-00.jpg"/>
+
+<p>Try switching between wave types while playing. A sine wave puts all its energy in the bass/lowMid band (depending on the frequency). A sawtooth spreads energy across all bands because it contains all harmonics. This is spectral analysis making the abstract concept of timbre <em>visible</em>.</p>
+
+<h2 id="combining-views">Combining Waveform and Spectrum</h2>
+
+<p>For a complete picture, we can draw both the time-domain waveform and the frequency-domain spectrum together. The waveform shows <em>what</em> the sound looks like; the spectrum shows <em>what it's made of</em>:</p>
+
+<!-- SKETCH 14: Combined waveform + spectrum -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="https://editor.p5js.org/rafael.arias.glez/sketches/HDTB_HZDd"></iframe>
 </div>
+<a class="editor-link" href="https://editor.p5js.org/rafael.arias.glez/sketches/HDTB_HZDd">open example in new window</a>
+</div>
+
+<p>In the <a href="../transformers/index.html">next tutorial</a>, we'll use the frequency information from FFT to drive audio filters and effects:  processing sound in real time.</p>
+
 </content>
 </div>
 <div class="body-section menu-section">
@@ -237,16 +244,16 @@
 <details class="menu-details">
 <summary class="menu-summary">
 <span class="menu-summary-title">Week 06</span>
-<span class="menu-summary-subtitle"> Machine Learning and AI Models</span>
+<span class="menu-summary-subtitle"> Sound as Material</span>
 </summary>
 <ul>
-<li><a href="../neural-nets/index.html">Intro to Neural Networks</a></li>
-<li><a href="../concurrency/index.html">Concurrency</a></li>
-<li><a href="../ml5/index.html">ml5</a></li>
-<li><a href="index.html">Teachable Machine</a></li>
-<li><a href="../transformers/index.html">Transformers.js</a></li>
-<li><a href="../gradio/index.html">Gradio Models</a></li>
-<li><a href="../gemini/index.html">Gemini API</a></li>
+<li><a href="../neural-nets/index.html">Sound Synthesis</a></li>
+<li><a href="../concurrency/index.html">Envelopes &amp; Timbre</a></li>
+<li><a href="../ml5/index.html">Scales &amp; Frequency</a></li>
+<li><a href="../teachable-machine/index.html">Spectral Analysis</a></li>
+<li><a href="../transformers/index.html">Filters &amp; Effects</a></li>
+<li><a href="../gradio/index.html">Microphone &amp; Reactivity</a></li>
+<li><a href="../gemini/index.html">Generative Music</a></li>
 </ul>
 </details>
 </div>

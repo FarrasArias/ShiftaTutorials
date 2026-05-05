@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Scales &amp; Frequency</title>
+<meta content="2511 Term" name="description"/>
+<meta content="creative, coding, generative, art, shifta, p5, p5js, p5.js, JavaScript" name="keywords"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../../css/main.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css?family=Raleway:400%7CSource+Code+Pro:400" rel="stylesheet" type="text/css"/>
+<link href="../../assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+<script src="../../js/main.js"></script>
+<script src="../../js/editor-loader.js"></script>
+<script async="" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+<div class="body-container">
+<div class="top-container" id="top-container">
+<div class="top-content">
+<h1><a class="top-home-link" href="../../index.html">Designing Generative Experiences</a></h1>
+<h3>2511 Term</h3>
+</div>
+</div>
+<div class="body-container">
+<div class="body-section content-section">
+<content class="body-section-content">
+<h1>Scales &amp; Frequency</h1>
+
+<p>In the previous tutorials we generated tones at arbitrary frequencies. But music is built on <strong>scales</strong>:  specific collections of pitches chosen for their relationships to each other. Understanding how scales are constructed mathematically lets us build generative systems that sound <em>musical</em> rather than random.</p>
+
+<h2 id="intervals-and-ratios">Intervals and Frequency Ratios</h2>
+
+<p>When two notes sound "good" together:  when we perceive <strong>consonance</strong>:  it's because their frequencies form simple ratios. This was discovered by Pythagoras around 500 BCE and remains the foundation of tuning theory.</p>
+
+<p>The simplest ratios produce the most consonant intervals:</p>
+
+<ul>
+<li><strong>Octave</strong>: \(2:1\):  frequencies 220 Hz and 440 Hz. So perfectly consonant that we consider them "the same note."</li>
+<li><strong>Perfect fifth</strong>: \(3:2\):  frequencies 220 Hz and 330 Hz. The most consonant interval after the octave. The backbone of Western harmony.</li>
+<li><strong>Perfect fourth</strong>: \(4:3\):  frequencies 220 Hz and 293.3 Hz.</li>
+<li><strong>Major third</strong>: \(5:4\):  frequencies 220 Hz and 275 Hz. Warm and bright.</li>
+<li><strong>Minor third</strong>: \(6:5\):  frequencies 220 Hz and 264 Hz. Darker, melancholic.</li>
+</ul>
+
+<p>The more complex the ratio, the more <strong>dissonant</strong> (tense, rough) the interval sounds. This is because complex ratios create interference patterns that our ears detect as "beating" or roughness.</p>
+
+<h2 id="just-intonation">Just Intonation: Pure Ratios</h2>
+
+<p>If we build a scale using only pure frequency ratios, we get <strong>just intonation</strong>. A just major scale starting on 220 Hz:</p>
+
+<table>
+<tr><th>Degree</th><th>Ratio</th><th>Frequency</th><th>Interval name</th></tr>
+<tr><td>1 (root)</td><td>\(1:1\)</td><td>220.0 Hz</td><td>Unison</td></tr>
+<tr><td>2</td><td>\(9:8\)</td><td>247.5 Hz</td><td>Major second</td></tr>
+<tr><td>3</td><td>\(5:4\)</td><td>275.0 Hz</td><td>Major third</td></tr>
+<tr><td>4</td><td>\(4:3\)</td><td>293.3 Hz</td><td>Perfect fourth</td></tr>
+<tr><td>5</td><td>\(3:2\)</td><td>330.0 Hz</td><td>Perfect fifth</td></tr>
+<tr><td>6</td><td>\(5:3\)</td><td>366.7 Hz</td><td>Major sixth</td></tr>
+<tr><td>7</td><td>\(15:8\)</td><td>412.5 Hz</td><td>Major seventh</td></tr>
+<tr><td>8</td><td>\(2:1\)</td><td>440.0 Hz</td><td>Octave</td></tr>
+</table>
+
+<p>Just intonation sounds beautiful <em>in one key</em>. The problem: if you try to transpose to a different starting note, the ratios between notes change and some intervals become out of tune. This is the <strong>comma problem</strong> that plagued Western music for centuries.</p>
+
+<!-- SKETCH 08: Just intonation scale player -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_08"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_08">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, env;
+let baseFreq = 220;
+let justRatios = [1, 9/8, 5/4, 4/3, 3/2, 5/3, 15/8, 2];
+
+function setup() {
+  createCanvas(400, 300);
+  osc = new p5.Oscillator('triangle');
+  osc.amp(0);
+  osc.start();
+
+  env = new p5.Envelope();
+  env.setADSR(0.01, 0.2, 0.3, 0.3);
+  env.setRange(0.4, 0);
+
+  textAlign(CENTER, CENTER);
+  textSize(14);
+}
+
+function draw() {
+  background(15);
+  fill('#f0ece4');
+  text('Just Intonation Major Scale', width / 2, 20);
+  text('press keys 1-8 to play scale degrees', width / 2, height - 20);
+
+  for (let i = 0; i < justRatios.length; i++) {
+    let x = map(i, 0, justRatios.length - 1, 50, width - 50);
+    let freq = baseFreq * justRatios[i];
+    fill(i === 0 || i === 7 ? '#FF4D1C' : '#C5F74F');
+    rect(x - 15, 80, 30, 150, 4);
+    fill('#888');
+    text(nf(freq, 1, 1), x, 260);
+  }
+}
+
+function keyPressed() {
+  let index = int(key) - 1;
+  if (index >= 0 && index < justRatios.length) {
+    osc.freq(baseFreq * justRatios[index]);
+    env.play(osc);
+  }
+}
+</code></pre></div></div>
+
+<h2 id="equal-temperament">Equal Temperament: The Compromise</h2>
+
+<p>The solution that modern Western music settled on is <strong>12-tone equal temperament</strong> (12-TET). Instead of using pure ratios, we divide the octave into 12 <em>exactly equal</em> steps on a logarithmic scale. Each step (a semitone) multiplies the frequency by:</p>
+
+\[r = 2^{1/12} \approx 1.05946\]
+
+<p>The frequency of note \(k\) semitones above a base frequency \(f_0\) is:</p>
+
+\[f_k = f_0 \times 2^{k/12}\]
+
+<p>This means:</p>
+<ul>
+<li>The "equal-tempered fifth" (7 semitones) has a ratio of \(2^{7/12} \approx 1.4983\), very close to the pure \(3:2 = 1.5\).</li>
+<li>The "equal-tempered major third" (4 semitones) has a ratio of \(2^{4/12} \approx 1.2599\), noticeably different from the pure \(5:4 = 1.25\).</li>
+</ul>
+
+<p>The tradeoff: <strong>no interval is perfectly pure, but every key sounds equally good (or equally bad)</strong>. This is why a piano can play in any key without retuning.</p>
+
+<!-- SKETCH 09: 12-TET chromatic scale -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_09"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_09">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, env;
+let baseFreq = 261.63;
+let noteNames = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+
+function setup() {
+  createCanvas(500, 300);
+  osc = new p5.Oscillator('sine');
+  osc.amp(0);
+  osc.start();
+
+  env = new p5.Envelope();
+  env.setADSR(0.01, 0.15, 0.2, 0.3);
+  env.setRange(0.35, 0);
+
+  textAlign(CENTER, CENTER);
+  textSize(12);
+}
+
+function draw() {
+  background(15);
+  fill('#f0ece4');
+  text('12-TET Chromatic Scale:  click a key', width / 2, 20);
+
+  for (let i = 0; i < 12; i++) {
+    let x = map(i, 0, 11, 40, width - 40);
+    let isBlack = [1, 3, 6, 8, 10].includes(i);
+
+    fill(isBlack ? '#333' : '#f0ece4');
+    rect(x - 16, 50, 32, 160, 4);
+
+    fill(isBlack ? '#aaa' : '#333');
+    text(noteNames[i], x, 230);
+
+    let freq = baseFreq * pow(2, i / 12);
+    fill('#888');
+    text(nf(freq, 1, 1), x, 250);
+  }
+}
+
+function mousePressed() {
+  for (let i = 0; i < 12; i++) {
+    let x = map(i, 0, 11, 40, width - 40);
+    if (abs(mouseX - x) < 16 && mouseY > 50 && mouseY < 210) {
+      let freq = baseFreq * pow(2, i / 12);
+      osc.freq(freq);
+      env.play(osc);
+      break;
+    }
+  }
+}
+</code></pre></div></div>
+
+<h2 id="microtonal">Microtonal Tuning: N-TET</h2>
+
+<p>There's nothing sacred about dividing the octave into 12 parts. The general formula for <strong>N-tone equal temperament</strong> (N-TET) is:</p>
+
+\[f_k = f_0 \times 2^{k/N}\]
+
+<p>Different values of \(N\) produce different trade-offs between the available intervals:</p>
+
+<ul>
+<li><strong>19-TET</strong>: 19 steps per octave. The major third (\(2^{6/19} \approx 1.2447\)) is much closer to the pure \(5:4 = 1.25\) than 12-TET's version. The fifth is slightly narrow. Used by some adventurous composers and microtonal guitarists.</li>
+<li><strong>31-TET</strong>: 31 steps. Excellent approximations of both thirds and fifths. The Dutch physicist Christiaan Huygens advocated for this tuning in the 1600s.</li>
+<li><strong>53-TET</strong>: 53 steps. Nearly indistinguishable from just intonation for most intervals. Turkish classical music theory uses a 53-division system.</li>
+<li><strong>24-TET</strong>: quarter-tones. Used in Arabic maqam music and some 20th-century Western compositions.</li>
+</ul>
+
+<p>In each case, we pick a <strong>subset</strong> of the N available steps to form a scale, just as we pick 7 notes from 12 to form a major scale in 12-TET.</p>
+
+<!-- SKETCH 10: N-TET explorer -->
+<div class="editor-block-wrapper">
+<div class="p5-editor-wrapper editor-wrapper">
+<iframe class="editor" data-src="SKETCH_URL_10"></iframe>
+</div>
+<a class="editor-link" href="SKETCH_URL_10">open example in new window</a>
+</div>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let osc, env;
+let baseFreq = 220;
+let N = 19;
+let scaleSteps = [0, 3, 6, 8, 11, 14, 17, 19];
+
+function setup() {
+  createCanvas(500, 350);
+  osc = new p5.Oscillator('triangle');
+  osc.amp(0);
+  osc.start();
+
+  env = new p5.Envelope();
+  env.setADSR(0.01, 0.2, 0.3, 0.3);
+  env.setRange(0.35, 0);
+
+  textAlign(CENTER, CENTER);
+  textSize(12);
+}
+
+function draw() {
+  background(15);
+  fill('#f0ece4');
+  text(N + '-TET Scale:  click a bar to play', width / 2, 20);
+  text('press UP/DOWN to change N (divisions of octave)', width / 2, height - 15);
+
+  for (let i = 0; i < scaleSteps.length; i++) {
+    let x = map(i, 0, scaleSteps.length - 1, 50, width - 50);
+    let freq = baseFreq * pow(2, scaleSteps[i] / N);
+    let ratio = pow(2, scaleSteps[i] / N);
+    let barH = map(freq, baseFreq, baseFreq * 2, 40, 200);
+
+    fill('#FF4D1C');
+    rect(x - 18, height - 50 - barH, 36, barH, 3);
+
+    fill('#C5F74F');
+    text('step ' + scaleSteps[i], x, height - 50 - barH - 15);
+
+    fill('#888');
+    text(nf(freq, 1, 1) + ' Hz', x, height - 38);
+  }
+
+  fill('#4FC5F7');
+  text('N = ' + N, width / 2, 45);
+}
+
+function mousePressed() {
+  for (let i = 0; i < scaleSteps.length; i++) {
+    let x = map(i, 0, scaleSteps.length - 1, 50, width - 50);
+    if (abs(mouseX - x) < 20) {
+      let freq = baseFreq * pow(2, scaleSteps[i] / N);
+      osc.freq(freq);
+      env.play(osc);
+      break;
+    }
+  }
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    N = min(N + 1, 53);
+    updateScale();
+  }
+  if (keyCode === DOWN_ARROW) {
+    N = max(N - 1, 5);
+    updateScale();
+  }
+}
+
+function updateScale() {
+  scaleSteps = [];
+  let numNotes = 8;
+  for (let i = 0; i < numNotes; i++) {
+    scaleSteps.push(round(i * N / (numNotes - 1)));
+  }
+}
+</code></pre></div></div>
+
+<p>Try pressing UP and DOWN arrow keys to change the number of divisions. Notice how the frequencies shift and the intervals between notes change character. Some values of N sound close to familiar Western scales; others sound alien and exotic.</p>
+
+<h2 id="bohlen-pierce">Beyond the Octave: The Bohlen–Pierce Scale</h2>
+
+<p>Most tuning systems assume the octave (\(2:1\)) as the fundamental repeating unit. But the <strong>Bohlen–Pierce scale</strong> challenges even this assumption: it divides the <em>tritave</em> (\(3:1\)) into 13 equal steps instead:</p>
+
+\[f_k = f_0 \times 3^{k/13}\]
+
+<p>The step ratio is \(3^{1/13} \approx 1.08818\), compared to \(2^{1/12} \approx 1.05946\) for standard tuning. The resulting intervals have no Western equivalent:  they exist in a completely different harmonic world. Music written in Bohlen–Pierce has a strange, otherworldly quality that's immediately recognizable as <em>something different</em>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Bohlen-Pierce: tritave divided into 13 steps
+let bpFreq = baseFreq * pow(3, step / 13);
+
+// Compare with standard 12-TET
+let tetFreq = baseFreq * pow(2, step / 12);
+</code></pre></div></div>
+
+<h2 id="pentatonic">The Pentatonic Scale: A Universal</h2>
+
+<p>Before diving deeper into microtonal systems, it's worth noting that the <strong>pentatonic scale</strong> (5 notes per octave) appears in nearly every musical culture on Earth:  from Chinese traditional music to Celtic folk to West African kora to blues. In 12-TET, the major pentatonic uses steps [0, 2, 4, 7, 9], which correspond to whole-tone and minor-third intervals.</p>
+
+<p>Pentatonic scales have a special property: <strong>no note clashes badly with any other</strong>. This makes them ideal for generative music:  random melodies from a pentatonic scale almost always sound pleasant.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Pentatonic scale in 12-TET
+let pentatonic12 = [0, 2, 4, 7, 9];
+
+// Approximate pentatonic in 19-TET
+let pentatonic19 = [0, 3, 6, 11, 14];
+
+// Both produce the same general "shape" of scale
+// but 19-TET has subtly different interval colors
+</code></pre></div></div>
+
+<p>In the <a href="../teachable-machine/index.html">next tutorial</a>, we'll look at how to analyze the frequency content of sounds using the FFT (Fast Fourier Transform):  turning sound back into the numbers that compose it.</p>
+
+</content>
+</div>
+<div class="body-section menu-section">
+<div class="menu-container" id="menu-container">
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 01</span>
+<span class="menu-summary-subtitle"> Getting Started</span>
+</summary>
+<ul>
+<li><a href="../../week01/programming/index.html">Programming Computers</a></li>
+<li><a href="../../week01/javascript/index.html">The Browser and JavaScript</a></li>
+<li><a href="../../week01/p5-setup/index.html">Setting up p5.js</a></li>
+<li><a href="../../week01/p5-intro/index.html">Intro to p5.js</a></li>
+<li><a href="../../week01/drawing/index.html">Drawing: Shapes and Colors</a></li>
+<li><a href="../../week01/variables/index.html">Variables</a></li>
+<li><a href="../../week01/transformations/index.html">Translations, Rotations and Transformations</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 02</span>
+<span class="menu-summary-subtitle"> Structures</span>
+</summary>
+<ul>
+<li><a href="../../week02/conditionals/index.html">Conditionals</a></li>
+<li><a href="../../week02/patterns/index.html">Loops as Patterns</a></li>
+<li><a href="../../week02/counters/index.html">Loops as Counters</a></li>
+<li><a href="../../week02/functions/index.html">Functions</a></li>
+<li><a href="../../week02/random/index.html">Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 03</span>
+<span class="menu-summary-subtitle"> Time</span>
+</summary>
+<ul>
+<li><a href="../../week03/arrays/index.html">Arrays</a></li>
+<li><a href="../../week03/strings/index.html">Strings</a></li>
+<li><a href="../../week03/objects/index.html">JavaScript Objects</a></li>
+<li><a href="../../week03/animations/index.html">Animations</a></li>
+<li><a href="../../week03/interactions/index.html">Interactions</a></li>
+<li><a href="../../week03/maths/index.html">Maths: mod and map</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 04</span>
+<span class="menu-summary-subtitle"> Data Structures</span>
+</summary>
+<ul>
+<li><a href="../../week04/data/index.html">Loading Data (JSON/CSV)</a></li>
+<li><a href="../../week04/images/index.html">Images</a></li>
+<li><a href="../../week04/videos/index.html">Videos</a></li>
+<li><a href="../../week04/sound-files/index.html">Sound Files</a></li>
+<li><a href="../../week04/sound-processing/index.html">Sound Processing</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Datasets</span>
+<span class="menu-summary-subtitle"> </span>
+</summary>
+<ul>
+<li><a href="../../datasets/beijing/index.html">Beijing PM2.5 Dataset</a></li>
+<li><a href="../../datasets/crashes/index.html">Motor Vehicle Collisions - Crash Dataset</a></li>
+<li><a href="../../datasets/inflation/index.html">Global Inflation Dataset: (1970 - 2022)</a></li>
+<li><a href="../../datasets/stocks/index.html">Stock Exchange Data</a></li>
+<li><a href="../../datasets/trees/index.html">2015 Street Tree Census</a></li>
+<li><a href="../../datasets/wine/index.html">Wine Information</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 05</span>
+<span class="menu-summary-subtitle"> Randomness and Simulations</span>
+</summary>
+<ul>
+<li><a href="../../week05/classes/index.html">Classes</a></li>
+<li><a href="../../week05/cycles/index.html">Cycles</a></li>
+<li><a href="../../week05/sincos/index.html">Sine &amp; Cosine</a></li>
+<li><a href="../../week05/vectors/index.html">More Trigonometry and Vectors</a></li>
+<li><a href="../../week05/more-random/index.html">More Randomness</a></li>
+</ul>
+</details>
+<details class="menu-details">
+<summary class="menu-summary">
+<span class="menu-summary-title">Week 06</span>
+<span class="menu-summary-subtitle"> Sound as Material</span>
+</summary>
+<ul>
+<li><a href="../neural-nets/index.html">Sound Synthesis</a></li>
+<li><a href="../concurrency/index.html">Envelopes &amp; Timbre</a></li>
+<li><a href="../ml5/index.html">Scales &amp; Frequency</a></li>
+<li><a href="../teachable-machine/index.html">Spectral Analysis</a></li>
+<li><a href="../transformers/index.html">Filters &amp; Effects</a></li>
+<li><a href="../gradio/index.html">Microphone &amp; Reactivity</a></li>
+<li><a href="../gemini/index.html">Generative Music</a></li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

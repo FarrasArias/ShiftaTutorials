@@ -372,7 +372,7 @@ class: title-slide
 .kicker[Designing Generative Experiences: SHIFTA 2026-04]
 
 ???
-Trig and modulo/map are review — keep those sections fast. The new material is fractals, cellular automata, and chaos. These are genuinely mind-bending ideas, so give them room to breathe. Keep everything anchored to a visual on screen.
+Trig and modulo/map are review:  keep those sections fast. The new material is fractals, cellular automata, and chaos. These are genuinely mind-bending ideas, so give them room to breathe. Keep everything anchored to a visual on screen.
 
 ---
 
@@ -407,14 +407,14 @@ class: section-slide
 
 # Trigonometry
 
-## Review — the geometry of circles.
+## Review:  the geometry of circles.
 
 ---
 
 # The Formula That Does Everything
 
 .col-left[
-**Radians** — p5.js default
+**Radians**:  p5.js default
 - Full circle = `TWO_PI` ≈ 6.28
 - Half = `PI` ≈ 3.14
 - Right angle = `HALF_PI` ≈ 1.57
@@ -431,7 +431,7 @@ x = cx + cos(angle) * radius
 y = cy + sin(angle) * radius
 ```
 
-As `angle` goes `0 → TWO_PI`, this traces one full circle. Everything else — spirals, roses, clocks, orbits — is a variation of this.
+As `angle` goes `0 → TWO_PI`, this traces one full circle. Everything else:  spirals, roses, clocks, orbits:  is a variation of this.
 ]
 .col-right[
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Unit_circle_angles_color.svg/500px-Unit_circle_angles_color.svg.png" style="max-height:350px; margin-top:0.5em;">
@@ -516,7 +516,7 @@ Two sine waves, different frequencies. The ratio `a:b` determines the shape.
 ```javascript
 let a = 3;        // x frequency
 let b = 2;        // y frequency
-let delta = HALF_PI;  // phase offset — try 0, PI/4, PI/2
+let delta = HALF_PI;  // phase offset:  try 0, PI/4, PI/2
 let steps = 1000;
 
 function setup() {
@@ -575,20 +575,20 @@ function keyPressed() { redraw(); }
 ```
 
 ???
-This one is a jaw-dropper. The golden angle (360 / φ²) is why sunflower seeds pack so efficiently — no two seeds share the same angular slice.
+This one is a jaw-dropper. The golden angle (360 / φ²) is why sunflower seeds pack so efficiently:  no two seeds share the same angular slice.
 
 ---
 
 .col-left[
 # Trig in the Wild
 
-Spirals in shells, seeds in sunflowers, oscilloscope patterns, planetary orbits — trigonometry is the language of circular motion everywhere.
+Spirals in shells, seeds in sunflowers, oscilloscope patterns, planetary orbits:  trigonometry is the language of circular motion everywhere.
 
 **Artists working with trig:**
 
-- **John Whitney Sr.** (1917–1995) — father of computer animation. His films *Arabesque* and *Catalog* are built entirely from Lissajous-type harmonics. Mesmerizing before anyone called it generative art.
-- **Manolo Gamboa Naon** (@manoloidee) — contemporary generative art layering sine waves into dense, rhythmic compositions.
-- **Robert Hodgin** — "flight404", particle systems orbiting with polar coordinates.
+- **John Whitney Sr.** (1917–1995):  father of computer animation. His films *Arabesque* and *Catalog* are built entirely from Lissajous-type harmonics. Mesmerizing before anyone called it generative art.
+- **Manolo Gamboa Naon** (@manoloidee):  contemporary generative art layering sine waves into dense, rhythmic compositions.
+- **Robert Hodgin**:  "flight404", particle systems orbiting with polar coordinates.
 
 .small[The Harmonograph (1840s): a Victorian mechanical device that drew Lissajous curves with two pendulums and a pen. No code required.]
 ]
@@ -625,8 +625,8 @@ countDown(5);  // prints: 5, 4, 3, 2, 1, 0
 --
 
 **Two essential parts:**
-1. **The recursive call** — the function calls itself with a modified argument
-2. **The base case** — the condition that stops the recursion
+1. **The recursive call**:  the function calls itself with a modified argument
+2. **The base case**:  the condition that stops the recursion
 
 .box[
 **Without a base case:** infinite recursion → crash.
@@ -687,7 +687,7 @@ nestedSquare(380)
 
 Common base case patterns:
 - `if (size < minimumSize) return;`
-- `if (depth <= 0) return;` — pass depth as a decreasing parameter
+- `if (depth <= 0) return;`:  pass depth as a decreasing parameter
 ]
 
 ---
@@ -750,12 +750,12 @@ The tree becomes a live instrument you play with the mouse.
 
 # Fractals and Self-Similarity
 
-A **fractal** is a structure where every part looks like the whole — at any scale.
+A **fractal** is a structure where every part looks like the whole:  at any scale.
 
 The tree is a fractal. So is the branching of lungs, rivers, lightning, and coastlines.
 
 > *"Clouds are not spheres, mountains are not cones, coastlines are not circles, and bark is not smooth, nor does lightning travel in a straight line."*
-> — Benoît Mandelbrot, *The Fractal Geometry of Nature*, 1982
+>:  Benoît Mandelbrot, *The Fractal Geometry of Nature*, 1982
 
 All fractals share one property: **a simple rule applied to its own output.**
 
@@ -835,7 +835,7 @@ function kochLine(start, end, iter) {
 
 # Dragon Curve
 
-Fold a piece of paper in half, always in the same direction. Unfold it flat. Repeat 10 times. The crease pattern is the **Dragon Curve** — a fractal that never crosses itself.
+Fold a piece of paper in half, always in the same direction. Unfold it flat. Repeat 10 times. The crease pattern is the **Dragon Curve**:  a fractal that never crosses itself.
 
 We describe it with an **L-system**: a grammar where symbols expand according to rules:
 - `F` → `F+G` *(go forward, then turn right)*
@@ -899,10 +899,10 @@ Take a triangle. Drop a dot anywhere inside it. Then repeat endlessly:
 
 You'd expect random noise. You get the **Sierpiński Triangle.**
 
-> *"Order for free."* — Stuart Kauffman
+> *"Order for free."*:  Stuart Kauffman
 
 .box[
-This is remarkable: pure randomness, applied consistently, produces perfect geometric structure. The fractal **emerges** from the rule — not from any intention to draw it. No one is drawing the triangle. The triangle appears.
+This is remarkable: pure randomness, applied consistently, produces perfect geometric structure. The fractal **emerges** from the rule:  not from any intention to draw it. No one is drawing the triangle. The triangle appears.
 ]
 
 ---
@@ -947,7 +947,7 @@ function draw() {
 
 # The Mandelbrot Set
 
-The most famous fractal — and not recursive code, but **iterative maths on the complex plane.**
+The most famous fractal:  and not recursive code, but **iterative maths on the complex plane.**
 
 For every point `c`, ask: does this sequence stay bounded, or escape to infinity?
 
@@ -962,7 +962,7 @@ z₃ = z₂² + c  ...
 - Points that **escape** → colored by how fast they left
 
 .box[
-Zoom into the boundary: infinite detail at every level — spirals, seahorses, antennas — all generated by the single rule `z = z² + c`. The complexity is not put in; it emerges from the arithmetic.
+Zoom into the boundary: infinite detail at every level:  spirals, seahorses, antennas:  all generated by the single rule `z = z² + c`. The complexity is not put in; it emerges from the arithmetic.
 ]
 
 ---
@@ -1012,20 +1012,20 @@ function draw() {
 .col-left[
 # Fractal Art & Artists
 
-> *"Fractal geometry is not just a chapter of mathematics, but one that helps Everyman to see the same world differently."* — Mandelbrot
+> *"Fractal geometry is not just a chapter of mathematics, but one that helps Everyman to see the same world differently."*:  Mandelbrot
 
-**Benoît Mandelbrot** — the mathematician who argued that roughness and self-similarity are fundamental to nature's geometry, not mathematical pathology.
+**Benoît Mandelbrot**:  the mathematician who argued that roughness and self-similarity are fundamental to nature's geometry, not mathematical pathology.
 
-**M.C. Escher** — infinite recursion in woodcuts, long before computers. *Print Gallery* (1956) depicts a man inside a picture that contains the city he's standing in.
+**M.C. Escher**:  infinite recursion in woodcuts, long before computers. *Print Gallery* (1956) depicts a man inside a picture that contains the city he's standing in.
 
-**Tyler Hobbs** — contemporary generative artist. His series *Fidenza* combines algorithmic flow with hand-tuned aesthetics.
+**Tyler Hobbs**:  contemporary generative artist. His series *Fidenza* combines algorithmic flow with hand-tuned aesthetics.
 
-**Sofia Crespo** — *Artificial Remnants*: neural networks trained on coral and fractal structures, blurring biology and code.
+**Sofia Crespo**:  *Artificial Remnants*: neural networks trained on coral and fractal structures, blurring biology and code.
 ]
 .col-right[
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Mandel_zoom_00_mandelbrot_set.jpg/480px-Mandel_zoom_00_mandelbrot_set.jpg" style="max-height:330px; border-radius:4px;">
 
-.small.dim[The Mandelbrot set — called "the most complex object in mathematics"]
+.small.dim[The Mandelbrot set:  called "the most complex object in mathematics"]
 ]
 .clearfix[]
 
@@ -1052,7 +1052,7 @@ No central control. No randomness. Just local rules, applied everywhere at once.
 - 3 cells = 8 possible combinations → a rule is 8 output bits → **256 possible rules**
 
 .box[
-256 rules. Some produce boring stripes. **Rule 30** produces apparent randomness — Wolfram uses it to generate random numbers in Mathematica. **Rule 110** can simulate any computer.
+256 rules. Some produce boring stripes. **Rule 30** produces apparent randomness:  Wolfram uses it to generate random numbers in Mathematica. **Rule 110** can simulate any computer.
 ]
 
 ---
@@ -1129,7 +1129,7 @@ function applyRule(a, b, c) {
 
 **Chaos theory**: tiny differences in starting conditions produce wildly different outcomes.
 
-> *"A butterfly flapping its wings in Brazil can set off a tornado in Texas."* — Edward Lorenz
+> *"A butterfly flapping its wings in Brazil can set off a tornado in Texas."*:  Edward Lorenz
 
 This is **sensitive dependence on initial conditions.**
 
@@ -1138,7 +1138,7 @@ This is **sensitive dependence on initial conditions.**
 - In nature: weather, heartbeats, ecosystems, the drip of a faucet
 
 .box[
-Chaos is **not** randomness. The same starting conditions always produce the same result — it is fully deterministic. But we can never measure initial conditions with perfect precision, so long-term prediction becomes impossible.
+Chaos is **not** randomness. The same starting conditions always produce the same result:  it is fully deterministic. But we can never measure initial conditions with perfect precision, so long-term prediction becomes impossible.
 
 The Lorenz attractor, bifurcation diagrams, and strange attractors are beautiful visual artifacts of chaos worth searching for.
 ]
@@ -1148,24 +1148,24 @@ The Lorenz attractor, bifurcation diagrams, and strange attractors are beautiful
 .col-left[
 # Artists & Emergence
 
-**Stephen Wolfram** — *A New Kind of Science* (2002): the book arguing that simple computational rules underlie all complexity in the universe. Bold claim. Fascinating pictures.
+**Stephen Wolfram**:  *A New Kind of Science* (2002): the book arguing that simple computational rules underlie all complexity in the universe. Bold claim. Fascinating pictures.
 
-**Ryoji Ikeda** — Japanese sound and visual artist. His *test pattern* installations map binary data to audiovisual noise at architectural scale — CA aesthetics made monumental.
+**Ryoji Ikeda**:  Japanese sound and visual artist. His *test pattern* installations map binary data to audiovisual noise at architectural scale:  CA aesthetics made monumental.
 
-**Casey Reas** — co-creator of Processing. His *Software Structures* series explores emergence through behavioral rules with no fixed outcome.
+**Casey Reas**:  co-creator of Processing. His *Software Structures* series explores emergence through behavioral rules with no fixed outcome.
 
-**Memo Akten** — *Learning to See*: machine learning trained on fractal and CA patterns, then turned to look at the world.
+**Memo Akten**:  *Learning to See*: machine learning trained on fractal and CA patterns, then turned to look at the world.
 
 .small[Rule 30's output is statistically indistinguishable from true randomness. One cell. One rule. Infinite noise.]
 ]
 .col-right[
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/CA_rule30s.png/320px-CA_rule30s.png" style="max-height:210px; border-radius:4px; margin-bottom:1em;">
 
-.small.dim[Rule 30 — apparent randomness from a single black cell]
+.small.dim[Rule 30:  apparent randomness from a single black cell]
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Cypraea-tigris-olivia.jpg/320px-Cypraea-tigris-olivia.jpg" style="max-height:160px; border-radius:4px;">
 
-.small.dim[*Conus textile* shell — nature ran the CA first]
+.small.dim[*Conus textile* shell:  nature ran the CA first]
 ]
 .clearfix[]
 
@@ -1182,7 +1182,7 @@ class: section-slide
 # The Three Tools
 
 .col-left[
-**Modulo `%`** — the remainder, always cycling
+**Modulo `%`**:  the remainder, always cycling
 ```javascript
 7 % 3   // → 1  (cycles 0, 1, 2, 0, 1, 2 ...)
 
@@ -1197,14 +1197,14 @@ let col = i % cols;
 let row = floor(i / cols);
 ```
 
-**`map()`** — translate between ranges
+**`map()`**:  translate between ranges
 ```javascript
 map(mouseX, 0, width, 0, 360)    // → hue
 map(i, 0, n, margin, width)      // → position
 map(noise(t), 0, 1, 50, 200)     // → size
 ```
 
-**`constrain()`** — clamp to bounds
+**`constrain()`**:  clamp to bounds
 ```javascript
 constrain(value, 0, width)
 // never below 0, never above width
@@ -1239,7 +1239,7 @@ Together they solve 90% of "how do I keep this in range?" problems.
 
 .col-left[
 **Trigonometry** *(review)*
-- `x = cx + cos(θ) * r` — the formula
+- `x = cx + cos(θ) * r`:  the formula
 - Spirals, rose curves, Lissajous, phyllotaxis
 
 **Recursion**
@@ -1254,10 +1254,10 @@ Together they solve 90% of "how do I keep this in range?" problems.
 ]
 .col-right[
 **Fractals**
-- Koch snowflake — recursive line subdivision
-- Dragon curve — L-system / paper folding
+- Koch snowflake:  recursive line subdivision
+- Dragon curve:  L-system / paper folding
 - Chaos game → Sierpiński triangle (emergence)
-- Mandelbrot set — complex number iteration
+- Mandelbrot set:  complex number iteration
 
 **Cellular Automata & Chaos**
 - 256 elementary rules, local → global
@@ -1279,10 +1279,10 @@ Keyboard changes depth and colour palette. Recursion becomes a live instrument.
 
 .box[
 **Before Session 2:**
-- Try `ruleValue` 30, 90, 110, and 184 in the CA sketch — screenshot what each looks like
-- Explore the Mandelbrot set at [mandelbrot.site](https://mandelbrot.site) — find a seahorse valley
-- Watch **Ryoji Ikeda** — *test pattern* on YouTube (2 minutes, no explanation needed)
-- Look up **Tyler Hobbs** — see how he bridges algorithmic process and painterly aesthetics
+- Try `ruleValue` 30, 90, 110, and 184 in the CA sketch:  screenshot what each looks like
+- Explore the Mandelbrot set at [mandelbrot.site](https://mandelbrot.site):  find a seahorse valley
+- Watch **Ryoji Ikeda**:  *test pattern* on YouTube (2 minutes, no explanation needed)
+- Look up **Tyler Hobbs**:  see how he bridges algorithmic process and painterly aesthetics
 ]
 
 ---
@@ -1293,7 +1293,7 @@ class: title-slide
 
 ## Mathematical Portrait
 
-.kicker[Pick one: fractal, CA, or trig — make maths beautiful]
+.kicker[Pick one: fractal, CA, or trig:  make maths beautiful]
 
 ---
 
@@ -1303,7 +1303,7 @@ class: title-slide
 
 ## Questions?
 
-.kicker[editor.p5js.org — try Rule 30, then change one pixel in row 0]
+.kicker[editor.p5js.org:  try Rule 30, then change one pixel in row 0]
 
 </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
